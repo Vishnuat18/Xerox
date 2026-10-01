@@ -1,11 +1,11 @@
-// SMART PRINT HUB - Database Seed Script
-const { PrismaClient } = require('@prisma/client');
+// SMART PRINT HUB - Database Seed Script for MySQL
+const { PrismaClient } = require('../src/generated/prisma');
 const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('[Seed] Starting database seed...');
+  console.log('[Seed] Starting database seed on MySQL (xerox)...');
 
   // 1. Subscription Plans
   const plans = [
@@ -189,7 +189,7 @@ async function main() {
   });
   console.log('[Seed] Seeded demo printers.');
 
-  console.log('[Seed] Seed complete successfully!');
+  console.log('[Seed] Seed complete successfully on MySQL!');
 }
 
 main()

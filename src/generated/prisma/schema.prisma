@@ -15,20 +15,20 @@ datasource db {
 // -------------------------------------------------------------
 
 model Shop {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  phone       String
-  email       String
-  address     String?  @db.Text
-  city        String?
-  state       String?
-  pincode     String?
-  gstNumber   String?
-  qrCodeUrl   String?  @db.Text
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  phone     String
+  email     String
+  address   String?  @db.Text
+  city      String?
+  state     String?
+  pincode   String?
+  gstNumber String?
+  qrCodeUrl String?  @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   users        User[]
   customers    Customer[]
@@ -43,16 +43,16 @@ model Shop {
 }
 
 model User {
-  id           String    @id @default(cuid())
+  id           String   @id @default(cuid())
   shopId       String?
-  email        String    @unique
+  email        String   @unique
   passwordHash String
   fullName     String
   phone        String?
-  role         String    @default("SHOP_OWNER") // "SUPER_ADMIN", "SHOP_OWNER", "SHOP_OPERATOR"
-  isVerified   Boolean   @default(false)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  role         String   @default("SHOP_OWNER") // "SUPER_ADMIN", "SHOP_OWNER", "SHOP_OPERATOR"
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   shop      Shop?      @relation(fields: [shopId], references: [id], onDelete: Cascade)
   auditLogs AuditLog[]
@@ -104,18 +104,18 @@ model Order {
 }
 
 model OrderDocument {
-  id               String   @id @default(cuid())
-  orderId          String
-  originalFilename String
-  storageKey       String   @db.VarChar(512)
-  fileSizeBytes    Int
-  mimeType         String
-  sha256Checksum   String
-  detectedPageCount Int     @default(1)
-  previewImageKey  String?  @db.Text
-  createdAt        DateTime @default(now())
+  id                String   @id @default(cuid())
+  orderId           String
+  originalFilename  String
+  storageKey        String   @db.VarChar(512)
+  fileSizeBytes     Int
+  mimeType          String
+  sha256Checksum    String
+  detectedPageCount Int      @default(1)
+  previewImageKey   String?  @db.Text
+  createdAt         DateTime @default(now())
 
-  order     Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order     Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
   specs     DocumentPrintSpec?
   printJobs PrintJob[]
 
@@ -193,17 +193,17 @@ model Printer {
 }
 
 model PrintJob {
-  id             String    @id @default(cuid())
-  orderId        String
-  documentId     String
-  printerId      String?
-  agentId        String?
-  status         String    @default("PENDING") // PENDING, ASSIGNED, DOWNLOADING, SPOOLING, PRINTING, SUCCESS, FAILED, CANCELLED
-  spoolerJobId   Int?
-  errorMessage   String?   @db.Text
-  dispatchedAt   DateTime?
-  completedAt    DateTime?
-  createdAt      DateTime  @default(now())
+  id           String    @id @default(cuid())
+  orderId      String
+  documentId   String
+  printerId    String?
+  agentId      String?
+  status       String    @default("PENDING") // PENDING, ASSIGNED, DOWNLOADING, SPOOLING, PRINTING, SUCCESS, FAILED, CANCELLED
+  spoolerJobId Int?
+  errorMessage String?   @db.Text
+  dispatchedAt DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
 
   order    Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
   document OrderDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
@@ -218,15 +218,15 @@ model PrintJob {
 // -------------------------------------------------------------
 
 model PricingRule {
-  id                String   @id @default(cuid())
-  shopId            String
-  paperSize         String   @default("A4") // "A4", "A3", "A5", "LETTER", "LEGAL"
-  bwSinglePrice     Float    @default(2.00)
-  bwDoublePrice     Float    @default(3.00)
-  colorSinglePrice  Float    @default(10.00)
-  colorDoublePrice  Float    @default(18.00)
-  isActive          Boolean  @default(true)
-  createdAt         DateTime @default(now())
+  id               String   @id @default(cuid())
+  shopId           String
+  paperSize        String   @default("A4") // "A4", "A3", "A5", "LETTER", "LEGAL"
+  bwSinglePrice    Float    @default(2.00)
+  bwDoublePrice    Float    @default(3.00)
+  colorSinglePrice Float    @default(10.00)
+  colorDoublePrice Float    @default(18.00)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
 
   shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
@@ -274,8 +274,8 @@ model AuditLog {
   id         String   @id @default(cuid())
   shopId     String?
   userId     String?
-  action     String   // e.g. "AUTH_LOGIN", "SPEC_OVERRIDE", "JOB_DISPATCH"
-  entityType String   // e.g. "ORDER", "PRINTER", "AUTH"
+  action     String // e.g. "AUTH_LOGIN", "SPEC_OVERRIDE", "JOB_DISPATCH"
+  entityType String // e.g. "ORDER", "PRINTER", "AUTH"
   entityId   String
   details    String?  @db.Text
   ipAddress  String?
