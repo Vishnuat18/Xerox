@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     trialEnd.setDate(trialEnd.getDate() + 30);
 
     // Create Shop, Owner User, Trial Subscription, and default Pricing in a transaction
-    const createdData = await db.$transaction(async (tx) => {
+    const createdData = await db.$transaction(async (tx: any) => {
       const newShop = await tx.shop.create({
         data: {
           slug,

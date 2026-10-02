@@ -55,38 +55,38 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-zinc-50/70">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-slate-950">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-xl">
-          <Card className="shadow-xl border-slate-200 dark:border-slate-800">
-            <CardHeader className="space-y-1 text-center">
-              <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mb-2 shadow-md shadow-emerald-500/20">
+          <Card className="shadow-lg border-zinc-200/90">
+            <CardHeader className="space-y-1.5 text-center">
+              <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mb-1 shadow-xs">
                 <Store className="h-6 w-6" />
               </div>
-              <CardTitle className="text-2xl font-black">Register Your Xerox Shop</CardTitle>
+              <CardTitle className="text-2xl font-black text-zinc-900 tracking-tight">Register Xerox Shop</CardTitle>
               <CardDescription>
-                Start your 30-Day Free Trial. Instant QR Code and automated printer workflow.
+                Create your shop profile and get an instant counter QR code for customer submissions.
               </CardDescription>
             </CardHeader>
 
             <form onSubmit={handleRegister}>
               <CardContent className="space-y-4">
                 {errorMessage && (
-                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                      Shop / Business Name
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
+                      Shop / Center Name
                     </label>
                     <div className="relative">
-                      <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Store className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                       <input
                         type="text"
                         name="shopName"
@@ -94,17 +94,17 @@ export default function RegisterPage() {
                         value={formData.shopName}
                         onChange={handleChange}
                         placeholder="Apex Xerox & Digital Prints"
-                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       Owner Full Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <User className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                       <input
                         type="text"
                         name="fullName"
@@ -112,7 +112,7 @@ export default function RegisterPage() {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="Vikram Malhotra"
-                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                       />
                     </div>
                   </div>
@@ -120,11 +120,11 @@ export default function RegisterPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                       <input
                         type="email"
                         name="email"
@@ -132,17 +132,17 @@ export default function RegisterPage() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="vikram@apexprint.com"
-                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                      Mobile / WhatsApp Number
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
+                      Mobile Contact Number
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Phone className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                       <input
                         type="tel"
                         name="phone"
@@ -150,18 +150,18 @@ export default function RegisterPage() {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="+91 98765 00000"
-                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                     Password (Min 8 Characters)
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="password"
                       name="password"
@@ -170,26 +170,26 @@ export default function RegisterPage() {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-900/60 text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200/80 text-xs text-emerald-900 flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
                   <span>Includes 30 days of Professional tier with multi-printer support and zero credit card required.</span>
                 </div>
               </CardContent>
 
-              <CardFooter className="flex flex-col gap-3">
-                <Button type="submit" variant="emerald" className="w-full h-11" isLoading={isLoading}>
-                  Create Shop & Get QR Code
+              <CardFooter className="flex flex-col gap-3 pt-2">
+                <Button type="submit" variant="primary" className="w-full h-11 text-sm font-bold shadow-xs" isLoading={isLoading}>
+                  Create Shop & Generate QR
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
 
-                <p className="text-center text-xs text-slate-500">
+                <p className="text-center text-xs text-zinc-500">
                   Already registered?{' '}
-                  <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                  <Link href="/login" className="font-bold text-emerald-700 hover:underline">
                     Sign in to your shop
                   </Link>
                 </p>

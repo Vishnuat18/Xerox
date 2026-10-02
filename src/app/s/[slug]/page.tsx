@@ -32,7 +32,7 @@ export default async function CustomerShopLandingPage({
         slug: shop.slug,
         phone: shop.phone,
         address: shop.address,
-        pricingRules: shop.pricingRules.map((r) => ({
+        pricingRules: (shop.pricingRules || []).map((r: any) => ({
           paperSize: r.paperSize,
           bwSinglePrice: r.bwSinglePrice,
           bwDoublePrice: r.bwDoublePrice,

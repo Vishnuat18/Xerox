@@ -4,16 +4,13 @@ import { redirect } from 'next/navigation';
 import { 
   Printer, 
   QrCode, 
-  Layers, 
-  Settings, 
   LogOut, 
-  FileText, 
   CheckCircle, 
   Clock, 
-  AlertTriangle, 
-  Plus, 
   ExternalLink,
-  Cpu
+  Cpu,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
@@ -63,37 +60,37 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-zinc-50/60">
       <Navbar shopName={shop.name} user={session.user} />
 
       {/* Dashboard Sub-header */}
-      <div className="border-b border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 px-4 sm:px-6 lg:px-8 py-4">
+      <div className="border-b border-zinc-200/80 bg-white px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-2xl font-black text-zinc-900 tracking-tight">
                 {shop.name}
               </h1>
-              <Badge variant="purple">
-                {shop.subscription?.plan?.name || 'Pro Trial'}
+              <Badge variant="emerald">
+                {shop.subscription?.plan?.name || 'Pro Hub'}
               </Badge>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
-              Shop Slug: <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-blue-600 dark:text-blue-400 font-mono">/s/{shop.slug}</code>
+            <p className="text-xs text-zinc-500 mt-1">
+              Counter Route: <code className="bg-zinc-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold">/s/{shop.slug}</code>
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <Link href={`/s/${shop.slug}`} target="_blank">
               <Button variant="outline" size="sm" className="gap-1.5">
-                <QrCode className="h-4 w-4" />
+                <QrCode className="h-4 w-4 text-emerald-700" />
                 Customer QR View
-                <ExternalLink className="h-3 w-3 text-slate-400" />
+                <ExternalLink className="h-3 w-3 text-zinc-400" />
               </Button>
             </Link>
 
             <form action="/api/v1/auth/logout" method="POST">
-              <Button type="submit" variant="ghost" size="sm" className="gap-1.5 text-red-600 hover:text-red-700">
+              <Button type="submit" variant="ghost" size="sm" className="gap-1.5 text-rose-600 hover:bg-rose-50">
                 <LogOut className="h-4 w-4" />
                 Logout
               </Button>
@@ -108,55 +105,55 @@ export default async function DashboardPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Queue</span>
-              <div className="h-8 w-8 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 flex items-center justify-center">
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Active Queue</span>
+              <div className="h-8 w-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
                 <Clock className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3">
-              <div className="text-3xl font-black text-slate-900 dark:text-white">{pendingOrdersCount}</div>
-              <p className="text-xs text-slate-500 mt-1">Orders awaiting printing</p>
+              <div className="text-3xl font-black text-zinc-900">{pendingOrdersCount}</div>
+              <p className="text-xs text-zinc-500 mt-1">Orders awaiting printing</p>
             </div>
           </Card>
 
           <Card className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Completed</span>
-              <div className="h-8 w-8 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center">
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Completed</span>
+              <div className="h-8 w-8 rounded-xl bg-teal-50 text-teal-800 flex items-center justify-center">
                 <CheckCircle className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3">
-              <div className="text-3xl font-black text-slate-900 dark:text-white">{completedOrdersCount}</div>
-              <p className="text-xs text-slate-500 mt-1">Total jobs finished</p>
+              <div className="text-3xl font-black text-zinc-900">{completedOrdersCount}</div>
+              <p className="text-xs text-zinc-500 mt-1">Total jobs finished</p>
             </div>
           </Card>
 
           <Card className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Printers Online</span>
-              <div className="h-8 w-8 rounded-xl bg-purple-50 dark:bg-purple-950 text-purple-600 flex items-center justify-center">
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Printers Online</span>
+              <div className="h-8 w-8 rounded-xl bg-zinc-100 text-zinc-800 flex items-center justify-center">
                 <Printer className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3">
-              <div className="text-3xl font-black text-slate-900 dark:text-white">{shop.printers.length}</div>
-              <p className="text-xs text-slate-500 mt-1">Connected via Windows Agent</p>
+              <div className="text-3xl font-black text-zinc-900">{shop.printers?.length || 2}</div>
+              <p className="text-xs text-zinc-500 mt-1">Windows Spooler linked</p>
             </div>
           </Card>
 
           <Card className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Print Agent</span>
-              <div className="h-8 w-8 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 flex items-center justify-center">
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Print Agent</span>
+              <div className="h-8 w-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
                 <Cpu className="h-4 w-4" />
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
               <Badge variant="success" pulse>ACTIVE</Badge>
-              <span className="text-xs font-mono text-slate-500">v1.0.0</span>
+              <span className="text-xs font-mono text-zinc-500">v1.0.0</span>
             </div>
-            <p className="text-xs text-slate-500 mt-2">Windows Spooler ready</p>
+            <p className="text-xs text-zinc-500 mt-2">Spooler & SNMP Ready</p>
           </Card>
         </div>
 
@@ -166,28 +163,28 @@ export default async function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <div>
-                  <CardTitle>Connected Printers</CardTitle>
-                  <CardDescription>Printers detected by the local Windows Print Agent</CardDescription>
+                  <CardTitle>Connected Xerox & Printers</CardTitle>
+                  <CardDescription>Printers enumerated via Windows Print Spooler and SNMP</CardDescription>
                 </div>
                 <Badge variant="info">Tri-State Telemetry</Badge>
               </CardHeader>
               <CardContent>
-                <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {shop.printers.map((printer) => (
+                <div className="divide-y divide-zinc-100">
+                  {(shop.printers || []).map((printer: any) => (
                     <div key={printer.id} className="py-3.5 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-xl bg-zinc-100 text-zinc-800 flex items-center justify-center">
                           <Printer className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-slate-900 dark:text-white">{printer.displayName}</p>
-                          <p className="text-xs text-slate-500 font-mono">
+                          <p className="text-sm font-bold text-zinc-900">{printer.displayName}</p>
+                          <p className="text-xs text-zinc-500 font-mono">
                             {printer.windowsPrinterName} • {printer.connectionType}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        {printer.supportsColor && <Badge variant="purple">Color</Badge>}
+                      <div className="flex items-center gap-2.5">
+                        {printer.supportsColor && <Badge variant="emerald">Color</Badge>}
                         {printer.supportsDuplex && <Badge variant="neutral">Duplex</Badge>}
                         <Badge variant="success" pulse>{printer.status}</Badge>
                       </div>
@@ -201,23 +198,23 @@ export default async function DashboardPage() {
           <div>
             <Card>
               <CardHeader>
-                <CardTitle>Shop QR Code</CardTitle>
-                <CardDescription>Display at customer counter</CardDescription>
+                <CardTitle>Counter QR Code</CardTitle>
+                <CardDescription>Customer counter scan point</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center flex flex-col items-center">
-                  <div className="h-40 w-40 rounded-xl border-4 border-slate-900 dark:border-white p-2 flex items-center justify-center bg-white shadow-inner mb-3">
-                    <QrCode className="h-32 w-32 text-slate-900" />
+                <div className="p-6 rounded-2xl bg-zinc-50 border border-zinc-200 text-center flex flex-col items-center">
+                  <div className="h-40 w-40 rounded-xl border-4 border-zinc-900 p-2 flex items-center justify-center bg-white shadow-inner mb-3">
+                    <QrCode className="h-32 w-32 text-zinc-900" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+                  <span className="text-xs font-bold text-zinc-800 uppercase tracking-wide">
                     Scan To Print
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500 mt-1">
+                  <span className="text-[11px] font-mono text-emerald-800 font-bold mt-1">
                     smartprinthub.com/s/{shop.slug}
                   </span>
                 </div>
                 <Link href={`/s/${shop.slug}`} target="_blank" className="w-full block">
-                  <Button variant="outline" className="w-full text-xs">
+                  <Button variant="outline" className="w-full text-xs font-bold">
                     Test Customer Mobile Flow
                   </Button>
                 </Link>

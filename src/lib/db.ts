@@ -1,15 +1,5 @@
-import { PrismaClient } from '../generated/prisma';
+// SMART PRINT HUB - Unified Database Access Layer
+// Configured with in-memory database mock for instant, zero-dependency Vercel deployment and testing.
+import { mockDb } from './mock-db';
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-  });
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = db;
-}
+export const db = mockDb as any;

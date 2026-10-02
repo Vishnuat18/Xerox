@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Printer, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { Printer, Lock, Mail, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -34,7 +34,6 @@ export default function LoginPage() {
         throw new Error(data.error?.message || 'Login failed. Please check your credentials.');
       }
 
-      // Redirect to owner dashboard
       router.push('/dashboard');
       router.refresh();
     } catch (err: unknown) {
@@ -45,17 +44,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-zinc-50/70">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-slate-950">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md">
-          <Card className="shadow-xl border-slate-200 dark:border-slate-800">
-            <CardHeader className="space-y-1 text-center">
-              <div className="mx-auto h-12 w-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center mb-2 shadow-md shadow-blue-500/20">
+          <Card className="shadow-lg border-zinc-200/90">
+            <CardHeader className="space-y-1.5 text-center">
+              <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mb-1 shadow-xs">
                 <Printer className="h-6 w-6" />
               </div>
-              <CardTitle className="text-2xl font-black">Shop Owner Portal</CardTitle>
+              <CardTitle className="text-2xl font-black text-zinc-900 tracking-tight">Shop Owner Portal</CardTitle>
               <CardDescription>
                 Sign in to manage print queues, configure printers, and monitor live orders.
               </CardDescription>
@@ -64,63 +63,64 @@ export default function LoginPage() {
             <form onSubmit={handleLogin}>
               <CardContent className="space-y-4">
                 {errorMessage && (
-                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <Mail className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="owner@yourshop.com"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       Password
                     </label>
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="password"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-900/60 text-xs text-blue-700 dark:text-blue-300">
-                  <span className="font-bold">Demo Account:</span> Credentials prefilled for testing.
+                <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span><strong>Demo Account:</strong> Credentials prefilled for testing.</span>
                 </div>
               </CardContent>
 
-              <CardFooter className="flex flex-col gap-3">
-                <Button type="submit" variant="primary" className="w-full h-11" isLoading={isLoading}>
+              <CardFooter className="flex flex-col gap-3 pt-2">
+                <Button type="submit" variant="primary" className="w-full h-11 text-sm font-bold shadow-xs" isLoading={isLoading}>
                   Sign In to Dashboard
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
 
-                <p className="text-center text-xs text-slate-500">
-                  Don&apos;t have a shop account yet?{' '}
-                  <Link href="/register" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                    Register Shop (30-day Free Trial)
+                <p className="text-center text-xs text-zinc-500">
+                  Need a new shop account?{' '}
+                  <Link href="/register" className="font-bold text-emerald-700 hover:underline">
+                    Register Shop
                   </Link>
                 </p>
               </CardFooter>

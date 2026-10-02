@@ -3,19 +3,20 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'neutral' | 'purple';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'neutral' | 'purple' | 'emerald';
   pulse?: boolean;
 }
 
 export function Badge({ className, variant = 'default', pulse = false, children, ...props }: BadgeProps) {
   const variants = {
-    default: 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-900',
-    success: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900',
-    warning: 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-900',
-    danger: 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-900',
-    info: 'bg-cyan-50 text-cyan-700 dark:bg-cyan-950/60 dark:text-cyan-300 border-cyan-200 dark:border-cyan-900',
-    neutral: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
-    purple: 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200 dark:border-purple-900',
+    default: 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
+    success: 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
+    emerald: 'bg-emerald-100/70 text-emerald-900 border-emerald-300/80 font-bold',
+    warning: 'bg-amber-50 text-amber-800 border-amber-200/80',
+    danger: 'bg-rose-50 text-rose-800 border-rose-200/80',
+    info: 'bg-zinc-100 text-zinc-800 border-zinc-200',
+    neutral: 'bg-zinc-100 text-zinc-700 border-zinc-200/80',
+    purple: 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
   };
 
   return (
@@ -31,8 +32,8 @@ export function Badge({ className, variant = 'default', pulse = false, children,
     >
       {pulse && (
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-current" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-500" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
         </span>
       )}
       {children}

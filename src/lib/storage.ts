@@ -1,6 +1,7 @@
 // SMART PRINT HUB - Unified File Storage & Validation Engine
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import crypto from 'crypto';
 import { ValidationError } from './errors';
 import { logger } from './logger';
@@ -75,11 +76,20 @@ export async function saveUploadedFile(
   const driver = process.env.STORAGE_DRIVER || 'local';
 
   if (driver === 'local') {
-    const uploadRoot = process.env.UPLOAD_DIR || './uploads';
-    const targetDir = path.join(process.cwd(), uploadRoot, 'shops', shopId, 'uploads');
+    const isVercel = Boolean(process.env.VERCEL);
+    const baseDir = isVercel ? os.tmpdir() : path.join(process.cwd(), 'uploads');
+    const targetDir = path.join(baseDir, 'shops', shopId, 'uploads');
 
-    if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, { recursive: true });
+    try {
+      if (!fs.existsSync(targetDir)) {
+        fs.mkdirSync(targetDir, { recursive: true });
+      }
+    } catch {
+      // In case of any filesystem restriction, fallback to system temp directory
+      const fallbackDir = path.join(os.tmpdir(), 'smartprinthub', shopId);
+      if (!fs.existsSync(fallbackDir)) {
+        fs.mkdirSync(fallbackDir, { recursive: true });
+      }
     }
 
     const fullPath = path.join(targetDir, filename);

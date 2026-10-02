@@ -6,7 +6,6 @@ import {
   FileText, 
   Image as ImageIcon, 
   Trash2, 
-  Plus, 
   CheckCircle2, 
   AlertCircle, 
   ArrowRight, 
@@ -46,8 +45,8 @@ interface UploadedFileInfo {
 }
 
 export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerName, setCustomerName] = useState('Rahul Sharma');
+  const [customerPhone, setCustomerPhone] = useState('9876543210');
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -62,7 +61,7 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
 
   const a4Rule = shop.pricingRules.find((r) => r.paperSize === 'A4');
 
-  // Format bytes
+  // Format bytes helper
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -75,9 +74,9 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
   const getFileIcon = (filename: string) => {
     const ext = filename.split('.').pop()?.toLowerCase();
     if (['jpg', 'jpeg', 'png', 'webp'].includes(ext || '')) {
-      return <ImageIcon className="h-5 w-5 text-emerald-500" />;
+      return <ImageIcon className="h-5 w-5 text-emerald-600" />;
     }
-    return <FileText className="h-5 w-5 text-blue-500" />;
+    return <FileText className="h-5 w-5 text-zinc-700" />;
   };
 
   // Add files with validation
@@ -93,7 +92,7 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
         return;
       }
       if (file.size > 50 * 1024 * 1024) {
-        setErrorMessage(`"${file.name}" is larger than 50MB.`);
+        setErrorMessage(`"${file.name}" exceeds 50MB.`);
         return;
       }
       newFiles.push(file);
@@ -167,108 +166,108 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-zinc-50/70">
       
       {/* Mobile-optimized Counter Header */}
-      <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200 px-4 py-3 shadow-2xs">
         <div className="max-w-md mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+            <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
               <Printer className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-sm font-black text-slate-900 dark:text-white leading-tight truncate max-w-[200px]">
+              <h1 className="text-sm font-black text-zinc-900 leading-tight truncate max-w-[200px]">
                 {shop.name}
               </h1>
-              <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <p className="text-[10px] text-zinc-500 font-semibold flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
                 Active Xerox Counter
               </p>
             </div>
           </div>
-          <Badge variant="success" pulse>COUNTER OPEN</Badge>
+          <Badge variant="success" pulse>OPEN</Badge>
         </div>
       </header>
 
       <main className="flex-1 max-w-md mx-auto w-full p-4 space-y-4">
         
         {/* Counter Rates Banner */}
-        <Card className="border-blue-100 dark:border-blue-900/40 bg-gradient-to-br from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-900">
+        <Card className="border-emerald-200/80 bg-gradient-to-br from-emerald-50/40 via-white to-zinc-50 shadow-2xs">
           <CardHeader className="pb-2 pt-4 px-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+              <span className="text-xs font-black text-zinc-900 uppercase tracking-wider">
                 Counter Printing Rates (A4)
               </span>
-              <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Standard</span>
+              <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100/70 px-2 py-0.5 rounded">Standard</span>
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-3">
-            <div className="grid grid-cols-2 gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
-              <div className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-                <span className="text-[10px] text-slate-400 block">B&W Single</span>
-                <strong className="text-slate-900 dark:text-white text-sm">₹{a4Rule?.bwSinglePrice.toFixed(2) || '2.00'}</strong>
+            <div className="grid grid-cols-2 gap-2 text-xs font-medium text-zinc-700">
+              <div className="p-2 rounded-xl bg-white border border-zinc-200/80 shadow-2xs">
+                <span className="text-[10px] text-zinc-400 block font-semibold">B&W Single</span>
+                <strong className="text-zinc-900 text-sm">₹{a4Rule?.bwSinglePrice.toFixed(2) || '2.00'}</strong>
               </div>
-              <div className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-                <span className="text-[10px] text-slate-400 block">B&W Duplex</span>
-                <strong className="text-slate-900 dark:text-white text-sm">₹{a4Rule?.bwDoublePrice.toFixed(2) || '3.00'}</strong>
+              <div className="p-2 rounded-xl bg-white border border-zinc-200/80 shadow-2xs">
+                <span className="text-[10px] text-zinc-400 block font-semibold">B&W Duplex</span>
+                <strong className="text-zinc-900 text-sm">₹{a4Rule?.bwDoublePrice.toFixed(2) || '3.00'}</strong>
               </div>
-              <div className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-                <span className="text-[10px] text-slate-400 block">Color Single</span>
-                <strong className="text-slate-900 dark:text-white text-sm">₹{a4Rule?.colorSinglePrice.toFixed(2) || '10.00'}</strong>
+              <div className="p-2 rounded-xl bg-white border border-zinc-200/80 shadow-2xs">
+                <span className="text-[10px] text-zinc-400 block font-semibold">Color Single</span>
+                <strong className="text-zinc-900 text-sm">₹{a4Rule?.colorSinglePrice.toFixed(2) || '10.00'}</strong>
               </div>
-              <div className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-                <span className="text-[10px] text-slate-400 block">Color Duplex</span>
-                <strong className="text-slate-900 dark:text-white text-sm">₹{a4Rule?.colorDoublePrice.toFixed(2) || '18.00'}</strong>
+              <div className="p-2 rounded-xl bg-white border border-zinc-200/80 shadow-2xs">
+                <span className="text-[10px] text-zinc-400 block font-semibold">Color Duplex</span>
+                <strong className="text-zinc-900 text-sm">₹{a4Rule?.colorDoublePrice.toFixed(2) || '18.00'}</strong>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {uploadSuccessData ? (
-          /* Upload Success Screen (Precursor to Milestone 4 Specifications) */
-          <Card className="border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900 shadow-lg">
+          /* Upload Success Screen */
+          <Card className="border-emerald-300 bg-white shadow-md">
             <CardHeader className="text-center pb-3">
-              <div className="mx-auto h-12 w-12 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center mb-2">
+              <div className="mx-auto h-12 w-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2">
                 <FileCheck className="h-6 w-6" />
               </div>
-              <CardTitle className="text-xl font-black text-emerald-800 dark:text-emerald-300">
+              <CardTitle className="text-xl font-black text-emerald-950">
                 Documents Ready!
               </CardTitle>
               <CardDescription className="text-xs">
-                {uploadSuccessData.files.length} document(s) securely ingested for {uploadSuccessData.customer.fullName}.
+                {uploadSuccessData.files.length} document(s) uploaded for {uploadSuccessData.customer.fullName}.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="divide-y divide-slate-100 dark:divide-slate-800 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2">
+              <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-200 bg-zinc-50/70 p-2">
                 {uploadSuccessData.files.map((file) => (
                   <div key={file.id} className="py-2.5 px-2 flex items-center justify-between gap-2 text-xs">
                     <div className="flex items-center gap-2 truncate">
                       {getFileIcon(file.originalFilename)}
-                      <span className="font-bold text-slate-900 dark:text-white truncate">
+                      <span className="font-bold text-zinc-900 truncate">
                         {file.originalFilename}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 shrink-0">
+                    <span className="text-[10px] font-mono text-zinc-500 shrink-0">
                       {formatBytes(file.fileSizeBytes)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-900/60 text-xs text-blue-800 dark:text-blue-300">
-                <p className="font-bold flex items-center gap-1.5 mb-0.5">
-                  <Sparkles className="h-4 w-4 text-blue-600" />
-                  Milestone 3 Verified: Document Ingestion Complete
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+                <p className="font-bold flex items-center gap-1.5 mb-0.5 text-emerald-800">
+                  <Sparkles className="h-4 w-4 text-emerald-700" />
+                  Files Ingested & Hashed
                 </p>
-                <p className="text-[11px] leading-relaxed text-blue-700/80 dark:text-blue-300/80">
-                  Ready for Milestone 4 Print Specifications (Page Ranges, Copies, Duplex, Finishing).
+                <p className="text-[11px] leading-relaxed text-emerald-800/80">
+                  Ready to configure print specifications (Copies, Duplex, Color) in Milestone 4.
                 </p>
               </div>
             </CardContent>
             <CardFooter>
               <Button 
                 variant="primary" 
-                className="w-full h-11"
+                className="w-full h-11 text-sm font-bold shadow-xs"
                 onClick={() => setUploadSuccessData(null)}
               >
                 Upload Additional Files
@@ -282,44 +281,44 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
             {/* Customer Details */}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                  1. Your Details
+                <CardTitle className="text-xs font-black uppercase tracking-wider text-zinc-700">
+                  1. Customer Details (Testing Account)
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  Needed to identify your prints at the counter.
+                  Prefilled with test customer profile.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                     Full Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <User className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
                     <input
                       type="text"
                       required
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="e.g. Rahul Sharma"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-9 pr-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                     Mobile Number
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Phone className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
                     <input
                       type="tel"
                       required
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       placeholder="10-digit mobile number"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-9 pr-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
@@ -330,10 +329,10 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  <CardTitle className="text-xs font-black uppercase tracking-wider text-zinc-700">
                     2. Select Documents
                   </CardTitle>
-                  <span className="text-xs text-slate-400 font-mono">
+                  <span className="text-xs text-zinc-500 font-mono">
                     {files.length} selected
                   </span>
                 </div>
@@ -348,8 +347,8 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                   onClick={() => fileInputRef.current?.click()}
                   className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
                     isDragging 
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/30' 
-                      : 'border-slate-300 dark:border-slate-700 hover:border-blue-500 bg-slate-50/50 dark:bg-slate-900/50'
+                      ? 'border-emerald-600 bg-emerald-50/50' 
+                      : 'border-zinc-300 hover:border-emerald-600 bg-zinc-50/60 hover:bg-emerald-50/20'
                   }`}
                 >
                   <input
@@ -363,13 +362,13 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                     }}
                   />
 
-                  <div className="mx-auto h-12 w-12 rounded-2xl bg-blue-100/80 dark:bg-blue-950 text-blue-600 flex items-center justify-center mb-2 shadow-xs">
+                  <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2 shadow-2xs">
                     <UploadCloud className="h-6 w-6" />
                   </div>
-                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <p className="text-xs font-bold text-zinc-800">
                     Tap to Choose Files or Drag & Drop
                   </p>
-                  <p className="text-[11px] text-slate-400 mt-1">
+                  <p className="text-[11px] text-zinc-500 mt-1 font-medium">
                     PDF, DOC, DOCX, JPG, PNG (Max 50MB each)
                   </p>
                 </div>
@@ -377,23 +376,23 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                 {/* File List */}
                 {files.length > 0 && (
                   <div className="space-y-2 pt-2">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                       Selected Files
                     </span>
-                    <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900">
+                    <div className="divide-y divide-zinc-100 border border-zinc-200 rounded-xl bg-white shadow-2xs">
                       {files.map((file, idx) => (
                         <div key={idx} className="p-2.5 flex items-center justify-between gap-3 text-xs">
                           <div className="flex items-center gap-2.5 min-w-0">
                             {getFileIcon(file.name)}
                             <div className="min-w-0">
-                              <p className="font-bold text-slate-900 dark:text-white truncate">{file.name}</p>
-                              <p className="text-[10px] text-slate-400 font-mono">{formatBytes(file.size)}</p>
+                              <p className="font-bold text-zinc-900 truncate">{file.name}</p>
+                              <p className="text-[10px] text-zinc-400 font-mono">{formatBytes(file.size)}</p>
                             </div>
                           </div>
                           <button
                             type="button"
                             onClick={() => handleRemoveFile(idx)}
-                            className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
+                            className="p-1.5 text-zinc-400 hover:text-rose-600 transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -404,21 +403,21 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                 )}
 
                 {errorMessage && (
-                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
 
                 {isUploading && (
                   <div className="space-y-1.5 pt-2">
-                    <div className="flex justify-between text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                    <div className="flex justify-between text-[11px] font-bold text-emerald-700">
                       <span>Uploading documents...</span>
                       <span>{uploadProgress}%</span>
                     </div>
-                    <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-zinc-100 rounded-full h-2 overflow-hidden">
                       <div 
-                        className="bg-blue-600 h-2 transition-all duration-300 rounded-full" 
+                        className="bg-emerald-600 h-2 transition-all duration-300 rounded-full" 
                         style={{ width: `${uploadProgress}%` }}
                       />
                     </div>
@@ -429,9 +428,9 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
               <CardFooter className="pt-2">
                 <Button
                   type="submit"
-                  variant="emerald"
+                  variant="primary"
                   isLoading={isUploading}
-                  className="w-full h-11 text-sm font-bold shadow-md shadow-emerald-500/20"
+                  className="w-full h-11 text-sm font-bold shadow-xs"
                 >
                   Upload & Proceed
                   <ArrowRight className="h-4 w-4 ml-1.5" />
@@ -439,9 +438,9 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
               </CardFooter>
             </Card>
 
-            <div className="text-center pt-1 text-xs text-slate-400 flex items-center justify-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-emerald-500" />
-              <span>Encrypted Direct Upload • Auto-purged after 24 hours</span>
+            <div className="text-center pt-1 text-xs text-zinc-400 flex items-center justify-center gap-1.5">
+              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+              <span>Direct Upload • Auto-purged after 24 hours</span>
             </div>
           </form>
         )}

@@ -11,8 +11,7 @@ import {
   CheckCircle2, 
   AlertCircle,
   ShieldCheck,
-  CreditCard,
-  Building
+  CreditCard
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -89,7 +88,7 @@ export default function ShopSettingsPage() {
       }
 
       setProfile(json.data.shop);
-      setSuccessMessage('Shop profile and settings successfully updated!');
+      setSuccessMessage('Shop profile updated successfully!');
       setTimeout(() => setSuccessMessage(''), 4000);
     } catch (err: unknown) {
       setErrorMessage((err as Error).message);
@@ -101,8 +100,8 @@ export default function ShopSettingsPage() {
   if (isLoading) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
-        <div className="flex items-center gap-3 text-slate-500 text-sm">
-          <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full" />
+        <div className="flex items-center gap-3 text-zinc-500 text-sm">
+          <div className="animate-spin h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full" />
           <span>Loading shop profile...</span>
         </div>
       </div>
@@ -111,7 +110,7 @@ export default function ShopSettingsPage() {
 
   if (!profile) {
     return (
-      <div className="p-8 text-center text-slate-500">
+      <div className="p-8 text-center text-zinc-500">
         <p>Could not load profile. Please refresh.</p>
       </div>
     );
@@ -121,12 +120,12 @@ export default function ShopSettingsPage() {
     <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
       
       <div>
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-          <Store className="h-6 w-6 text-blue-600" />
+        <h1 className="text-2xl font-black text-zinc-900 tracking-tight flex items-center gap-2">
+          <Store className="h-6 w-6 text-emerald-700" />
           Shop Profile & Operational Settings
         </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Manage your business details, customer-facing contact info, and view subscription entitlements.
+        <p className="text-xs text-zinc-500 mt-1">
+          Manage business identity, customer counter contact details, and view subscription limits.
         </p>
       </div>
 
@@ -137,7 +136,7 @@ export default function ShopSettingsPage() {
           <form onSubmit={handleSubmit}>
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Shop Details</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Shop Details</CardTitle>
                 <CardDescription>
                   These details appear on your customer receipts and counter standee.
                 </CardDescription>
@@ -145,92 +144,92 @@ export default function ShopSettingsPage() {
 
               <CardContent className="space-y-4">
                 {successMessage && (
-                  <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
                     <span>{successMessage}</span>
                   </div>
                 )}
 
                 {errorMessage && (
-                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 shrink-0" />
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                     Shop / Center Name
                   </label>
                   <div className="relative">
-                    <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <Store className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="text"
                       name="name"
                       required
                       value={profile.name}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       Counter Phone Number
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Phone className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                       <input
                         type="text"
                         name="phone"
                         required
                         value={profile.phone}
                         onChange={handleChange}
-                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       Shop Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                       <input
                         type="email"
                         name="email"
                         required
                         value={profile.email}
                         onChange={handleChange}
-                        className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                     Physical Address
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="text"
                       name="address"
                       value={profile.address || ''}
                       onChange={handleChange}
                       placeholder="Shop #, Street, Commercial Complex"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-3 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       City
                     </label>
                     <input
@@ -238,12 +237,12 @@ export default function ShopSettingsPage() {
                       name="city"
                       value={profile.city || ''}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       State
                     </label>
                     <input
@@ -251,12 +250,12 @@ export default function ShopSettingsPage() {
                       name="state"
                       value={profile.state || ''}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
                       PIN Code
                     </label>
                     <input
@@ -264,30 +263,30 @@ export default function ShopSettingsPage() {
                       name="pincode"
                       value={profile.pincode || ''}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    GSTIN / Tax Identification (Optional)
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
+                    GSTIN / Tax Identification
                   </label>
                   <div className="relative">
-                    <FileText className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                    <FileText className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
                     <input
                       type="text"
                       name="gstNumber"
                       value={profile.gstNumber || ''}
                       onChange={handleChange}
                       placeholder="29ABCDE1234F1Z5"
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white uppercase font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 uppercase font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
                     />
                   </div>
                 </div>
               </CardContent>
 
-              <CardFooter className="flex justify-end border-t border-slate-100 dark:border-slate-800 pt-4">
+              <CardFooter className="flex justify-end border-t border-zinc-100 pt-4">
                 <Button type="submit" variant="primary" isLoading={isSaving} className="gap-2">
                   <Save className="h-4 w-4" />
                   Save Changes
@@ -301,26 +300,26 @@ export default function ShopSettingsPage() {
         <div className="lg:col-span-4 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-blue-600" />
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-emerald-700" />
                 Shop Identity
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div>
-                <span className="text-slate-400 block font-mono text-[10px]">SHOP ID</span>
-                <span className="font-mono text-slate-800 dark:text-slate-200 font-bold select-all">
+                <span className="text-zinc-400 block font-mono text-[10px]">SHOP ID</span>
+                <span className="font-mono text-zinc-900 font-bold select-all">
                   {profile.id}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-mono text-[10px]">URL SLUG</span>
-                <span className="font-mono text-blue-600 dark:text-blue-400 font-bold select-all">
+                <span className="text-zinc-400 block font-mono text-[10px]">URL SLUG</span>
+                <span className="font-mono text-emerald-700 font-bold select-all">
                   {profile.slug}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block font-mono text-[10px]">STATUS</span>
+                <span className="text-zinc-400 block font-mono text-[10px]">STATUS</span>
                 <Badge variant={profile.isActive ? 'success' : 'danger'}>
                   {profile.isActive ? 'ACTIVE & ONLINE' : 'INACTIVE'}
                 </Badge>
@@ -330,31 +329,31 @@ export default function ShopSettingsPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <CreditCard className="h-4 w-4 text-purple-600" />
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-zinc-700" />
                 Plan & Entitlements
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Tier:</span>
-                <span className="font-bold text-slate-900 dark:text-white">
+                <span className="text-zinc-500">Tier:</span>
+                <span className="font-bold text-zinc-900">
                   {profile.subscription?.plan?.name || 'Professional'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Max Printers:</span>
-                <span className="font-bold text-slate-900 dark:text-white">
+                <span className="text-zinc-500">Max Printers:</span>
+                <span className="font-bold text-zinc-900">
                   {profile.subscription?.plan?.maxPrinters || 4} Printers
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Order Quota:</span>
-                <span className="font-bold text-slate-900 dark:text-white">
+                <span className="text-zinc-500">Order Quota:</span>
+                <span className="font-bold text-zinc-900">
                   {profile.subscription?.plan?.maxMonthlyOrders || 2500} / Month
                 </span>
               </div>
-              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+              <div className="pt-2 border-t border-zinc-100 text-[11px] text-emerald-700 font-bold">
                 30-Day Free Trial Active
               </div>
             </CardContent>
