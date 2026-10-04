@@ -1,11 +1,19 @@
-import React from 'react';
-import { RateCardClient } from './rate-card-client';
+import React, { Suspense } from 'react';
+import { PricingHubClient } from './pricing-hub-client';
 
 export const metadata = {
-  title: 'Rate Card & Pricing Matrix | Smart Print Hub',
-  description: 'Configure Xerox printing rates, paper sizes, finishing options, and bulk discount tiers.',
+  title: 'Subscription Plans & Rate Card | Smart Print Hub',
+  description: 'Manage your SaaS plan (Starter ₹100, Business ₹249, Enterprise ₹499), 30-day trial status, and customer print rates.',
 };
 
 export default function PricingPage() {
-  return <RateCardClient />;
+  return (
+    <Suspense fallback={
+      <div className="py-20 flex items-center justify-center">
+        <div className="animate-spin h-6 w-6 border-2 border-zinc-900 border-t-transparent rounded-full" />
+      </div>
+    }>
+      <PricingHubClient />
+    </Suspense>
+  );
 }

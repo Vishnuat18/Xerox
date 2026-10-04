@@ -75,3 +75,23 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
 }
+
+/* Print optimization: When browser print is triggered, isolate document and hide app shell */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print, header, nav, aside, footer, button, .no-print-area {
+    display: none !important;
+  }
+  #sph-silent-print-frame {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border: none !important;
+    z-index: 999999 !important;
+  }
+}

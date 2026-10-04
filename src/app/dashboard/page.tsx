@@ -32,6 +32,11 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
+  const sub = await db.subscription.findUnique({ where: { shopId: shop.id } });
+  if (sub?.status === 'EXPIRED') {
+    redirect('/dashboard/pricing?expired=true');
+  }
+
   const formattedOrders = (shop.orders || []).map((o: any) => ({
     id: o.id,
     orderNumber: o.orderNumber,
@@ -53,6 +58,7 @@ export default async function DashboardPage() {
     documents: (o.documents || []).map((d: any) => ({
       id: d.id,
       originalFilename: d.originalFilename,
+      storageKey: d.storageKey,
       detectedPageCount: d.detectedPageCount || 1,
       specs: d.specs,
     })),

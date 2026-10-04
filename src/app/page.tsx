@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
+import { PricingSection } from '@/components/blocks/pricing-section';
 import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
@@ -113,6 +114,16 @@ export default async function HomePage() {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* SaaS Pricing Section */}
+      <section id="pricing" className="py-20 bg-white border-t border-zinc-200/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <PricingSection
+            title="Simple, Transparent Plans for Every Xerox Shop"
+            subtitle="Start your 30-day unrestricted free trial today. Renews daily at 12:00 AM Midnight. Zero credit card required."
+          />
         </div>
       </section>
 

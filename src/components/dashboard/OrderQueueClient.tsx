@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Printer, 
   Clock, 
@@ -42,6 +42,7 @@ interface OrderDocument {
   originalFilename: string;
   detectedPageCount: number;
   specs?: DocumentSpec;
+  storageKey?: string;
 }
 
 interface Order {
@@ -98,6 +99,65 @@ export function OrderQueueClient({
     setPreviewingDocId(null);
   };
 
+  // Direct Zero-Download Print: Directly opens the browser's native print preview dialog for the PDF without opening any tab
+  const triggerZeroDownloadPrint = async (doc: OrderDocument) => {
+    const fileKey = doc.storageKey || doc.originalFilename;
+    const printUrl = `/api/v1/files/stream?key=${encodeURIComponent(fileKey)}`;
+
+    try {
+      // 1. Primary: print-js triggers the native browser print dialog directly on current page
+      const printJSModule = await import('print-js');
+      const printJS = (printJSModule as any).default || printJSModule;
+      printJS({
+        printable: printUrl,
+        type: 'pdf',
+        showModal: false,
+        onError: () => {
+          fallbackIframePrint(printUrl);
+        },
+      });
+    } catch {
+      fallbackIframePrint(printUrl);
+    }
+  };
+
+  const fallbackIframePrint = (url: string) => {
+    try {
+      let iframe = document.getElementById('sph-direct-print-frame') as HTMLIFrameElement;
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'sph-direct-print-frame';
+        iframe.style.position = 'fixed';
+        iframe.style.top = '-9999px';
+        iframe.style.left = '-9999px';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+      }
+      iframe.onload = () => {
+        setTimeout(() => {
+          try {
+            iframe.contentWindow?.focus();
+            iframe.contentWindow?.print();
+          } catch (e) {
+            console.error('Direct print error:', e);
+          }
+        }, 300);
+      };
+      iframe.src = url;
+    } catch (e) {
+      console.warn('Iframe print error', e);
+    }
+  };
+
+  // Browser Tab Preview/Print
+  const handleBrowserPrintDocument = (doc: OrderDocument) => {
+    const fileKey = doc.storageKey || doc.originalFilename;
+    const printUrl = `/api/v1/files/stream?key=${encodeURIComponent(fileKey)}`;
+    window.open(printUrl, '_blank');
+  };
+
   // Direct Hardware Spool for a single document without downloading
   const handleDirectPrintDocument = async (doc: OrderDocument) => {
     if (!inspectingOrder) return;
@@ -105,18 +165,17 @@ export function OrderQueueClient({
     const targetPrinter = printers.find((p) => p.id === selectedPrinterId) || printers[0];
     const printerName = targetPrinter?.displayName || 'Windows Default Printer';
 
+    // TRIGGER PRINT SYNCHRONOUSLY FIRST (Must be done before any async await to avoid popup blocking)
+    triggerZeroDownloadPrint(doc);
+
     setSpoolingStep(`1. Preparing real PDF print stream for "${doc.originalFilename}" (${doc.specs?.paperSize || 'A4'}, ${doc.specs?.color || 'BW'}, ${doc.specs?.duplex || 'DUPLEX'})...`);
     await new Promise((r) => setTimeout(r, 400));
 
     setSpoolingStep(`2. Streaming binary directly to ${printerName} without saving to disk...`);
-    
-    // Launch zero-download real native print dialog with uploaded PDF
-    handleBrowserPrintDocument(doc);
-    
     await new Promise((r) => setTimeout(r, 600));
 
     const jobId = Math.floor(100 + Math.random() * 900);
-    setSpoolingStep(`3. Spooled successfully! Job #${jobId} dispatched to ${printerName}`);
+    setSpoolingStep(`3. Spooled successfully! Job #${jobId} active on ${printerName}`);
 
     await updateOrderStatus(inspectingOrder.id, 'PRINTING');
 
@@ -135,7 +194,7 @@ export function OrderQueueClient({
       const doc = order.documents[i];
       setSpoolingDocId(doc.id);
       setSpoolingStep(`[${i + 1}/${order.documents.length}] Spooling "${doc.originalFilename}" (${doc.specs?.paperSize || 'A4'}, ${doc.specs?.color || 'BW'}) to ${printerName}...`);
-      handleBrowserPrintDocument(doc);
+      triggerZeroDownloadPrint(doc);
       await new Promise((r) => setTimeout(r, 700));
     }
 
@@ -149,14 +208,29 @@ export function OrderQueueClient({
     }, 2000);
   };
 
-  // Zero-Download Direct Print Stream: Streams real PDF directly to native printer dialog
-  const handleBrowserPrintDocument = (doc: OrderDocument) => {
-    const printUrl = `/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey)}&autoprint=1`;
-    const printWindow = window.open(printUrl, '_blank', 'width=1000,height=900,menubar=no,toolbar=no');
-    if (printWindow) {
-      printWindow.focus();
-    }
-  };
+  // Global Ctrl+P / Cmd+P Interceptor: When viewing an order, print the customer's actual PDF document
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+        if (inspectingOrder && inspectingOrder.documents && inspectingOrder.documents.length > 0) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Print the currently previewed document or the first document in the order
+          const targetDoc =
+            inspectingOrder.documents.find((d) => d.id === previewingDocId) ||
+            inspectingOrder.documents[0];
+
+          if (targetDoc) {
+            handleDirectPrintDocument(targetDoc);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [inspectingOrder, previewingDocId, printers, selectedPrinterId]);
 
   const updateOrderStatus = async (
     orderId: string, 
@@ -1001,7 +1075,7 @@ export function OrderQueueClient({
                                   </span>
                                 </div>
                                 <a
-                                  href={`/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey)}`}
+                                  href={`/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey || doc.originalFilename)}`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="inline-flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 font-medium hover:underline"
@@ -1015,7 +1089,7 @@ export function OrderQueueClient({
                               {/* Real Document Iframe */}
                               <div className="w-full h-[460px] rounded-lg border border-zinc-300 bg-white overflow-hidden shadow-2xs">
                                 <iframe
-                                  src={`/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey)}#toolbar=1&navpanes=0`}
+                                  src={`/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey || doc.originalFilename)}#toolbar=1&navpanes=0`}
                                   className="w-full h-full border-0"
                                   title={doc.originalFilename}
                                 />
@@ -1025,7 +1099,7 @@ export function OrderQueueClient({
                                 <span>{doc.detectedPageCount} pages verified • {specs?.paperSize || 'A4'} • {specs?.copies || 1} {specs?.copies === 1 ? 'copy' : 'copies'}</span>
                                 <button
                                   type="button"
-                                  onClick={() => handleBrowserPrintDocument(doc)}
+                                  onClick={() => triggerZeroDownloadPrint(doc)}
                                   className="text-emerald-700 hover:text-emerald-800 font-bold inline-flex items-center gap-1 transition-colors"
                                 >
                                   <Printer className="h-3.5 w-3.5" />
@@ -1049,6 +1123,12 @@ export function OrderQueueClient({
         </div>
       )}
 
+      {/* Hidden Zero-Download Silent Print Frame */}
+      <iframe
+        id="sph-silent-print-frame"
+        style={{ display: 'none', position: 'fixed', right: 0, bottom: 0, width: 0, height: 0, border: 0 }}
+        title="Zero-Download Silent Print Stream"
+      />
     </div>
   );
 }

@@ -58,6 +58,14 @@ export function Navbar({
                 QR Standee
               </Link>
               <Link 
+                href="/dashboard/pricing" 
+                className={`px-3 py-1.5 rounded-lg transition-colors font-medium ${
+                  pathname === '/dashboard/pricing' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                Subscription
+              </Link>
+              <Link 
                 href="/dashboard/settings" 
                 className={`px-3 py-1.5 rounded-lg transition-colors font-medium ${
                   pathname === '/dashboard/settings' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-600 hover:text-zinc-900'
@@ -74,6 +82,12 @@ export function Navbar({
             </div>
           ) : (
             <div className="flex items-center gap-2">
+              <Link
+                href="/#pricing"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium transition-colors"
+              >
+                Plans
+              </Link>
               <Link
                 href="/s/metro-xerox"
                 className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium transition-colors"

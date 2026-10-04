@@ -1,7 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Check, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { 
+  Check, 
+  AlertCircle, 
+  Sparkles, 
+  CreditCard, 
+  ArrowUpRight, 
+  ShieldCheck, 
+  Clock,
+  Calendar
+} from 'lucide-react';
 
 interface ShopProfile {
   id: string;
@@ -16,20 +26,33 @@ interface ShopProfile {
   gstNumber?: string;
 }
 
+interface SubscriptionData {
+  planId: string;
+  planName: string;
+  monthlyPrice: number;
+  status: 'TRIALING' | 'ACTIVE' | 'EXPIRED';
+  daysRemaining: number;
+  daysElapsed: number;
+  isExpired: boolean;
+  features: string[];
+}
+
 export default function ShopSettingsPage() {
   const [profile, setProfile] = useState<ShopProfile | null>(null);
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    fetch('/api/v1/shops/profile')
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) {
-          setProfile(json.data.shop);
-        }
+    Promise.all([
+      fetch('/api/v1/shops/profile').then((res) => res.json()),
+      fetch('/api/v1/shops/subscription').then((res) => res.json()),
+    ])
+      .then(([profJson, subJson]) => {
+        if (profJson.success) setProfile(profJson.data.shop);
+        if (subJson.success && subJson.data?.subscription) setSubscription(subJson.data.subscription);
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -89,14 +112,15 @@ export default function ShopSettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-3xl space-y-8">
+      {/* Header */}
       <div className="pb-4 border-b border-zinc-200/70 flex items-center justify-between">
         <div>
-          <h1 className="text-base font-semibold text-zinc-900 tracking-tight">
-            Shop Settings
+          <h1 className="text-lg font-bold text-zinc-900 tracking-tight">
+            Shop Profile & Membership
           </h1>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Update store details displayed on customer order sheets and counter QR.
+            Manage your store details, billing cycle, and subscription status.
           </p>
         </div>
 
@@ -107,6 +131,55 @@ export default function ShopSettingsPage() {
         )}
       </div>
 
+      {/* Subscription Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 text-white p-6 shadow-md border border-zinc-700/80">
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                <Sparkles className="h-3 w-3" />
+                Smart Print Hub Pro
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                {subscription?.status === 'ACTIVE' ? 'Active Member' : '30-Day Free Trial'}
+              </span>
+            </div>
+
+            <h2 className="text-xl font-bold text-white tracking-tight">
+              {subscription?.planName || 'Business Pro Hub'}
+            </h2>
+
+            <p className="text-xs text-zinc-300 max-w-md leading-relaxed">
+              Automatic daily renewal runs every day at <strong className="text-white">12:00 AM Midnight</strong>. All zero-download spooling and live counter queue features are fully enabled.
+            </p>
+
+            <div className="flex items-center gap-4 text-xs text-zinc-400 pt-1">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5 text-amber-300" />
+                <span>
+                  {subscription?.isExpired ? 'Trial Expired' : `${subscription?.daysRemaining ?? 28} Days Remaining`}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Renews Daily 12:00 AM</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="shrink-0 flex flex-col gap-2">
+            <Link
+              href="/dashboard/pricing"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-semibold text-xs transition-all shadow-sm"
+            >
+              <CreditCard className="h-4 w-4" />
+              Manage Subscription
+              <ArrowUpRight className="h-3.5 w-3.5 text-zinc-400" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {errorMessage && (
         <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
           <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
@@ -114,7 +187,12 @@ export default function ShopSettingsPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Profile Form */}
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-2xs">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
+          Shop Identification Details
+        </h3>
+
         <div className="space-y-1">
           <label className="text-xs font-medium text-zinc-700">Shop Name</label>
           <input
@@ -216,9 +294,9 @@ export default function ShopSettingsPage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50 shadow-xs"
           >
-            {isSaving ? 'Saving...' : 'Save Changes'}
+            {isSaving ? 'Saving...' : 'Save Profile Changes'}
           </button>
         </div>
       </form>

@@ -20,7 +20,7 @@ export async function GET(
 
     const disposition = isDownload ? 'attachment' : 'inline';
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
         'Content-Type': mimeType,
@@ -30,7 +30,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    logger.error('Dynamic file stream error:', error);
+    logger.error('Dynamic file stream error:', error as Error);
     return NextResponse.json(
       { success: false, error: { message: 'Failed to stream document' } },
       { status: 500 }

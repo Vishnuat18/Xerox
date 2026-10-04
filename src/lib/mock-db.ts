@@ -487,20 +487,25 @@ class MockDatabase {
       result.printers = Array.from(this.printers.values()).filter((p) => p.shopId === shop.id);
     }
     if (include.subscription) {
-      result.subscription = {
-        id: 'sub-pro-001',
+      const sub = this.subscriptions.get(shop.id) || {
+        id: `sub-${shop.id}`,
         shopId: shop.id,
-        planId: 'PROFESSIONAL',
+        planId: 'BUSINESS',
         status: 'TRIALING',
-        trialStartAt: new Date(),
-        trialEndAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        trialStartAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        trialEndAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+      };
+      result.subscription = {
+        ...sub,
         plan: {
-          id: 'PROFESSIONAL',
-          name: 'Professional Hub',
-          monthlyPrice: 999,
-          yearlyPrice: 9999,
-          maxPrinters: 4,
-          maxMonthlyOrders: 2500,
+          id: sub.planId,
+          name: sub.planId === 'STARTER' ? 'Starter Hub' : sub.planId === 'ENTERPRISE' ? 'Enterprise Hub' : 'Business Pro',
+          monthlyPrice: sub.planId === 'STARTER' ? 100 : sub.planId === 'ENTERPRISE' ? 499 : 249,
+          yearlyPrice: sub.planId === 'STARTER' ? 85 : sub.planId === 'ENTERPRISE' ? 399 : 199,
+          maxPrinters: sub.planId === 'STARTER' ? 1 : sub.planId === 'ENTERPRISE' ? 999 : 4,
+          maxMonthlyOrders: sub.planId === 'STARTER' ? 500 : sub.planId === 'ENTERPRISE' ? 99999 : 5000,
         },
       };
     }
@@ -903,20 +908,69 @@ class MockDatabase {
   };
 
   // --- SUBSCRIPTIONS & PLANS ---
-  public subscription = {
-    findUnique: async () => ({
-      id: 'sub-demo-001',
-      planId: 'PROFESSIONAL',
-      status: 'TRIALING',
-      trialStartAt: new Date(),
-      trialEndAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      plan: {
-        name: 'Professional Hub',
-        maxPrinters: 4,
-        maxMonthlyOrders: 2500,
+  private subscriptions: Map<string, any> = new Map([
+    [
+      initialShop.id,
+      {
+        id: 'sub-demo-001',
+        shopId: initialShop.id,
+        planId: 'BUSINESS',
+        status: 'TRIALING',
+        trialStartAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // Day 3 of 30
+        trialEndAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+        plan: {
+          name: 'Business Pro',
+          maxPrinters: 4,
+          maxMonthlyOrders: 2500,
+        },
       },
-    }),
-    create: async (args: { data: any }) => args.data,
+    ],
+  ]);
+
+  public subscription = {
+    findUnique: async (args?: { where?: { shopId?: string; id?: string } }) => {
+      const shopId = args?.where?.shopId || initialShop.id;
+      return this.subscriptions.get(shopId) || {
+        id: 'sub-demo-001',
+        shopId,
+        planId: 'BUSINESS',
+        status: 'TRIALING',
+        trialStartAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        trialEndAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+      };
+    },
+    findFirst: async (args?: { where?: { shopId?: string } }) => {
+      const shopId = args?.where?.shopId || initialShop.id;
+      return this.subscriptions.get(shopId) || null;
+    },
+    create: async (args: { data: any }) => {
+      const sub = {
+        id: args.data.id || `sub-${Date.now()}`,
+        ...args.data,
+      };
+      if (args.data.shopId) {
+        this.subscriptions.set(args.data.shopId, sub);
+      }
+      return sub;
+    },
+    update: async (args: { where: { shopId?: string; id?: string }; data: any }) => {
+      const shopId = args.where.shopId || initialShop.id;
+      const existing = this.subscriptions.get(shopId) || {
+        id: 'sub-demo-001',
+        shopId,
+        planId: 'BUSINESS',
+        status: 'TRIALING',
+        trialStartAt: new Date(),
+        trialEndAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      };
+      const updated = {
+        ...existing,
+        ...args.data,
+        updatedAt: new Date(),
+      };
+      this.subscriptions.set(shopId, updated);
+      return updated;
+    },
   };
 
   public subscriptionPlan = {

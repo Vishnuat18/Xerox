@@ -24,7 +24,7 @@ export function findFileOnDisk(storageKey: string): string | null {
   if (fs.existsSync(p1) && fs.statSync(p1).isFile()) return p1;
 
   // Candidate 2: relative to process.cwd()
-  const p2 = path.join(process.cwd(), storageKey);
+  const p2 = path.join(/* turbopackIgnore: true */ process.cwd(), storageKey);
   if (fs.existsSync(p2) && fs.statSync(p2).isFile()) return p2;
 
   // Candidate 3: relative to os.tmpdir()
@@ -163,7 +163,7 @@ export async function generateDemoPdf(
 /**
  * Inject Adobe/Chrome OpenAction JavaScript: this.print() into a PDF document
  */
-export async function injectAutoPrintAction(pdfBuffer: Buffer): Promise<Buffer> {
+export async function injectAutoPrintAction(pdfBuffer: Uint8Array): Promise<Buffer> {
   try {
     const pdfDoc = await PDFDocument.load(pdfBuffer, { ignoreEncryption: true });
 
@@ -177,10 +177,10 @@ export async function injectAutoPrintAction(pdfBuffer: Buffer): Promise<Buffer> 
     );
 
     const modifiedBytes = await pdfDoc.save();
-    return Buffer.from(modifiedBytes);
+    return Buffer.from(modifiedBytes) as any;
   } catch (err) {
     logger.warn(`Could not inject auto-print action into PDF: ${err}`);
-    return pdfBuffer;
+    return Buffer.from(pdfBuffer) as any;
   }
 }
 
@@ -206,7 +206,7 @@ export async function getDocumentStream(
 
     if (isRealPdf) {
       if (autoPrint) {
-        buffer = await injectAutoPrintAction(buffer);
+        buffer = (await injectAutoPrintAction(new Uint8Array(buffer))) as any;
       }
 
       return {
