@@ -1,10 +1,12 @@
 // SMART PRINT HUB - Owner Registration & Shop Setup API
 import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { hashPassword, createSessionToken, setAuthCookie } from '@/lib/auth';
+import { deviceRegistry } from '@/lib/device-registry';
 import { apiSuccess, apiError } from '@/lib/api-response';
-import { ValidationError, ConflictError } from '@/lib/errors';
+import { ValidationError, ConflictError, ForbiddenError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 
 const registerSchema = z.object({
@@ -18,6 +20,8 @@ const registerSchema = z.object({
   state: z.string().optional(),
   pincode: z.string().optional(),
   gstNumber: z.string().optional(),
+  deviceId: z.string().optional(),
+  hardwareFingerprint: z.string().optional(),
 });
 
 function generateSlug(shopName: string): string {
@@ -39,7 +43,42 @@ export async function POST(req: NextRequest) {
       throw new ValidationError('Validation failed for registration input', result.error.format());
     }
 
-    const { fullName, email, password, phone, shopName, address, city, state, pincode, gstNumber } = result.data;
+    const {
+      fullName,
+      email,
+      password,
+      phone,
+      shopName,
+      address,
+      city,
+      state,
+      pincode,
+      gstNumber,
+      deviceId,
+      hardwareFingerprint,
+    } = result.data;
+
+    // --- SYSTEM HARDWARE RESTRICTION CHECK ---
+    // Enforce "One Account Per System/Computer" rule to eliminate free-trial abuse
+    const cookieStore = await cookies();
+    const registeredShopCookie = cookieStore.get('sph_device_registered_shop')?.value || null;
+    const cookieDeviceId = cookieStore.get('sph_sys_machine_id')?.value || null;
+    const effectiveDeviceId = deviceId || cookieDeviceId || `sys_${Date.now().toString(36)}`;
+
+    const deviceCheck = deviceRegistry.checkDevice(
+      effectiveDeviceId,
+      hardwareFingerprint,
+      registeredShopCookie
+    );
+
+    if (deviceCheck.isRegistered) {
+      logger.warn(
+        `Registration BLOCKED: Device [${effectiveDeviceId}] already registered to shop "${deviceCheck.existingShop?.shopName}" (${deviceCheck.existingShop?.ownerEmailMasked})`
+      );
+      throw new ForbiddenError(
+        `This computer/system has already registered a Xerox shop account ("${deviceCheck.existingShop?.shopName || 'Existing Shop'}"). Only 1 shop account per system is allowed to protect free trial fairness. Please sign in to your registered account (${deviceCheck.existingShop?.ownerEmailMasked || 'registered email'}).`
+      );
+    }
 
     // Check if email already registered
     const existingUser = await db.user.findUnique({
@@ -120,7 +159,31 @@ export async function POST(req: NextRequest) {
 
     await setAuthCookie(token);
 
-    logger.info(`Registered new shop owner: ${email} -> Shop: ${createdData.shop.name} (${createdData.shop.id})`);
+    // Register this computer/system permanently to this shop
+    deviceRegistry.registerDevice({
+      deviceId: effectiveDeviceId,
+      hardwareFingerprint: hardwareFingerprint || `hw_${effectiveDeviceId}`,
+      shopId: createdData.shop.id,
+      shopName: createdData.shop.name,
+      ownerEmail: createdData.user.email,
+      ipAddress: req.headers.get('x-forwarded-for') || undefined,
+    });
+
+    // Mark system with persistent cookies (10 years)
+    cookieStore.set('sph_device_registered_shop', createdData.shop.id, {
+      maxAge: 315360000,
+      path: '/',
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+    cookieStore.set('sph_sys_machine_id', effectiveDeviceId, {
+      maxAge: 315360000,
+      path: '/',
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    logger.info(`Registered new shop owner: ${email} -> Shop: ${createdData.shop.name} (${createdData.shop.id}) on system [${effectiveDeviceId}]`);
 
     return apiSuccess(
       {

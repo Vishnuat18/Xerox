@@ -1,0 +1,18 @@
+{
+  "name": "smart-print-hub-windows-agent",
+  "version": "1.0.0",
+  "description": "Smart Print Hub - High-Performance Windows Print Spooler Agent",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "dev": "node agent.js --dev"
+  },
+  "keywords": [
+    "xerox",
+    "print-agent",
+    "windows-spooler",
+    "silent-printing"
+  ],
+  "author": "Smart Print Hub",
+  "license": "MIT"
+}

@@ -136,3 +136,54 @@ export async function requireRole(allowedRoles: string[]): Promise<AuthSession> 
   }
   return session;
 }
+
+// -------------------------------------------------------------
+// Customer Cross-Shop Session Management (Name + Phone)
+// -------------------------------------------------------------
+export const CUSTOMER_COOKIE_NAME = 'sph_customer_token';
+
+export interface CustomerTokenPayload {
+  customerId: string;
+  phone: string;
+  fullName: string;
+}
+
+export function createCustomerToken(payload: CustomerTokenPayload): string {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
+}
+
+export function verifyCustomerToken(token: string): CustomerTokenPayload {
+  try {
+    return jwt.verify(token, JWT_SECRET) as CustomerTokenPayload;
+  } catch {
+    throw new UnauthorizedError('Invalid or expired customer session');
+  }
+}
+
+export async function setCustomerCookie(token: string) {
+  const cookieStore = await cookies();
+  cookieStore.set(CUSTOMER_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  });
+}
+
+export async function clearCustomerCookie() {
+  const cookieStore = await cookies();
+  cookieStore.delete(CUSTOMER_COOKIE_NAME);
+}
+
+export async function getCustomerSession(): Promise<CustomerTokenPayload | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+    if (!token) return null;
+    return verifyCustomerToken(token);
+  } catch {
+    return null;
+  }
+}
+

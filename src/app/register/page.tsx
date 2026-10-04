@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Store, User, Mail, Phone, Lock, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Store, AlertCircle, ShieldAlert, Laptop, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { getSystemDeviceFingerprint, SystemFingerprint } from '@/lib/device-fingerprint';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,6 +21,41 @@ export default function RegisterPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  
+  // Hardware & Device Security State
+  const [deviceInfo, setDeviceInfo] = useState<SystemFingerprint | null>(null);
+  const [isCheckingDevice, setIsCheckingDevice] = useState(true);
+  const [deviceBlocked, setDeviceBlocked] = useState(false);
+  const [existingShopInfo, setExistingShopInfo] = useState<{
+    shopName: string;
+    ownerEmailMasked: string;
+    registeredAt: string;
+  } | null>(null);
+
+  useEffect(() => {
+    async function checkSystem() {
+      try {
+        const fp = await getSystemDeviceFingerprint();
+        setDeviceInfo(fp);
+
+        const res = await fetch(
+          `/api/v1/auth/check-device?deviceId=${encodeURIComponent(fp.deviceId)}&fingerprint=${encodeURIComponent(fp.hardwareFingerprint)}`
+        );
+        const data = await res.json();
+
+        if (data.success && data.data?.isRegistered) {
+          setDeviceBlocked(true);
+          setExistingShopInfo(data.data.existingShop);
+        }
+      } catch (err) {
+        console.error('System pre-check error', err);
+      } finally {
+        setIsCheckingDevice(false);
+      }
+    }
+
+    checkSystem();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,20 +63,34 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (deviceBlocked) return;
+
     setIsLoading(true);
     setErrorMessage('');
 
     try {
+      const payload = {
+        ...formData,
+        deviceId: deviceInfo?.deviceId,
+        hardwareFingerprint: deviceInfo?.hardwareFingerprint,
+      };
+
       const res = await fetch('/api/v1/auth/register-owner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.error?.message || 'Registration failed. Please review your details.');
+        if (data.error?.code === 'DEVICE_ALREADY_REGISTERED' || res.status === 403) {
+          setDeviceBlocked(true);
+          if (data.error?.details?.existingShop) {
+            setExistingShopInfo(data.error.details.existingShop);
+          }
+        }
+        throw new Error(data.error?.message || 'Registration failed. Please check your details.');
       }
 
       router.push('/dashboard');
@@ -55,147 +103,174 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50/70">
+    <div className="min-h-screen flex flex-col bg-zinc-50/50">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-xl">
-          <Card className="shadow-lg border-zinc-200/90">
-            <CardHeader className="space-y-1.5 text-center">
-              <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mb-1 shadow-xs">
-                <Store className="h-6 w-6" />
+      <main className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-6">
+          
+          <div className="text-center space-y-1">
+            <div className="h-8 w-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center mx-auto mb-3 shadow-2xs">
+              <Store className="h-4 w-4" />
+            </div>
+            <h1 className="text-lg font-semibold text-zinc-900">
+              Register your Xerox Shop
+            </h1>
+            <p className="text-xs text-zinc-400">
+              Get an instant counter QR code and zero-download live spooler
+            </p>
+          </div>
+
+          {/* DEVICE RESTRICTION BLOCK BANNER: ONE SHOP PER SYSTEM */}
+          {deviceBlocked ? (
+            <div className="bg-white rounded-2xl border border-amber-200/90 p-6 space-y-4 shadow-sm animate-in fade-in duration-300">
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-700 shrink-0">
+                  <ShieldAlert className="h-5 w-5" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-bold text-zinc-900">
+                    System Limit Reached: 1 Account per Computer
+                  </h3>
+                  <p className="text-xs text-zinc-600 leading-relaxed">
+                    This computer is already registered with an active shop account:
+                  </p>
+                  <div className="mt-2 p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs font-mono space-y-1">
+                    <p className="font-semibold text-zinc-900">
+                      Shop: {existingShopInfo?.shopName || 'Registered Xerox Shop'}
+                    </p>
+                    <p className="text-zinc-500">
+                      Account: {existingShopInfo?.ownerEmailMasked || 'registered email'}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <CardTitle className="text-2xl font-black text-zinc-900 tracking-tight">Register Xerox Shop</CardTitle>
-              <CardDescription>
-                Create your shop profile and get an instant counter QR code for customer submissions.
-              </CardDescription>
-            </CardHeader>
 
-            <form onSubmit={handleRegister}>
-              <CardContent className="space-y-4">
-                {errorMessage && (
-                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
+              <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-100 text-[11px] text-amber-900 leading-relaxed">
+                To maintain fair access and prevent repeated free-trial creation, each physical system is permitted only one shop owner registration.
+              </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
-                      Shop / Center Name
-                    </label>
-                    <div className="relative">
-                      <Store className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
-                      <input
-                        type="text"
-                        name="shopName"
-                        required
-                        value={formData.shopName}
-                        onChange={handleChange}
-                        placeholder="Apex Xerox & Digital Prints"
-                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
-                      Owner Full Name
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
-                      <input
-                        type="text"
-                        name="fullName"
-                        required
-                        value={formData.fullName}
-                        onChange={handleChange}
-                        placeholder="Vikram Malhotra"
-                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="vikram@apexprint.com"
-                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
-                      Mobile Contact Number
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="+91 98765 00000"
-                        className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">
-                    Password (Min 8 Characters)
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400" />
-                    <input
-                      type="password"
-                      name="password"
-                      required
-                      minLength={8}
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="••••••••"
-                      className="w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-2xs"
-                    />
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200/80 text-xs text-emerald-900 flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-                  <span>Includes 30 days of Professional tier with multi-printer support and zero credit card required.</span>
-                </div>
-              </CardContent>
-
-              <CardFooter className="flex flex-col gap-3 pt-2">
-                <Button type="submit" variant="primary" className="w-full h-11 text-sm font-bold shadow-xs" isLoading={isLoading}>
-                  Create Shop & Generate QR
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-
-                <p className="text-center text-xs text-zinc-500">
-                  Already registered?{' '}
-                  <Link href="/login" className="font-bold text-emerald-700 hover:underline">
-                    Sign in to your shop
-                  </Link>
+              <div className="pt-2 flex flex-col gap-2">
+                <Link
+                  href="/login"
+                  className="w-full py-2.5 rounded-lg text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                >
+                  <span>Sign In to Existing Account</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <p className="text-center text-[11px] text-zinc-400">
+                  Need to transfer ownership or need help? <a href="mailto:support@smartprinthub.com" className="text-zinc-700 underline font-medium">Contact Support</a>
                 </p>
-              </CardFooter>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleRegister} className="bg-white rounded-2xl border border-zinc-200/80 p-6 space-y-3.5 shadow-sm">
+              {errorMessage && (
+                <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
+              {/* Hardware verified security badge */}
+              <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[11px] text-zinc-500">
+                <div className="flex items-center gap-1.5">
+                  <Laptop className="h-3 w-3 text-zinc-400" />
+                  <span>Hardware verification:</span>
+                </div>
+                <div className="flex items-center gap-1 text-emerald-700 font-medium">
+                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                  <span>Verified Device (1 Shop per System)</span>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-zinc-700">Shop / Center Name</label>
+                <input
+                  type="text"
+                  name="shopName"
+                  required
+                  value={formData.shopName}
+                  onChange={handleChange}
+                  placeholder="e.g. Metro Xerox & Multi-Print"
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-zinc-700">Owner Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  required
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Your Name"
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-zinc-700">Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="owner@shop.com"
+                    className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-zinc-700">Mobile Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+91 98765 00000"
+                    className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-zinc-700">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  minLength={8}
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Min 8 characters"
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                />
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isLoading || isCheckingDevice}
+                  className="w-full py-2.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50 shadow-2xs"
+                >
+                  {isLoading ? 'Setting up shop & counter QR...' : 'Create Shop Account'}
+                </button>
+              </div>
             </form>
-          </Card>
+          )}
+
+          <p className="text-center text-xs text-zinc-400">
+            Already registered?{' '}
+            <Link href="/login" className="text-zinc-900 hover:underline font-medium">
+              Sign In
+            </Link>
+          </p>
+
         </div>
       </main>
 

@@ -2,75 +2,99 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Printer, LayoutDashboard, LogIn, Sparkles, Store } from 'lucide-react';
-import { Badge } from './badge';
-import { Button } from './button';
+import { usePathname } from 'next/navigation';
+import { Printer, ArrowUpRight } from 'lucide-react';
 
-export function Navbar({ shopName, user }: { shopName?: string; user?: { fullName: string; role: string } | null }) {
+export function Navbar({ 
+  shopName, 
+  user 
+}: { 
+  shopName?: string; 
+  user?: { fullName: string; role: string } | null;
+}) {
+  const pathname = usePathname();
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 glass-panel">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/90 backdrop-blur-md">
+      <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-4 sm:px-6">
+        
         {/* Brand */}
-        <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2.5 transition-transform hover:scale-[1.01]">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-xs">
-              <Printer className="h-5 w-5" />
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="h-7 w-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center transition-transform group-hover:scale-95">
+              <Printer className="h-3.5 w-3.5" />
             </div>
-            <div>
-              <span className="text-base sm:text-lg font-black tracking-tight text-zinc-900 flex items-center gap-1.5">
-                SMART PRINT <span className="text-emerald-700">HUB</span>
-              </span>
-              <p className="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">Automated Xerox Systems</p>
-            </div>
+            <span className="text-sm font-semibold tracking-tight text-zinc-900">
+              Smart Print Hub
+            </span>
           </Link>
 
           {shopName && (
-            <div className="hidden md:flex items-center pl-4 border-l border-zinc-200">
-              <span className="text-xs font-semibold text-zinc-700 flex items-center gap-1.5 bg-zinc-100/80 px-2.5 py-1 rounded-lg">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                {shopName}
-              </span>
+            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-zinc-200 text-xs text-zinc-500">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="font-medium text-zinc-700 truncate max-w-[200px]">{shopName}</span>
             </div>
           )}
         </div>
 
         {/* Navigation & Controls */}
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2">
-            <Badge variant="success" pulse>
-              Vercel Live Ready
-            </Badge>
-          </div>
-
+        <nav className="flex items-center gap-2 text-xs">
           {user ? (
             <div className="flex items-center gap-3">
-              <Link href="/dashboard">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <LayoutDashboard className="h-4 w-4 text-emerald-700" />
-                  Dashboard
-                </Button>
+              <Link 
+                href="/dashboard" 
+                className={`px-3 py-1.5 rounded-lg transition-colors font-medium ${
+                  pathname === '/dashboard' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                Dashboard
               </Link>
-              <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs font-bold text-zinc-900">{user.fullName}</span>
-                <span className="text-[10px] text-zinc-500 uppercase font-medium">{user.role}</span>
-              </div>
+              <Link 
+                href="/dashboard/qr" 
+                className={`px-3 py-1.5 rounded-lg transition-colors font-medium ${
+                  pathname === '/dashboard/qr' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                QR Standee
+              </Link>
+              <Link 
+                href="/dashboard/settings" 
+                className={`px-3 py-1.5 rounded-lg transition-colors font-medium ${
+                  pathname === '/dashboard/settings' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                Settings
+              </Link>
+
+              <div className="h-4 w-px bg-zinc-200 mx-1" />
+
+              <span className="hidden md:inline text-zinc-400 font-normal">
+                {user.fullName}
+              </span>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login">
-                <Button variant="ghost" size="sm" className="gap-1.5">
-                  <LogIn className="h-4 w-4" />
-                  Owner Login
-                </Button>
+              <Link
+                href="/s/metro-xerox"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium transition-colors"
+              >
+                Customer Demo <ArrowUpRight className="h-3 w-3 text-zinc-400" />
               </Link>
-              <Link href="/register">
-                <Button variant="primary" size="sm" className="gap-1.5 shadow-xs">
-                  Register Shop
-                </Button>
+              <Link
+                href="/login"
+                className="px-3 py-1.5 rounded-lg text-zinc-700 hover:text-zinc-900 font-medium transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white font-medium transition-all"
+              >
+                Get Started
               </Link>
             </div>
           )}
-        </div>
+        </nav>
       </div>
     </header>
   );

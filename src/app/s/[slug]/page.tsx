@@ -24,6 +24,26 @@ export default async function CustomerShopLandingPage({
     notFound();
   }
 
+  const config = typeof db.getPricingConfig === 'function'
+    ? await db.getPricingConfig(shop.id)
+    : {
+        volumeDiscountsEnabled: true,
+        finishing: {
+          stapleCorner: 2.0,
+          stapleSide: 5.0,
+          bindingSpiral: 35.0,
+          bindingHardcover: 65.0,
+          bindingProject: 150.0,
+          laminationGlossy: 15.0,
+          laminationMatte: 25.0,
+        },
+        bulkDiscounts: [
+          { minPages: 50, discountPercent: 10 },
+          { minPages: 150, discountPercent: 15 },
+          { minPages: 500, discountPercent: 25 },
+        ],
+      };
+
   return (
     <CustomerUploadClient
       shop={{
@@ -39,6 +59,9 @@ export default async function CustomerShopLandingPage({
           colorSinglePrice: r.colorSinglePrice,
           colorDoublePrice: r.colorDoublePrice,
         })),
+        finishing: config.finishing,
+        bulkDiscounts: config.volumeDiscountsEnabled ? config.bulkDiscounts : [],
+        volumeDiscountsEnabled: config.volumeDiscountsEnabled ?? true,
       }}
     />
   );

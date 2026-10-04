@@ -2,6 +2,7 @@
 import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { saveUploadedFile } from '@/lib/storage';
+import { getPdfPageCount } from '@/lib/pdf-page-counter';
 import { apiSuccess, apiError } from '@/lib/api-response';
 import { ValidationError, NotFoundError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
@@ -66,9 +67,21 @@ export async function POST(req: NextRequest) {
     for (const file of fileEntries) {
       if (typeof file === 'string') continue;
       const stored = await saveUploadedFile(shop.id, file);
+
+      let detectedPages = 1;
+      if (file.name.toLowerCase().endsWith('.pdf')) {
+        try {
+          const buffer = await file.arrayBuffer();
+          detectedPages = await getPdfPageCount(buffer);
+        } catch (pageErr) {
+          logger.warn(`Could not count PDF pages for ${file.name}: ${pageErr}`);
+        }
+      }
+
       uploadedFiles.push({
         id: crypto.randomUUID(),
         ...stored,
+        detectedPageCount: detectedPages,
       });
     }
 
