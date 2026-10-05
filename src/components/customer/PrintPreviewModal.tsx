@@ -95,13 +95,13 @@ export function PrintPreviewModal({
   const sheetWidthPx = Math.round(baseWidthPx * paper.scaleFactor);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-zinc-950/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-5 bg-zinc-950/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-150">
       
       {/* Modal Container */}
-      <div className="w-full max-w-4xl max-h-[94vh] bg-white rounded-2xl border border-zinc-200/90 shadow-2xl flex flex-col overflow-hidden">
+      <div className="w-full max-w-4xl max-h-[96vh] sm:max-h-[94vh] bg-white rounded-t-3xl sm:rounded-2xl border-t sm:border border-zinc-200/90 shadow-2xl flex flex-col overflow-hidden">
         
         {/* Top Header */}
-        <div className="px-5 py-3 border-b border-zinc-200/80 flex items-center justify-between bg-zinc-50/70 shrink-0">
+        <div className="px-4 sm:px-5 py-3 border-b border-zinc-200/80 flex items-center justify-between bg-zinc-50/70 shrink-0">
           <div className="flex items-center gap-2.5 truncate">
             <div className="h-7 w-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center shrink-0">
               <Eye className="h-3.5 w-3.5" />
@@ -130,7 +130,7 @@ export function PrintPreviewModal({
         <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-y-auto">
           
           {/* Virtual Paper Canvas */}
-          <div className="flex-1 bg-zinc-100/80 p-4 sm:p-8 flex flex-col items-center justify-center relative overflow-hidden select-none min-h-[380px]">
+          <div className="flex-1 bg-zinc-100/80 p-4 sm:p-8 flex flex-col items-center justify-center relative overflow-hidden select-none min-h-[240px] sm:min-h-[380px]">
             
             {/* Sheet Sub-controls overlay */}
             <div className="absolute top-3 left-4 flex items-center gap-2 text-[10px] font-mono text-zinc-500 z-10">

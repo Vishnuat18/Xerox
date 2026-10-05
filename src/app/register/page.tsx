@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Store, AlertCircle, ShieldAlert, Laptop, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Store, AlertCircle, ShieldAlert, Laptop, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
 import { getSystemDeviceFingerprint, SystemFingerprint } from '@/lib/device-fingerprint';
@@ -19,6 +19,7 @@ export default function RegisterPage() {
     city: 'Bangalore',
     state: 'Karnataka',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   
@@ -240,16 +241,26 @@ export default function RegisterPage() {
 
               <div className="space-y-1">
                 <label className="text-xs font-medium text-zinc-700">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  required
-                  minLength={8}
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Min 8 characters"
-                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    required
+                    minLength={8}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Min 8 characters"
+                    className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 pr-10 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 p-1 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="pt-2">

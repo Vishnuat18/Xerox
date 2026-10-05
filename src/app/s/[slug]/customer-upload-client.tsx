@@ -21,7 +21,9 @@ import {
   Phone,
   Clock,
   X,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft,
+  QrCode
 } from 'lucide-react';
 import { 
   PrintPreviewModal, 
@@ -529,25 +531,59 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
   return (
     <div className="min-h-screen bg-zinc-50/60 flex flex-col">
       
-      {/* Quiet Mobile Header */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 px-4 py-3">
-        <div className="max-w-md mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-md bg-zinc-900 text-white flex items-center justify-center">
-              <Printer className="h-3.5 w-3.5" />
+      {/* Native App Style Mobile Header */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200/80 px-3 sm:px-4 py-2.5">
+        <div className="max-w-lg mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Link
+              href="/scan"
+              className="p-1 -ml-1 text-zinc-500 hover:text-zinc-900 rounded-lg hover:bg-zinc-100 flex items-center gap-0.5 transition-colors shrink-0"
+              title="Scanner Place & Rate Card"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <QrCode className="h-3.5 w-3.5 text-emerald-600" />
+            </Link>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-bold text-zinc-900 truncate">
+                  {shop.name}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              </div>
+              <p className="text-[10px] text-zinc-400 truncate">
+                {shop.address || 'Counter Online & Ready'}
+              </p>
             </div>
-            <span className="text-xs font-semibold text-zinc-900 truncate max-w-[180px]">
-              {shop.name}
-            </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-zinc-500">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <span>Counter Ready</span>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            {customerSession ? (
+              <button
+                type="button"
+                onClick={() => setShowOrdersDrawer(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-[11px] font-semibold transition-colors shadow-2xs"
+              >
+                <Layers className="h-3 w-3 text-zinc-600" />
+                <span>Orders ({crossShopOrders.length})</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginInputName(customerName);
+                  setLoginInputPhone(customerPhone);
+                  setShowLoginModal(true);
+                }}
+                className="px-3 py-1 rounded-full bg-zinc-900 text-white text-[11px] font-semibold hover:bg-zinc-800 transition-colors shadow-2xs"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-md mx-auto w-full p-4 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full p-3 sm:p-4 space-y-4 pb-36">
         
         {/* Universal Cross-Shop Customer Profile Banner */}
         {customerSession ? (
@@ -1010,6 +1046,48 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
 
       </main>
 
+      {/* Floating Sticky Native App Checkout Dock (When files exist) */}
+      {filesWithSpecs.length > 0 && !completedOrder && (
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 p-3 sm:p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] animate-in slide-in-from-bottom duration-200">
+          <div className="max-w-lg mx-auto flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-base sm:text-lg font-bold text-zinc-900 font-mono">
+                  ₹{breakdown.grandTotal.toFixed(2)}
+                </span>
+                {breakdown.appliedPercent > 0 && (
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                    {breakdown.appliedPercent}% OFF
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-zinc-500 font-medium truncate">
+                {breakdown.totalPagesCount} {breakdown.totalPagesCount === 1 ? 'page' : 'pages'} • {filesWithSpecs.length} {filesWithSpecs.length === 1 ? 'file' : 'files'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              disabled={isSubmitting}
+              onClick={handleSubmitOrder}
+              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs sm:text-sm transition-all shadow-md active:scale-95 flex items-center gap-1.5 disabled:opacity-50 shrink-0"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Submitting...</span>
+                </>
+              ) : (
+                <>
+                  <span>Send to Counter</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Interactive Print Preview Popup Modal */}
       {previewingIndex !== null && filesWithSpecs[previewingIndex] && (
         <PrintPreviewModal
@@ -1029,10 +1107,11 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
             onClick={() => setShowOrdersDrawer(false)}
           />
 
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-            <div className="w-screen max-w-md bg-white border-l border-zinc-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-200">
-              
-              <div className="p-4 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/70">
+          <div className="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto max-h-[85vh] sm:max-h-full w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-none border-t sm:border-t-0 sm:border-l border-zinc-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-bottom sm:slide-in-from-right duration-200">
+            {/* Native App Grab Handle */}
+            <div className="w-10 h-1 bg-zinc-300 rounded-full mx-auto mt-2.5 mb-0.5 sm:hidden" />
+            
+            <div className="p-4 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/70">
                 <div>
                   <h3 className="text-sm font-bold text-zinc-900">My Print Orders</h3>
                   <p className="text-xs text-zinc-400">Across all Smart Print Hub partner shops</p>
@@ -1097,13 +1176,13 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
 
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Switch Account / Universal Customer Login Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/40 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-sm bg-white rounded-2xl border border-zinc-200 shadow-xl p-5 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-zinc-950/40 backdrop-blur-xs animate-in fade-in">
+          <div className="w-full max-w-sm bg-white rounded-t-3xl sm:rounded-2xl border-t sm:border border-zinc-200 shadow-2xl p-5 space-y-4 animate-in slide-in-from-bottom sm:slide-in-from-bottom-2 duration-200">
+            <div className="w-10 h-1 bg-zinc-300 rounded-full mx-auto -mt-1 mb-1 sm:hidden" />
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-zinc-900">Universal Customer Login</h3>
