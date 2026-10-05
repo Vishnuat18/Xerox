@@ -41,19 +41,26 @@ export default async function HomePage() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
             <Link
-              href="/s/metro-xerox"
+              href="/scan"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold transition-all shadow-sm"
             >
-              <QrCode className="h-4 w-4" />
-              Customer Scan Flow
+              <QrCode className="h-4 w-4 text-emerald-400" />
+              Scan Counter QR & Pricing
+            </Link>
+
+            <Link
+              href="/s/metro-xerox"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-200 text-xs font-semibold transition-all shadow-2xs"
+            >
+              Direct Print Demo
+              <ArrowRight className="h-3.5 w-3.5 text-zinc-400" />
             </Link>
 
             <Link
               href="/login"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-200 text-xs font-semibold transition-all shadow-2xs"
             >
-              Shop Owner Dashboard
-              <ArrowRight className="h-3.5 w-3.5 text-zinc-400" />
+              Shop Sign In
             </Link>
           </div>
 

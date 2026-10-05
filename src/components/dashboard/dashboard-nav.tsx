@@ -201,7 +201,7 @@ export function DashboardNav({ shop, user }: DashboardNavProps) {
           </Link>
         )}
 
-        {/* Profile Card with Google Pro Pill */}
+        {/* Profile Card with Smart Pro Pill */}
         <div className="flex items-center justify-between px-2 pt-1 border-t border-zinc-100">
           <div className="min-w-0 pr-2">
             <div className="flex items-center gap-1.5">

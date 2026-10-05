@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Printer, ArrowUpRight } from 'lucide-react';
+import { Printer, ArrowUpRight, QrCode } from 'lucide-react';
 
 export function Navbar({ 
   shopName, 
@@ -83,16 +83,21 @@ export function Navbar({
           ) : (
             <div className="flex items-center gap-2">
               <Link
+                href="/scan"
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-colors border ${
+                  pathname === '/scan'
+                    ? 'bg-zinc-900 text-white border-zinc-900'
+                    : 'bg-emerald-50/80 text-emerald-800 border-emerald-200/80 hover:bg-emerald-100/80'
+                }`}
+              >
+                <QrCode className="h-3 w-3 shrink-0" />
+                <span>Scan Counter QR</span>
+              </Link>
+              <Link
                 href="/#pricing"
                 className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium transition-colors"
               >
                 Plans
-              </Link>
-              <Link
-                href="/s/metro-xerox"
-                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium transition-colors"
-              >
-                Customer Demo <ArrowUpRight className="h-3 w-3 text-zinc-400" />
               </Link>
               <Link
                 href="/login"
