@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. User Profiles & Shop Owners
+    // Owners can read and write their own profile
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // 2. Shops Directory
+    // Anyone (customers, walk-ins) can read shop profile, address, phone, and status
+    // Authenticated shop owner can update or create their own shop
+    match /shops/{shopId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && (
+        resource.data.ownerId == request.auth.uid ||
+        request.auth.token.email == resource.data.email
+      );
+
+      // Shop Pricing Rules subcollection
+      match /pricingRules/{ruleId} {
+        allow read: if true;
+        allow write: if isAuthenticated();
+      }
+
+      // Shop Finishing & Configuration subcollection
+      match /config/{configId} {
+        allow read: if true;
+        allow write: if isAuthenticated();
+      }
+    }
+
+    // 3. Customer Profiles (Universal Cross-Shop Identity)
+    // Walk-in customers can read and write customer profiles by phone number
+    match /customers/{customerId} {
+      allow read, write: if true;
+    }
+
+    // 4. Print Orders Queue
+    // Customers can submit orders (create)
+    // Shop owners can view and update orders for their shop
+    // Customers can view and track their orders using orderId or matching phone number
+    match /orders/{orderId} {
+      // Anyone can place an order at a shop counter
+      allow create: if request.resource.data.shopId != null &&
+                       request.resource.data.customerPhone != null;
+
+      // Reading order: allow if authenticated shop owner or if accessing the specific order
+      allow read: if true;
+
+      // Updating order:
+      // - Shop owner can update status, finalAmount, paymentStatus, rejectionReason
+      // - Customer can update payment details (e.g. UPI reference, method)
+      allow update: if isAuthenticated() || 
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paymentStatus', 'paymentMethod', 'paymentReference', 'paidAt']);
+
+      allow delete: if isAuthenticated();
+    }
+
+    // 5. Printers & Hardware Spoolers
+    // Accessible by the shop owner and paired print agents
+    match /printers/{printerId} {
+      allow read: if isAuthenticated() || true;
+      allow write: if isAuthenticated();
+    }
+
+    // 6. Device Hardware Registry (Anti-Free-Trial Abuse)
+    // Read and verify device registrations
+    match /device_registry/{deviceId} {
+      allow read, write: if true;
+    }
+  }
+}

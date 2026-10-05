@@ -23,7 +23,11 @@ import {
   X,
   ChevronRight,
   ChevronLeft,
-  QrCode
+  QrCode,
+  Menu,
+  ShieldCheck,
+  Tag,
+  Edit2
 } from 'lucide-react';
 import { 
   PrintPreviewModal, 
@@ -34,6 +38,7 @@ import {
   PrintPreviewSpec 
 } from '@/components/customer/PrintPreviewModal';
 import { countFilePages } from '@/lib/pdf-page-counter';
+import { saveCustomerToFirestore, saveOrderToFirestore } from '@/lib/firebase';
 
 interface PricingRule {
   paperSize: string;
@@ -86,16 +91,28 @@ const PAPER_PRICE_MULTIPLIER: Record<PaperSize, number> = {
 };
 
 export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
-  const [customerName, setCustomerName] = useState('Rahul Sharma');
-  const [customerPhone, setCustomerPhone] = useState('9876543210');
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
   
   // Universal Cross-Shop Customer Authentication State
   const [customerSession, setCustomerSession] = useState<{ id?: string; fullName: string; phone: string } | null>(null);
   const [crossShopOrders, setCrossShopOrders] = useState<any[]>([]);
-  const [showOrdersDrawer, setShowOrdersDrawer] = useState(false);
+
+  // First-Time One-Time Customer Onboarding Modal
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [onboardingName, setOnboardingName] = useState('');
+  const [onboardingPhone, setOnboardingPhone] = useState('');
+  const [isOnboardingSaving, setIsOnboardingSaving] = useState(false);
+  const [onboardingError, setOnboardingError] = useState('');
+
+  // Customer Profile & History Menu Sheet
+  const [showCustomerMenu, setShowCustomerMenu] = useState(false);
+  const [customerMenuTab, setCustomerMenuTab] = useState<'history' | 'rates' | 'profile'>('history');
+
+  // Switch / Edit Profile Modal
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loginInputName, setLoginInputName] = useState('Rahul Sharma');
-  const [loginInputPhone, setLoginInputPhone] = useState('9876543210');
+  const [loginInputName, setLoginInputName] = useState('');
+  const [loginInputPhone, setLoginInputPhone] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const [filesWithSpecs, setFilesWithSpecs] = useState<FileWithSpec[]>([]);
@@ -108,34 +125,51 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-resolve cross-shop customer profile on mount
+  // Auto-resolve cross-shop customer profile or trigger one-time scan onboarding on mount
   useEffect(() => {
+    let hasOnboarded = false;
+    let localProfile: { fullName: string; phone: string } | null = null;
+
     try {
+      hasOnboarded = localStorage.getItem('sph_customer_onboarded') === 'true';
       const stored = localStorage.getItem('sph_customer_profile');
       if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed?.fullName && parsed?.phone) {
-          setCustomerName(parsed.fullName);
-          setCustomerPhone(parsed.phone);
-          setCustomerSession(parsed);
-          setLoginInputName(parsed.fullName);
-          setLoginInputPhone(parsed.phone);
-        }
+        localProfile = JSON.parse(stored);
       }
     } catch {}
+
+    if (localProfile?.fullName && localProfile?.phone) {
+      setCustomerName(localProfile.fullName);
+      setCustomerPhone(localProfile.phone);
+      setCustomerSession(localProfile);
+      setOnboardingName(localProfile.fullName);
+      setOnboardingPhone(localProfile.phone);
+      setLoginInputName(localProfile.fullName);
+      setLoginInputPhone(localProfile.phone);
+    } else if (!hasOnboarded) {
+      // First-time scan on this browser/counter! Prompt for Name & Contact
+      setShowOnboardingModal(true);
+    }
 
     const resolveUniversalSession = async () => {
       try {
         const res = await fetch('/api/v1/customer/auth');
         const json = await res.json();
         if (json.success && json.data.customer) {
-          setCustomerSession(json.data.customer);
-          setCustomerName(json.data.customer.fullName);
-          setCustomerPhone(json.data.customer.phone);
-          setLoginInputName(json.data.customer.fullName);
-          setLoginInputPhone(json.data.customer.phone);
+          const cust = json.data.customer;
+          setCustomerSession(cust);
+          setCustomerName(cust.fullName);
+          setCustomerPhone(cust.phone);
+          setOnboardingName(cust.fullName);
+          setOnboardingPhone(cust.phone);
+          setLoginInputName(cust.fullName);
+          setLoginInputPhone(cust.phone);
           setCrossShopOrders(json.data.orders || []);
-          localStorage.setItem('sph_customer_profile', JSON.stringify(json.data.customer));
+          localStorage.setItem('sph_customer_profile', JSON.stringify(cust));
+          localStorage.setItem('sph_customer_onboarded', 'true');
+          setShowOnboardingModal(false);
+        } else if (!hasOnboarded && !localProfile) {
+          setShowOnboardingModal(true);
         }
       } catch (err) {
         console.error('Failed to resolve cross-shop customer session', err);
@@ -144,6 +178,67 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
 
     resolveUniversalSession();
   }, []);
+
+  // One-Time First-Time Customer Onboarding Form Submission
+  const handleCompleteOnboarding = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setOnboardingError('');
+
+    const cleanName = onboardingName.trim();
+    const cleanPhone = onboardingPhone.replace(/[^0-9]/g, '');
+
+    if (cleanName.length < 2) {
+      setOnboardingError('Please enter your name (minimum 2 characters).');
+      return;
+    }
+    if (cleanPhone.length < 10) {
+      setOnboardingError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
+    setIsOnboardingSaving(true);
+    try {
+      // 1. Sync with Customer Auth API
+      const res = await fetch('/api/v1/customer/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName: cleanName, phone: cleanPhone }),
+      });
+      const json = await res.json();
+
+      const profileData = {
+        id: json.data?.customer?.id,
+        fullName: cleanName,
+        phone: cleanPhone,
+      };
+
+      // 2. Sync to Firebase Firestore
+      await saveCustomerToFirestore({
+        fullName: cleanName,
+        phone: cleanPhone,
+      });
+
+      // 3. Mark ONE-TIME setup complete in localStorage
+      localStorage.setItem('sph_customer_onboarded', 'true');
+      localStorage.setItem('sph_customer_profile', JSON.stringify(profileData));
+
+      setCustomerName(cleanName);
+      setCustomerPhone(cleanPhone);
+      setCustomerSession(profileData);
+      setLoginInputName(cleanName);
+      setLoginInputPhone(cleanPhone);
+      if (json.data?.orders) {
+        setCrossShopOrders(json.data.orders);
+      }
+
+      // Close modal and reveal the upload page directly
+      setShowOnboardingModal(false);
+    } catch (err: any) {
+      setOnboardingError(err.message || 'Could not complete registration. Please try again.');
+    } finally {
+      setIsOnboardingSaving(false);
+    }
+  };
 
   // Save / Switch Universal Customer Profile
   const handleSaveCustomerProfile = async (name: string, phone: string) => {
@@ -162,7 +257,9 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
         setCustomerPhone(json.data.customer.phone);
         setCrossShopOrders(json.data.orders || []);
         localStorage.setItem('sph_customer_profile', JSON.stringify(json.data.customer));
+        localStorage.setItem('sph_customer_onboarded', 'true');
         setShowLoginModal(false);
+        setShowCustomerMenu(false);
       }
     } catch (err) {
       console.error('Failed to log in customer', err);
@@ -437,6 +534,28 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
       }
 
       setCompletedOrder(orderJson.data.order);
+      setCrossShopOrders((prev) => [orderJson.data.order, ...prev]);
+
+      // Mirror order in Firebase Firestore
+      try {
+        await saveOrderToFirestore({
+          orderNumber: orderJson.data.order.orderNumber,
+          shopId: shop.id,
+          shopSlug: shop.slug,
+          shopName: shop.name,
+          customerName: customerName.trim(),
+          customerPhone: customerPhone.replace(/[^0-9]/g, ''),
+          totalPages: breakdown.totalPagesCount,
+          totalDocuments: filesWithSpecs.length,
+          estimatedAmount: breakdown.grandTotal,
+          finalAmount: breakdown.grandTotal,
+          status: 'QUEUED',
+          paymentStatus: 'PENDING',
+          createdAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.warn('Firestore mirror order fallback:', err);
+      }
 
       // Persist customer profile across all shops on the platform
       try {
@@ -445,6 +564,11 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fullName: customerName.trim(), phone: customerPhone.trim() }),
         });
+        await saveCustomerToFirestore({
+          fullName: customerName.trim(),
+          phone: customerPhone.trim(),
+        });
+        localStorage.setItem('sph_customer_onboarded', 'true');
         localStorage.setItem('sph_customer_profile', JSON.stringify({
           fullName: customerName.trim(),
           phone: customerPhone.trim(),
@@ -560,23 +684,29 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
             {customerSession ? (
               <button
                 type="button"
-                onClick={() => setShowOrdersDrawer(true)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-[11px] font-semibold transition-colors shadow-2xs"
+                onClick={() => {
+                  setCustomerMenuTab('history');
+                  setShowCustomerMenu(true);
+                }}
+                className="inline-flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-medium transition-all shadow-2xs active:scale-95 border border-zinc-200/80 cursor-pointer"
+                title="Customer Menu & Profile"
               >
-                <Layers className="h-3 w-3 text-zinc-600" />
-                <span>Orders ({crossShopOrders.length})</span>
+                <div className="h-5 w-5 rounded-full bg-emerald-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
+                  {(customerName || 'C').charAt(0).toUpperCase()}
+                </div>
+                <span className="max-w-[85px] sm:max-w-[120px] truncate font-semibold text-[11px]">
+                  {customerName ? customerName.split(' ')[0] : 'Profile'}
+                </span>
+                <Menu className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
               </button>
             ) : (
               <button
                 type="button"
-                onClick={() => {
-                  setLoginInputName(customerName);
-                  setLoginInputPhone(customerPhone);
-                  setShowLoginModal(true);
-                }}
-                className="px-3 py-1 rounded-full bg-zinc-900 text-white text-[11px] font-semibold hover:bg-zinc-800 transition-colors shadow-2xs"
+                onClick={() => setShowOnboardingModal(true)}
+                className="px-3 py-1.5 rounded-full bg-zinc-900 text-white text-[11px] font-semibold hover:bg-zinc-800 transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
               >
-                Sign In
+                <User className="h-3.5 w-3.5 text-zinc-300" />
+                <span>Fill Details</span>
               </button>
             )}
           </div>
@@ -587,16 +717,16 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
         
         {/* Universal Cross-Shop Customer Profile Banner */}
         {customerSession ? (
-          <div className="bg-white rounded-xl border border-emerald-200/80 p-3.5 space-y-2.5 shadow-2xs">
+          <div className="bg-white rounded-2xl border border-emerald-200/90 p-3.5 space-y-2.5 shadow-2xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="h-8 w-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                <div className="h-9 w-9 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-2xs">
                   {customerName.charAt(0).toUpperCase()}
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs font-bold text-zinc-900">{customerName}</span>
-                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                       Universal Profile
                     </span>
                   </div>
@@ -609,24 +739,27 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
-                  onClick={() => setShowOrdersDrawer(true)}
-                  className="px-2.5 py-1 rounded-lg bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-700 font-medium text-[11px] flex items-center gap-1 transition-colors shadow-2xs"
+                  onClick={() => {
+                    setCustomerMenuTab('history');
+                    setShowCustomerMenu(true);
+                  }}
+                  className="px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold text-[11px] flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
                   title="View your orders across all print shops"
                 >
-                  <Layers className="h-3 w-3 text-zinc-500" />
-                  <span>My Orders ({crossShopOrders.length})</span>
+                  <Layers className="h-3.5 w-3.5 text-zinc-600" />
+                  <span>My History ({crossShopOrders.length})</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => {
-                    setLoginInputName(customerName);
-                    setLoginInputPhone(customerPhone);
-                    setShowLoginModal(true);
+                    setCustomerMenuTab('profile');
+                    setShowCustomerMenu(true);
                   }}
-                  className="px-2 py-1 text-[11px] text-zinc-400 hover:text-zinc-800 font-medium"
+                  className="p-1.5 text-zinc-400 hover:text-zinc-800 rounded-lg hover:bg-zinc-100 transition-colors cursor-pointer"
+                  title="Edit Customer Profile"
                 >
-                  Switch
+                  <Edit2 className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -636,48 +769,31 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-zinc-200/80 p-3.5 space-y-2.5 shadow-2xs">
+          <div className="bg-white rounded-2xl border border-zinc-200/90 p-4 space-y-3 shadow-2xs">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold text-zinc-800">Your Contact Details</span>
+              <span className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                <User className="h-3.5 w-3.5 text-zinc-600" />
+                <span>Customer Quick Setup (1-Time Only)</span>
+              </span>
               <button
                 type="button"
-                onClick={() => {
-                  setLoginInputName(customerName);
-                  setLoginInputPhone(customerPhone);
-                  setShowLoginModal(true);
-                }}
-                className="text-[11px] text-emerald-700 hover:underline font-medium"
+                onClick={() => setShowOnboardingModal(true)}
+                className="text-[11px] text-emerald-700 hover:underline font-semibold cursor-pointer"
               >
-                Existing User? Sign In
+                Open Setup
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <label className="text-[10px] font-medium text-zinc-400 block mb-1">Your Name</label>
-                <input
-                  type="text"
-                  required
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="e.g. Rahul Sharma"
-                  className="w-full rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-medium text-zinc-400 block mb-1">Mobile Number</label>
-                <input
-                  type="tel"
-                  required
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="10-digit mobile"
-                  className="w-full rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 font-mono"
-                />
-              </div>
-            </div>
-            <p className="text-[10px] text-zinc-400">
-              ✨ Enter Name & Contact once. Automatically recognized across any print shop on the platform!
+            <p className="text-[11px] text-zinc-500 leading-relaxed">
+              Enter your Name & Mobile Number once. Your prints are instantly identified at the counter, and you can view your order history across any Xerox shop!
             </p>
+            <button
+              type="button"
+              onClick={() => setShowOnboardingModal(true)}
+              className="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+            >
+              <span>Fill Name & Contact (1-Time Setup)</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
 
@@ -1099,43 +1215,200 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
         />
       )}
 
-      {/* Universal Cross-Shop Orders Drawer */}
-      {showOrdersDrawer && (
+      {/* 1. FIRST-TIME ONE-TIME ONBOARDING MODAL FOR WALK-IN CUSTOMERS */}
+      {showOnboardingModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-zinc-950/60 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl border-t sm:border border-zinc-200/90 shadow-2xl p-6 sm:p-7 space-y-5 animate-in slide-in-from-bottom sm:slide-in-from-bottom-2 duration-200">
+            {/* Native Mobile Grab Handle */}
+            <div className="w-12 h-1.5 bg-zinc-300 rounded-full mx-auto -mt-2 mb-2 sm:hidden" />
+
+            <div className="text-center space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
+                <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                <span>1-Time Setup • Universal Xerox Identity</span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">
+                Welcome to {shop.name}
+              </h2>
+              <p className="text-xs text-zinc-500 leading-relaxed max-w-sm mx-auto">
+                Enter your Name & Mobile Number once. Next time you scan any Xerox counter QR, you will be recognized instantly without filling this again!
+              </p>
+            </div>
+
+            {onboardingError && (
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+                <span>{onboardingError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleCompleteOnboarding} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-700 block">
+                  Your Full Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={onboardingName}
+                    onChange={(e) => setOnboardingName(e.target.value)}
+                    placeholder="e.g. Rahul Sharma"
+                    className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 shadow-2xs"
+                  />
+                  <User className="h-4 w-4 text-zinc-400 absolute right-3.5 top-3 pointer-events-none" />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-700 block">
+                  Mobile Number (10 digits)
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    value={onboardingPhone}
+                    onChange={(e) => setOnboardingPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="9876543210"
+                    className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 font-mono shadow-2xs"
+                  />
+                  <Phone className="h-4 w-4 text-zinc-400 absolute right-3.5 top-3 pointer-events-none" />
+                </div>
+                <p className="text-[10px] text-zinc-400">
+                  Used only to identify your print queue at the counter. No spam ever.
+                </p>
+              </div>
+
+              {/* Highlights */}
+              <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-200/70 space-y-1.5 text-[11px] text-zinc-600">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span><strong>Zero Download:</strong> Files print straight to the shop printer</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span><strong>Track History:</strong> View past receipts & reprints anytime</span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isOnboardingSaving}
+                className="w-full py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs sm:text-sm transition-all shadow-md active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              >
+                {isOnboardingSaving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Saving Profile...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Continue to Upload & Print</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2. CUSTOMER MENU & PROFILE BOTTOM SHEET (HISTORY, RATES, SETTINGS) */}
+      {showCustomerMenu && (
         <div className="fixed inset-0 z-50 overflow-hidden">
           <div 
             className="fixed inset-0 bg-zinc-950/40 backdrop-blur-xs transition-opacity animate-in fade-in"
-            onClick={() => setShowOrdersDrawer(false)}
+            onClick={() => setShowCustomerMenu(false)}
           />
 
-          <div className="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto max-h-[85vh] sm:max-h-full w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-none border-t sm:border-t-0 sm:border-l border-zinc-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-bottom sm:slide-in-from-right duration-200">
-            {/* Native App Grab Handle */}
-            <div className="w-10 h-1 bg-zinc-300 rounded-full mx-auto mt-2.5 mb-0.5 sm:hidden" />
+          <div className="fixed inset-x-0 bottom-0 sm:inset-y-0 sm:right-0 sm:left-auto max-h-[90vh] sm:max-h-full w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-none border-t sm:border-t-0 sm:border-l border-zinc-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-bottom sm:slide-in-from-right duration-200">
+            {/* Native Mobile Grab Handle */}
+            <div className="w-12 h-1.5 bg-zinc-300 rounded-full mx-auto mt-2.5 mb-1 sm:hidden" />
             
-            <div className="p-4 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/70">
-                <div>
-                  <h3 className="text-sm font-bold text-zinc-900">My Print Orders</h3>
-                  <p className="text-xs text-zinc-400">Across all Smart Print Hub partner shops</p>
+            {/* Profile Header */}
+            <div className="p-4 border-b border-zinc-200 bg-zinc-50/80 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm shadow-2xs">
+                  {(customerName || 'C').charAt(0).toUpperCase()}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowOrdersDrawer(false)}
-                  className="h-8 w-8 text-zinc-400 hover:text-zinc-900 rounded-lg flex items-center justify-center transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+                <div>
+                  <h3 className="text-sm font-bold text-zinc-900 leading-tight">
+                    {customerName || 'Customer Profile'}
+                  </h3>
+                  <p className="text-xs text-zinc-500 font-mono">
+                    +91 {customerPhone ? customerPhone.replace(/[^0-9]/g, '').slice(-10) : '0000000000'}
+                  </p>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setShowCustomerMenu(false)}
+                className="h-8 w-8 text-zinc-400 hover:text-zinc-900 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
+            {/* Menu Tabs */}
+            <div className="flex border-b border-zinc-200 bg-zinc-100/60 p-1 gap-1">
+              <button
+                type="button"
+                onClick={() => setCustomerMenuTab('history')}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  customerMenuTab === 'history'
+                    ? 'bg-white text-zinc-900 shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-800'
+                }`}
+              >
+                <Clock className="h-3.5 w-3.5" />
+                <span>History ({crossShopOrders.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCustomerMenuTab('rates')}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  customerMenuTab === 'rates'
+                    ? 'bg-white text-zinc-900 shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-800'
+                }`}
+              >
+                <Tag className="h-3.5 w-3.5" />
+                <span>Shop Rates</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCustomerMenuTab('profile')}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                  customerMenuTab === 'profile'
+                    ? 'bg-white text-zinc-900 shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-800'
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+                <span>Edit Profile</span>
+              </button>
+            </div>
+
+            {/* Tab 1: Order History */}
+            {customerMenuTab === 'history' && (
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {crossShopOrders.length === 0 ? (
-                  <div className="py-12 text-center text-zinc-400 text-xs">
-                    <Clock className="h-8 w-8 mx-auto mb-2 text-zinc-300" />
-                    <p>No past orders found for +91 {customerPhone.slice(-10)}</p>
+                  <div className="py-16 text-center text-zinc-400 text-xs space-y-2">
+                    <Clock className="h-8 w-8 mx-auto text-zinc-300" />
+                    <p className="font-semibold text-zinc-700">No print orders found yet</p>
+                    <p className="text-[11px] text-zinc-400">
+                      When you send documents to {shop.name} or any partner counter, your orders will appear here automatically.
+                    </p>
                   </div>
                 ) : (
                   crossShopOrders.map((o) => (
-                    <div key={o.id} className="p-3.5 rounded-xl border border-zinc-200 bg-white space-y-2 hover:border-zinc-300 transition-colors shadow-2xs">
+                    <div key={o.id} className="p-3.5 rounded-2xl border border-zinc-200 bg-white space-y-2 hover:border-zinc-300 transition-colors shadow-2xs">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-xs text-zinc-900 bg-zinc-100 px-2 py-0.5 rounded">
+                        <span className="font-mono font-bold text-xs text-zinc-900 bg-zinc-100 px-2 py-0.5 rounded-md">
                           {o.orderNumber}
                         </span>
                         <span className="text-[10px] font-mono text-zinc-400">
@@ -1144,21 +1417,21 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                       </div>
 
                       <div className="text-xs text-zinc-600">
-                        <p className="font-semibold text-zinc-800">{o.shop?.name || shop.name}</p>
+                        <p className="font-semibold text-zinc-900">{o.shop?.name || shop.name}</p>
                         <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
-                          {o.totalDocuments || 1} file(s) • {o.totalPages || 1} pages • ₹{(o.finalAmount ?? o.estimatedAmount).toFixed(2)}
+                          {o.totalDocuments || 1} file(s) • {o.totalPages || 1} pages • ₹{(o.finalAmount ?? o.estimatedAmount ?? 0).toFixed(2)}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between pt-1 border-t border-zinc-100">
-                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                      <div className="flex items-center justify-between pt-1.5 border-t border-zinc-100">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold ${
                           o.status === 'READY'
-                            ? 'bg-teal-50 text-teal-800 border border-teal-200'
+                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                             : o.status === 'COMPLETED'
                             ? 'bg-zinc-100 text-zinc-700'
                             : 'bg-amber-50 text-amber-800 border border-amber-200'
                         }`}>
-                          {o.status === 'READY' ? 'Ready for Pickup' : o.status === 'COMPLETED' ? 'Completed' : 'Printing / In Progress'}
+                          {o.status === 'READY' ? 'Ready for Pickup' : o.status === 'COMPLETED' ? 'Completed' : 'Printing / In Queue'}
                         </span>
 
                         <Link
@@ -1173,12 +1446,135 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                   ))
                 )}
               </div>
+            )}
 
-            </div>
+            {/* Tab 2: Shop Rate Card */}
+            {customerMenuTab === 'rates' && (
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-200/70 space-y-1">
+                  <h4 className="text-xs font-bold text-zinc-900">{shop.name} Xerox Rate Card</h4>
+                  <p className="text-[11px] text-zinc-500">Live prices configured directly by the counter manager</p>
+                </div>
+
+                <div className="space-y-2">
+                  <h5 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider font-mono">Standard Printing (A4)</h5>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-3 rounded-xl border border-zinc-200 bg-white">
+                      <span className="text-zinc-500 block text-[11px]">B&W Single Sided</span>
+                      <strong className="text-base text-zinc-900 font-mono">₹{a4Rule.bwSinglePrice.toFixed(2)}</strong>
+                    </div>
+                    <div className="p-3 rounded-xl border border-zinc-200 bg-white">
+                      <span className="text-zinc-500 block text-[11px]">B&W Double Sided</span>
+                      <strong className="text-base text-zinc-900 font-mono">₹{a4Rule.bwDoublePrice.toFixed(2)}</strong>
+                    </div>
+                    <div className="p-3 rounded-xl border border-zinc-200 bg-white">
+                      <span className="text-zinc-500 block text-[11px]">Color Single</span>
+                      <strong className="text-base text-emerald-600 font-mono">₹{a4Rule.colorSinglePrice.toFixed(2)}</strong>
+                    </div>
+                    <div className="p-3 rounded-xl border border-zinc-200 bg-white">
+                      <span className="text-zinc-500 block text-[11px]">Color Double</span>
+                      <strong className="text-base text-emerald-600 font-mono">₹{a4Rule.colorDoublePrice.toFixed(2)}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {shop.finishing && (
+                  <div className="space-y-2">
+                    <h5 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider font-mono">Binding & Finishing</h5>
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex items-center justify-between p-2.5 rounded-xl border border-zinc-100 bg-zinc-50/50">
+                        <span className="text-zinc-700">Spiral Binding</span>
+                        <span className="font-bold text-zinc-900 font-mono">₹{shop.finishing.bindingSpiral}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded-xl border border-zinc-100 bg-zinc-50/50">
+                        <span className="text-zinc-700">Hardcover Project Binding</span>
+                        <span className="font-bold text-zinc-900 font-mono">₹{shop.finishing.bindingHardcover}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded-xl border border-zinc-100 bg-zinc-50/50">
+                        <span className="text-zinc-700">Lamination (Glossy/Matte)</span>
+                        <span className="font-bold text-zinc-900 font-mono">₹{shop.finishing.laminationGlossy}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-800">
+                  ⚡ Transparent counter pricing. Instant total calculation before submitting your order!
+                </div>
+              </div>
+            )}
+
+            {/* Tab 3: Edit Profile & Switch Account */}
+            {customerMenuTab === 'profile' && (
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-zinc-700 block">Your Full Name</label>
+                    <input
+                      type="text"
+                      value={loginInputName}
+                      onChange={(e) => setLoginInputName(e.target.value)}
+                      placeholder="e.g. Rahul Sharma"
+                      className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-zinc-700 block">Mobile Contact (10 digits)</label>
+                    <input
+                      type="tel"
+                      value={loginInputPhone}
+                      onChange={(e) => setLoginInputPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                      placeholder="e.g. 9876543210"
+                      className="w-full rounded-xl border border-zinc-200 px-3.5 py-2.5 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 font-mono"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={isLoggingIn || !loginInputName.trim() || loginInputPhone.trim().length < 10}
+                    onClick={() => handleSaveCustomerProfile(loginInputName, loginInputPhone)}
+                    className="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
+                  >
+                    {isLoggingIn ? 'Saving Changes...' : 'Save Profile Changes'}
+                  </button>
+                </div>
+
+                <div className="pt-3 border-t border-zinc-200 space-y-2">
+                  <h5 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider font-mono">Counter Actions</h5>
+                  <Link
+                    href="/scan"
+                    className="w-full py-2.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <QrCode className="h-4 w-4 text-emerald-600" />
+                    <span>Scan Another Xerox Counter</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.removeItem('sph_customer_profile');
+                      localStorage.removeItem('sph_customer_onboarded');
+                      setCustomerSession(null);
+                      setCustomerName('');
+                      setCustomerPhone('');
+                      setCrossShopOrders([]);
+                      setShowCustomerMenu(false);
+                      setShowOnboardingModal(true);
+                    }}
+                    className="w-full py-2.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <span>Switch Customer Account</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
-        )}
+        </div>
+      )}
 
-      {/* Switch Account / Universal Customer Login Modal */}
+      {/* 3. SWITCH ACCOUNT / LOGIN MODAL */}
       {showLoginModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-zinc-950/40 backdrop-blur-xs animate-in fade-in">
           <div className="w-full max-w-sm bg-white rounded-t-3xl sm:rounded-2xl border-t sm:border border-zinc-200 shadow-2xl p-5 space-y-4 animate-in slide-in-from-bottom sm:slide-in-from-bottom-2 duration-200">
@@ -1191,7 +1587,7 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
               <button
                 type="button"
                 onClick={() => setShowLoginModal(false)}
-                className="h-7 w-7 text-zinc-400 hover:text-zinc-900 rounded-lg flex items-center justify-center"
+                className="h-7 w-7 text-zinc-400 hover:text-zinc-900 rounded-lg flex items-center justify-center cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1218,7 +1614,7 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                 <input
                   type="tel"
                   value={loginInputPhone}
-                  onChange={(e) => setLoginInputPhone(e.target.value)}
+                  onChange={(e) => setLoginInputPhone(e.target.value.replace(/[^0-9]/g, ''))}
                   placeholder="e.g. 9876543210"
                   className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 font-mono"
                 />
@@ -1230,14 +1626,14 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                 type="button"
                 disabled={isLoggingIn || !loginInputName.trim() || loginInputPhone.trim().length < 10}
                 onClick={() => handleSaveCustomerProfile(loginInputName, loginInputPhone)}
-                className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-xs transition-colors disabled:opacity-50"
+                className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-xs transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {isLoggingIn ? 'Connecting...' : 'Sign In & Sync'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowLoginModal(false)}
-                className="px-3 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 font-medium text-xs transition-colors"
+                className="px-3 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 font-medium text-xs transition-colors cursor-pointer"
               >
                 Cancel
               </button>
