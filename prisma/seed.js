@@ -108,6 +108,22 @@ async function main() {
   });
   console.log(`[Seed] Seeded Owner User: ${user.fullName} (${user.email})`);
 
+  const vishnuPasswordHash = await bcrypt.hash('Semester7!', 10);
+  const vishnuUser = await prisma.user.upsert({
+    where: { email: 'vishnurajan24766@gmail.com' },
+    update: { passwordHash: vishnuPasswordHash, shopId: shop.id },
+    create: {
+      email: 'vishnurajan24766@gmail.com',
+      passwordHash: vishnuPasswordHash,
+      fullName: 'Vishnu Rajan',
+      phone: '+91 98765 43210',
+      role: 'SHOP_OWNER',
+      isVerified: true,
+      shopId: shop.id,
+    },
+  });
+  console.log(`[Seed] Seeded Owner User: ${vishnuUser.fullName} (${vishnuUser.email})`);
+
   // 4. Shop Subscription
   const trialEnd = new Date();
   trialEnd.setDate(trialEnd.getDate() + 30);
