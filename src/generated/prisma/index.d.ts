@@ -5452,7 +5452,12 @@ export namespace Prisma {
     orderNumber: string | null
     shopId: string | null
     customerId: string | null
+    customerPhone: string | null
     status: string | null
+    paymentStatus: string | null
+    paymentMethod: string | null
+    paymentReference: string | null
+    paidAt: Date | null
     totalDocuments: number | null
     totalPages: number | null
     estimatedAmount: number | null
@@ -5468,7 +5473,12 @@ export namespace Prisma {
     orderNumber: string | null
     shopId: string | null
     customerId: string | null
+    customerPhone: string | null
     status: string | null
+    paymentStatus: string | null
+    paymentMethod: string | null
+    paymentReference: string | null
+    paidAt: Date | null
     totalDocuments: number | null
     totalPages: number | null
     estimatedAmount: number | null
@@ -5484,7 +5494,12 @@ export namespace Prisma {
     orderNumber: number
     shopId: number
     customerId: number
+    customerPhone: number
     status: number
+    paymentStatus: number
+    paymentMethod: number
+    paymentReference: number
+    paidAt: number
     totalDocuments: number
     totalPages: number
     estimatedAmount: number
@@ -5516,7 +5531,12 @@ export namespace Prisma {
     orderNumber?: true
     shopId?: true
     customerId?: true
+    customerPhone?: true
     status?: true
+    paymentStatus?: true
+    paymentMethod?: true
+    paymentReference?: true
+    paidAt?: true
     totalDocuments?: true
     totalPages?: true
     estimatedAmount?: true
@@ -5532,7 +5552,12 @@ export namespace Prisma {
     orderNumber?: true
     shopId?: true
     customerId?: true
+    customerPhone?: true
     status?: true
+    paymentStatus?: true
+    paymentMethod?: true
+    paymentReference?: true
+    paidAt?: true
     totalDocuments?: true
     totalPages?: true
     estimatedAmount?: true
@@ -5548,7 +5573,12 @@ export namespace Prisma {
     orderNumber?: true
     shopId?: true
     customerId?: true
+    customerPhone?: true
     status?: true
+    paymentStatus?: true
+    paymentMethod?: true
+    paymentReference?: true
+    paidAt?: true
     totalDocuments?: true
     totalPages?: true
     estimatedAmount?: true
@@ -5651,7 +5681,12 @@ export namespace Prisma {
     orderNumber: string
     shopId: string
     customerId: string
+    customerPhone: string | null
     status: string
+    paymentStatus: string
+    paymentMethod: string | null
+    paymentReference: string | null
+    paidAt: Date | null
     totalDocuments: number
     totalPages: number
     estimatedAmount: number
@@ -5686,7 +5721,12 @@ export namespace Prisma {
     orderNumber?: boolean
     shopId?: boolean
     customerId?: boolean
+    customerPhone?: boolean
     status?: boolean
+    paymentStatus?: boolean
+    paymentMethod?: boolean
+    paymentReference?: boolean
+    paidAt?: boolean
     totalDocuments?: boolean
     totalPages?: boolean
     estimatedAmount?: boolean
@@ -5709,7 +5749,12 @@ export namespace Prisma {
     orderNumber?: boolean
     shopId?: boolean
     customerId?: boolean
+    customerPhone?: boolean
     status?: boolean
+    paymentStatus?: boolean
+    paymentMethod?: boolean
+    paymentReference?: boolean
+    paidAt?: boolean
     totalDocuments?: boolean
     totalPages?: boolean
     estimatedAmount?: boolean
@@ -5720,7 +5765,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "shopId" | "customerId" | "status" | "totalDocuments" | "totalPages" | "estimatedAmount" | "finalAmount" | "customerNotes" | "rejectionReason" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "shopId" | "customerId" | "customerPhone" | "status" | "paymentStatus" | "paymentMethod" | "paymentReference" | "paidAt" | "totalDocuments" | "totalPages" | "estimatedAmount" | "finalAmount" | "customerNotes" | "rejectionReason" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     shop?: boolean | ShopDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -5742,7 +5787,12 @@ export namespace Prisma {
       orderNumber: string
       shopId: string
       customerId: string
+      customerPhone: string | null
       status: string
+      paymentStatus: string
+      paymentMethod: string | null
+      paymentReference: string | null
+      paidAt: Date | null
       totalDocuments: number
       totalPages: number
       estimatedAmount: number
@@ -6128,7 +6178,12 @@ export namespace Prisma {
     readonly orderNumber: FieldRef<"Order", 'String'>
     readonly shopId: FieldRef<"Order", 'String'>
     readonly customerId: FieldRef<"Order", 'String'>
+    readonly customerPhone: FieldRef<"Order", 'String'>
     readonly status: FieldRef<"Order", 'String'>
+    readonly paymentStatus: FieldRef<"Order", 'String'>
+    readonly paymentMethod: FieldRef<"Order", 'String'>
+    readonly paymentReference: FieldRef<"Order", 'String'>
+    readonly paidAt: FieldRef<"Order", 'DateTime'>
     readonly totalDocuments: FieldRef<"Order", 'Int'>
     readonly totalPages: FieldRef<"Order", 'Int'>
     readonly estimatedAmount: FieldRef<"Order", 'Float'>
@@ -7655,6 +7710,8 @@ export namespace Prisma {
     pagesPerSheet: number | null
     collate: boolean | null
     stapling: string | null
+    binding: string | null
+    lamination: string | null
     finishingNotes: string | null
     priceDetails: string | null
     createdAt: Date | null
@@ -7673,6 +7730,8 @@ export namespace Prisma {
     pagesPerSheet: number | null
     collate: boolean | null
     stapling: string | null
+    binding: string | null
+    lamination: string | null
     finishingNotes: string | null
     priceDetails: string | null
     createdAt: Date | null
@@ -7691,6 +7750,8 @@ export namespace Prisma {
     pagesPerSheet: number
     collate: number
     stapling: number
+    binding: number
+    lamination: number
     finishingNotes: number
     priceDetails: number
     createdAt: number
@@ -7721,6 +7782,8 @@ export namespace Prisma {
     pagesPerSheet?: true
     collate?: true
     stapling?: true
+    binding?: true
+    lamination?: true
     finishingNotes?: true
     priceDetails?: true
     createdAt?: true
@@ -7739,6 +7802,8 @@ export namespace Prisma {
     pagesPerSheet?: true
     collate?: true
     stapling?: true
+    binding?: true
+    lamination?: true
     finishingNotes?: true
     priceDetails?: true
     createdAt?: true
@@ -7757,6 +7822,8 @@ export namespace Prisma {
     pagesPerSheet?: true
     collate?: true
     stapling?: true
+    binding?: true
+    lamination?: true
     finishingNotes?: true
     priceDetails?: true
     createdAt?: true
@@ -7862,6 +7929,8 @@ export namespace Prisma {
     pagesPerSheet: number
     collate: boolean
     stapling: string
+    binding: string
+    lamination: string
     finishingNotes: string | null
     priceDetails: string | null
     createdAt: Date
@@ -7899,6 +7968,8 @@ export namespace Prisma {
     pagesPerSheet?: boolean
     collate?: boolean
     stapling?: boolean
+    binding?: boolean
+    lamination?: boolean
     finishingNotes?: boolean
     priceDetails?: boolean
     createdAt?: boolean
@@ -7920,13 +7991,15 @@ export namespace Prisma {
     pagesPerSheet?: boolean
     collate?: boolean
     stapling?: boolean
+    binding?: boolean
+    lamination?: boolean
     finishingNotes?: boolean
     priceDetails?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DocumentPrintSpecOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "documentId" | "copies" | "color" | "duplex" | "paperSize" | "orientation" | "pageRange" | "pagesPerSheet" | "collate" | "stapling" | "finishingNotes" | "priceDetails" | "createdAt" | "updatedAt", ExtArgs["result"]["documentPrintSpec"]>
+  export type DocumentPrintSpecOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "documentId" | "copies" | "color" | "duplex" | "paperSize" | "orientation" | "pageRange" | "pagesPerSheet" | "collate" | "stapling" | "binding" | "lamination" | "finishingNotes" | "priceDetails" | "createdAt" | "updatedAt", ExtArgs["result"]["documentPrintSpec"]>
   export type DocumentPrintSpecInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     document?: boolean | OrderDocumentDefaultArgs<ExtArgs>
   }
@@ -7948,6 +8021,8 @@ export namespace Prisma {
       pagesPerSheet: number
       collate: boolean
       stapling: string
+      binding: string
+      lamination: string
       finishingNotes: string | null
       priceDetails: string | null
       createdAt: Date
@@ -8333,6 +8408,8 @@ export namespace Prisma {
     readonly pagesPerSheet: FieldRef<"DocumentPrintSpec", 'Int'>
     readonly collate: FieldRef<"DocumentPrintSpec", 'Boolean'>
     readonly stapling: FieldRef<"DocumentPrintSpec", 'String'>
+    readonly binding: FieldRef<"DocumentPrintSpec", 'String'>
+    readonly lamination: FieldRef<"DocumentPrintSpec", 'String'>
     readonly finishingNotes: FieldRef<"DocumentPrintSpec", 'String'>
     readonly priceDetails: FieldRef<"DocumentPrintSpec", 'String'>
     readonly createdAt: FieldRef<"DocumentPrintSpec", 'DateTime'>
@@ -8714,6 +8791,7 @@ export namespace Prisma {
     agentName: string | null
     machineHostname: string | null
     osVersion: string | null
+    ipAddress: string | null
     authTokenHash: string | null
     isConnected: boolean | null
     lastHeartbeatAt: Date | null
@@ -8726,6 +8804,7 @@ export namespace Prisma {
     agentName: string | null
     machineHostname: string | null
     osVersion: string | null
+    ipAddress: string | null
     authTokenHash: string | null
     isConnected: boolean | null
     lastHeartbeatAt: Date | null
@@ -8738,6 +8817,7 @@ export namespace Prisma {
     agentName: number
     machineHostname: number
     osVersion: number
+    ipAddress: number
     authTokenHash: number
     isConnected: number
     lastHeartbeatAt: number
@@ -8752,6 +8832,7 @@ export namespace Prisma {
     agentName?: true
     machineHostname?: true
     osVersion?: true
+    ipAddress?: true
     authTokenHash?: true
     isConnected?: true
     lastHeartbeatAt?: true
@@ -8764,6 +8845,7 @@ export namespace Prisma {
     agentName?: true
     machineHostname?: true
     osVersion?: true
+    ipAddress?: true
     authTokenHash?: true
     isConnected?: true
     lastHeartbeatAt?: true
@@ -8776,6 +8858,7 @@ export namespace Prisma {
     agentName?: true
     machineHostname?: true
     osVersion?: true
+    ipAddress?: true
     authTokenHash?: true
     isConnected?: true
     lastHeartbeatAt?: true
@@ -8861,6 +8944,7 @@ export namespace Prisma {
     agentName: string
     machineHostname: string | null
     osVersion: string | null
+    ipAddress: string | null
     authTokenHash: string
     isConnected: boolean
     lastHeartbeatAt: Date | null
@@ -8890,6 +8974,7 @@ export namespace Prisma {
     agentName?: boolean
     machineHostname?: boolean
     osVersion?: boolean
+    ipAddress?: boolean
     authTokenHash?: boolean
     isConnected?: boolean
     lastHeartbeatAt?: boolean
@@ -8908,13 +8993,14 @@ export namespace Prisma {
     agentName?: boolean
     machineHostname?: boolean
     osVersion?: boolean
+    ipAddress?: boolean
     authTokenHash?: boolean
     isConnected?: boolean
     lastHeartbeatAt?: boolean
     createdAt?: boolean
   }
 
-  export type PrintAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shopId" | "agentName" | "machineHostname" | "osVersion" | "authTokenHash" | "isConnected" | "lastHeartbeatAt" | "createdAt", ExtArgs["result"]["printAgent"]>
+  export type PrintAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shopId" | "agentName" | "machineHostname" | "osVersion" | "ipAddress" | "authTokenHash" | "isConnected" | "lastHeartbeatAt" | "createdAt", ExtArgs["result"]["printAgent"]>
   export type PrintAgentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     shop?: boolean | ShopDefaultArgs<ExtArgs>
     printers?: boolean | PrintAgent$printersArgs<ExtArgs>
@@ -8935,6 +9021,7 @@ export namespace Prisma {
       agentName: string
       machineHostname: string | null
       osVersion: string | null
+      ipAddress: string | null
       authTokenHash: string
       isConnected: boolean
       lastHeartbeatAt: Date | null
@@ -9316,6 +9403,7 @@ export namespace Prisma {
     readonly agentName: FieldRef<"PrintAgent", 'String'>
     readonly machineHostname: FieldRef<"PrintAgent", 'String'>
     readonly osVersion: FieldRef<"PrintAgent", 'String'>
+    readonly ipAddress: FieldRef<"PrintAgent", 'String'>
     readonly authTokenHash: FieldRef<"PrintAgent", 'String'>
     readonly isConnected: FieldRef<"PrintAgent", 'Boolean'>
     readonly lastHeartbeatAt: FieldRef<"PrintAgent", 'DateTime'>
@@ -16068,7 +16156,12 @@ export namespace Prisma {
     orderNumber: 'orderNumber',
     shopId: 'shopId',
     customerId: 'customerId',
+    customerPhone: 'customerPhone',
     status: 'status',
+    paymentStatus: 'paymentStatus',
+    paymentMethod: 'paymentMethod',
+    paymentReference: 'paymentReference',
+    paidAt: 'paidAt',
     totalDocuments: 'totalDocuments',
     totalPages: 'totalPages',
     estimatedAmount: 'estimatedAmount',
@@ -16110,6 +16203,8 @@ export namespace Prisma {
     pagesPerSheet: 'pagesPerSheet',
     collate: 'collate',
     stapling: 'stapling',
+    binding: 'binding',
+    lamination: 'lamination',
     finishingNotes: 'finishingNotes',
     priceDetails: 'priceDetails',
     createdAt: 'createdAt',
@@ -16125,6 +16220,7 @@ export namespace Prisma {
     agentName: 'agentName',
     machineHostname: 'machineHostname',
     osVersion: 'osVersion',
+    ipAddress: 'ipAddress',
     authTokenHash: 'authTokenHash',
     isConnected: 'isConnected',
     lastHeartbeatAt: 'lastHeartbeatAt',
@@ -16295,7 +16391,11 @@ export namespace Prisma {
     orderNumber: 'orderNumber',
     shopId: 'shopId',
     customerId: 'customerId',
+    customerPhone: 'customerPhone',
     status: 'status',
+    paymentStatus: 'paymentStatus',
+    paymentMethod: 'paymentMethod',
+    paymentReference: 'paymentReference',
     customerNotes: 'customerNotes',
     rejectionReason: 'rejectionReason'
   };
@@ -16325,6 +16425,8 @@ export namespace Prisma {
     orientation: 'orientation',
     pageRange: 'pageRange',
     stapling: 'stapling',
+    binding: 'binding',
+    lamination: 'lamination',
     finishingNotes: 'finishingNotes',
     priceDetails: 'priceDetails'
   };
@@ -16338,6 +16440,7 @@ export namespace Prisma {
     agentName: 'agentName',
     machineHostname: 'machineHostname',
     osVersion: 'osVersion',
+    ipAddress: 'ipAddress',
     authTokenHash: 'authTokenHash'
   };
 
@@ -16693,17 +16796,17 @@ export namespace Prisma {
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    phone?: string
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     shopId?: StringFilter<"Customer"> | string
-    phone?: StringFilter<"Customer"> | string
     fullName?: StringFilter<"Customer"> | string
     email?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
     orders?: OrderListRelationFilter
-  }, "id">
+  }, "id" | "phone">
 
   export type CustomerOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16737,7 +16840,12 @@ export namespace Prisma {
     orderNumber?: StringFilter<"Order"> | string
     shopId?: StringFilter<"Order"> | string
     customerId?: StringFilter<"Order"> | string
+    customerPhone?: StringNullableFilter<"Order"> | string | null
     status?: StringFilter<"Order"> | string
+    paymentStatus?: StringFilter<"Order"> | string
+    paymentMethod?: StringNullableFilter<"Order"> | string | null
+    paymentReference?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     totalDocuments?: IntFilter<"Order"> | number
     totalPages?: IntFilter<"Order"> | number
     estimatedAmount?: FloatFilter<"Order"> | number
@@ -16757,7 +16865,12 @@ export namespace Prisma {
     orderNumber?: SortOrder
     shopId?: SortOrder
     customerId?: SortOrder
+    customerPhone?: SortOrderInput | SortOrder
     status?: SortOrder
+    paymentStatus?: SortOrder
+    paymentMethod?: SortOrderInput | SortOrder
+    paymentReference?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
     totalDocuments?: SortOrder
     totalPages?: SortOrder
     estimatedAmount?: SortOrder
@@ -16781,7 +16894,12 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     shopId?: StringFilter<"Order"> | string
     customerId?: StringFilter<"Order"> | string
+    customerPhone?: StringNullableFilter<"Order"> | string | null
     status?: StringFilter<"Order"> | string
+    paymentStatus?: StringFilter<"Order"> | string
+    paymentMethod?: StringNullableFilter<"Order"> | string | null
+    paymentReference?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     totalDocuments?: IntFilter<"Order"> | number
     totalPages?: IntFilter<"Order"> | number
     estimatedAmount?: FloatFilter<"Order"> | number
@@ -16801,7 +16919,12 @@ export namespace Prisma {
     orderNumber?: SortOrder
     shopId?: SortOrder
     customerId?: SortOrder
+    customerPhone?: SortOrderInput | SortOrder
     status?: SortOrder
+    paymentStatus?: SortOrder
+    paymentMethod?: SortOrderInput | SortOrder
+    paymentReference?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
     totalDocuments?: SortOrder
     totalPages?: SortOrder
     estimatedAmount?: SortOrder
@@ -16825,7 +16948,12 @@ export namespace Prisma {
     orderNumber?: StringWithAggregatesFilter<"Order"> | string
     shopId?: StringWithAggregatesFilter<"Order"> | string
     customerId?: StringWithAggregatesFilter<"Order"> | string
+    customerPhone?: StringNullableWithAggregatesFilter<"Order"> | string | null
     status?: StringWithAggregatesFilter<"Order"> | string
+    paymentStatus?: StringWithAggregatesFilter<"Order"> | string
+    paymentMethod?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    paymentReference?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     totalDocuments?: IntWithAggregatesFilter<"Order"> | number
     totalPages?: IntWithAggregatesFilter<"Order"> | number
     estimatedAmount?: FloatWithAggregatesFilter<"Order"> | number
@@ -16940,6 +17068,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFilter<"DocumentPrintSpec"> | number
     collate?: BoolFilter<"DocumentPrintSpec"> | boolean
     stapling?: StringFilter<"DocumentPrintSpec"> | string
+    binding?: StringFilter<"DocumentPrintSpec"> | string
+    lamination?: StringFilter<"DocumentPrintSpec"> | string
     finishingNotes?: StringNullableFilter<"DocumentPrintSpec"> | string | null
     priceDetails?: StringNullableFilter<"DocumentPrintSpec"> | string | null
     createdAt?: DateTimeFilter<"DocumentPrintSpec"> | Date | string
@@ -16959,6 +17089,8 @@ export namespace Prisma {
     pagesPerSheet?: SortOrder
     collate?: SortOrder
     stapling?: SortOrder
+    binding?: SortOrder
+    lamination?: SortOrder
     finishingNotes?: SortOrderInput | SortOrder
     priceDetails?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -16982,6 +17114,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFilter<"DocumentPrintSpec"> | number
     collate?: BoolFilter<"DocumentPrintSpec"> | boolean
     stapling?: StringFilter<"DocumentPrintSpec"> | string
+    binding?: StringFilter<"DocumentPrintSpec"> | string
+    lamination?: StringFilter<"DocumentPrintSpec"> | string
     finishingNotes?: StringNullableFilter<"DocumentPrintSpec"> | string | null
     priceDetails?: StringNullableFilter<"DocumentPrintSpec"> | string | null
     createdAt?: DateTimeFilter<"DocumentPrintSpec"> | Date | string
@@ -17001,6 +17135,8 @@ export namespace Prisma {
     pagesPerSheet?: SortOrder
     collate?: SortOrder
     stapling?: SortOrder
+    binding?: SortOrder
+    lamination?: SortOrder
     finishingNotes?: SortOrderInput | SortOrder
     priceDetails?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -17027,6 +17163,8 @@ export namespace Prisma {
     pagesPerSheet?: IntWithAggregatesFilter<"DocumentPrintSpec"> | number
     collate?: BoolWithAggregatesFilter<"DocumentPrintSpec"> | boolean
     stapling?: StringWithAggregatesFilter<"DocumentPrintSpec"> | string
+    binding?: StringWithAggregatesFilter<"DocumentPrintSpec"> | string
+    lamination?: StringWithAggregatesFilter<"DocumentPrintSpec"> | string
     finishingNotes?: StringNullableWithAggregatesFilter<"DocumentPrintSpec"> | string | null
     priceDetails?: StringNullableWithAggregatesFilter<"DocumentPrintSpec"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"DocumentPrintSpec"> | Date | string
@@ -17042,6 +17180,7 @@ export namespace Prisma {
     agentName?: StringFilter<"PrintAgent"> | string
     machineHostname?: StringNullableFilter<"PrintAgent"> | string | null
     osVersion?: StringNullableFilter<"PrintAgent"> | string | null
+    ipAddress?: StringNullableFilter<"PrintAgent"> | string | null
     authTokenHash?: StringFilter<"PrintAgent"> | string
     isConnected?: BoolFilter<"PrintAgent"> | boolean
     lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
@@ -17057,6 +17196,7 @@ export namespace Prisma {
     agentName?: SortOrder
     machineHostname?: SortOrderInput | SortOrder
     osVersion?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
     authTokenHash?: SortOrder
     isConnected?: SortOrder
     lastHeartbeatAt?: SortOrderInput | SortOrder
@@ -17076,6 +17216,7 @@ export namespace Prisma {
     agentName?: StringFilter<"PrintAgent"> | string
     machineHostname?: StringNullableFilter<"PrintAgent"> | string | null
     osVersion?: StringNullableFilter<"PrintAgent"> | string | null
+    ipAddress?: StringNullableFilter<"PrintAgent"> | string | null
     authTokenHash?: StringFilter<"PrintAgent"> | string
     isConnected?: BoolFilter<"PrintAgent"> | boolean
     lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
@@ -17091,6 +17232,7 @@ export namespace Prisma {
     agentName?: SortOrder
     machineHostname?: SortOrderInput | SortOrder
     osVersion?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
     authTokenHash?: SortOrder
     isConnected?: SortOrder
     lastHeartbeatAt?: SortOrderInput | SortOrder
@@ -17109,6 +17251,7 @@ export namespace Prisma {
     agentName?: StringWithAggregatesFilter<"PrintAgent"> | string
     machineHostname?: StringNullableWithAggregatesFilter<"PrintAgent"> | string | null
     osVersion?: StringNullableWithAggregatesFilter<"PrintAgent"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"PrintAgent"> | string | null
     authTokenHash?: StringWithAggregatesFilter<"PrintAgent"> | string
     isConnected?: BoolWithAggregatesFilter<"PrintAgent"> | boolean
     lastHeartbeatAt?: DateTimeNullableWithAggregatesFilter<"PrintAgent"> | Date | string | null
@@ -17960,7 +18103,12 @@ export namespace Prisma {
   export type OrderCreateInput = {
     id?: string
     orderNumber: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -17980,7 +18128,12 @@ export namespace Prisma {
     orderNumber: string
     shopId: string
     customerId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -17996,7 +18149,12 @@ export namespace Prisma {
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -18016,7 +18174,12 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -18034,7 +18197,12 @@ export namespace Prisma {
     orderNumber: string
     shopId: string
     customerId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -18048,7 +18216,12 @@ export namespace Prisma {
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -18064,7 +18237,12 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -18184,6 +18362,8 @@ export namespace Prisma {
     pagesPerSheet?: number
     collate?: boolean
     stapling?: string
+    binding?: string
+    lamination?: string
     finishingNotes?: string | null
     priceDetails?: string | null
     createdAt?: Date | string
@@ -18203,6 +18383,8 @@ export namespace Prisma {
     pagesPerSheet?: number
     collate?: boolean
     stapling?: string
+    binding?: string
+    lamination?: string
     finishingNotes?: string | null
     priceDetails?: string | null
     createdAt?: Date | string
@@ -18220,6 +18402,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFieldUpdateOperationsInput | number
     collate?: BoolFieldUpdateOperationsInput | boolean
     stapling?: StringFieldUpdateOperationsInput | string
+    binding?: StringFieldUpdateOperationsInput | string
+    lamination?: StringFieldUpdateOperationsInput | string
     finishingNotes?: NullableStringFieldUpdateOperationsInput | string | null
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18239,6 +18423,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFieldUpdateOperationsInput | number
     collate?: BoolFieldUpdateOperationsInput | boolean
     stapling?: StringFieldUpdateOperationsInput | string
+    binding?: StringFieldUpdateOperationsInput | string
+    lamination?: StringFieldUpdateOperationsInput | string
     finishingNotes?: NullableStringFieldUpdateOperationsInput | string | null
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18257,6 +18443,8 @@ export namespace Prisma {
     pagesPerSheet?: number
     collate?: boolean
     stapling?: string
+    binding?: string
+    lamination?: string
     finishingNotes?: string | null
     priceDetails?: string | null
     createdAt?: Date | string
@@ -18274,6 +18462,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFieldUpdateOperationsInput | number
     collate?: BoolFieldUpdateOperationsInput | boolean
     stapling?: StringFieldUpdateOperationsInput | string
+    binding?: StringFieldUpdateOperationsInput | string
+    lamination?: StringFieldUpdateOperationsInput | string
     finishingNotes?: NullableStringFieldUpdateOperationsInput | string | null
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18292,6 +18482,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFieldUpdateOperationsInput | number
     collate?: BoolFieldUpdateOperationsInput | boolean
     stapling?: StringFieldUpdateOperationsInput | string
+    binding?: StringFieldUpdateOperationsInput | string
+    lamination?: StringFieldUpdateOperationsInput | string
     finishingNotes?: NullableStringFieldUpdateOperationsInput | string | null
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18303,6 +18495,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -18318,6 +18511,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -18331,6 +18525,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18346,6 +18541,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18360,6 +18556,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -18371,6 +18568,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18383,6 +18581,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19282,6 +19481,17 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -19351,7 +19561,12 @@ export namespace Prisma {
     orderNumber?: SortOrder
     shopId?: SortOrder
     customerId?: SortOrder
+    customerPhone?: SortOrder
     status?: SortOrder
+    paymentStatus?: SortOrder
+    paymentMethod?: SortOrder
+    paymentReference?: SortOrder
+    paidAt?: SortOrder
     totalDocuments?: SortOrder
     totalPages?: SortOrder
     estimatedAmount?: SortOrder
@@ -19374,7 +19589,12 @@ export namespace Prisma {
     orderNumber?: SortOrder
     shopId?: SortOrder
     customerId?: SortOrder
+    customerPhone?: SortOrder
     status?: SortOrder
+    paymentStatus?: SortOrder
+    paymentMethod?: SortOrder
+    paymentReference?: SortOrder
+    paidAt?: SortOrder
     totalDocuments?: SortOrder
     totalPages?: SortOrder
     estimatedAmount?: SortOrder
@@ -19390,7 +19610,12 @@ export namespace Prisma {
     orderNumber?: SortOrder
     shopId?: SortOrder
     customerId?: SortOrder
+    customerPhone?: SortOrder
     status?: SortOrder
+    paymentStatus?: SortOrder
+    paymentMethod?: SortOrder
+    paymentReference?: SortOrder
+    paidAt?: SortOrder
     totalDocuments?: SortOrder
     totalPages?: SortOrder
     estimatedAmount?: SortOrder
@@ -19406,6 +19631,20 @@ export namespace Prisma {
     totalPages?: SortOrder
     estimatedAmount?: SortOrder
     finalAmount?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -19544,6 +19783,8 @@ export namespace Prisma {
     pagesPerSheet?: SortOrder
     collate?: SortOrder
     stapling?: SortOrder
+    binding?: SortOrder
+    lamination?: SortOrder
     finishingNotes?: SortOrder
     priceDetails?: SortOrder
     createdAt?: SortOrder
@@ -19567,6 +19808,8 @@ export namespace Prisma {
     pagesPerSheet?: SortOrder
     collate?: SortOrder
     stapling?: SortOrder
+    binding?: SortOrder
+    lamination?: SortOrder
     finishingNotes?: SortOrder
     priceDetails?: SortOrder
     createdAt?: SortOrder
@@ -19585,6 +19828,8 @@ export namespace Prisma {
     pagesPerSheet?: SortOrder
     collate?: SortOrder
     stapling?: SortOrder
+    binding?: SortOrder
+    lamination?: SortOrder
     finishingNotes?: SortOrder
     priceDetails?: SortOrder
     createdAt?: SortOrder
@@ -19594,17 +19839,6 @@ export namespace Prisma {
   export type DocumentPrintSpecSumOrderByAggregateInput = {
     copies?: SortOrder
     pagesPerSheet?: SortOrder
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type PrintAgentOrderByRelevanceInput = {
@@ -19619,6 +19853,7 @@ export namespace Prisma {
     agentName?: SortOrder
     machineHostname?: SortOrder
     osVersion?: SortOrder
+    ipAddress?: SortOrder
     authTokenHash?: SortOrder
     isConnected?: SortOrder
     lastHeartbeatAt?: SortOrder
@@ -19631,6 +19866,7 @@ export namespace Prisma {
     agentName?: SortOrder
     machineHostname?: SortOrder
     osVersion?: SortOrder
+    ipAddress?: SortOrder
     authTokenHash?: SortOrder
     isConnected?: SortOrder
     lastHeartbeatAt?: SortOrder
@@ -19643,24 +19879,11 @@ export namespace Prisma {
     agentName?: SortOrder
     machineHostname?: SortOrder
     osVersion?: SortOrder
+    ipAddress?: SortOrder
     authTokenHash?: SortOrder
     isConnected?: SortOrder
     lastHeartbeatAt?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type PrintAgentNullableScalarRelationFilter = {
@@ -20544,6 +20767,10 @@ export namespace Prisma {
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -20774,10 +21001,6 @@ export namespace Prisma {
     connectOrCreate?: PrintJobCreateOrConnectWithoutAgentInput | PrintJobCreateOrConnectWithoutAgentInput[]
     createMany?: PrintJobCreateManyAgentInputEnvelope
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type ShopUpdateOneRequiredWithoutPrintAgentsNestedInput = {
@@ -21226,6 +21449,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[]
@@ -21246,6 +21480,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -21294,31 +21542,6 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -21404,7 +21627,12 @@ export namespace Prisma {
   export type OrderCreateWithoutShopInput = {
     id?: string
     orderNumber: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -21422,7 +21650,12 @@ export namespace Prisma {
     id?: string
     orderNumber: string
     customerId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -21532,6 +21765,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -21545,6 +21779,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -21706,7 +21941,12 @@ export namespace Prisma {
     orderNumber?: StringFilter<"Order"> | string
     shopId?: StringFilter<"Order"> | string
     customerId?: StringFilter<"Order"> | string
+    customerPhone?: StringNullableFilter<"Order"> | string | null
     status?: StringFilter<"Order"> | string
+    paymentStatus?: StringFilter<"Order"> | string
+    paymentMethod?: StringNullableFilter<"Order"> | string | null
+    paymentReference?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     totalDocuments?: IntFilter<"Order"> | number
     totalPages?: IntFilter<"Order"> | number
     estimatedAmount?: FloatFilter<"Order"> | number
@@ -21812,6 +22052,7 @@ export namespace Prisma {
     agentName?: StringFilter<"PrintAgent"> | string
     machineHostname?: StringNullableFilter<"PrintAgent"> | string | null
     osVersion?: StringNullableFilter<"PrintAgent"> | string | null
+    ipAddress?: StringNullableFilter<"PrintAgent"> | string | null
     authTokenHash?: StringFilter<"PrintAgent"> | string
     isConnected?: BoolFilter<"PrintAgent"> | boolean
     lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
@@ -22098,7 +22339,12 @@ export namespace Prisma {
   export type OrderCreateWithoutCustomerInput = {
     id?: string
     orderNumber: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -22116,7 +22362,12 @@ export namespace Prisma {
     id?: string
     orderNumber: string
     shopId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -22520,7 +22771,12 @@ export namespace Prisma {
   export type OrderCreateWithoutDocumentsInput = {
     id?: string
     orderNumber: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -22539,7 +22795,12 @@ export namespace Prisma {
     orderNumber: string
     shopId: string
     customerId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -22567,6 +22828,8 @@ export namespace Prisma {
     pagesPerSheet?: number
     collate?: boolean
     stapling?: string
+    binding?: string
+    lamination?: string
     finishingNotes?: string | null
     priceDetails?: string | null
     createdAt?: Date | string
@@ -22584,6 +22847,8 @@ export namespace Prisma {
     pagesPerSheet?: number
     collate?: boolean
     stapling?: string
+    binding?: string
+    lamination?: string
     finishingNotes?: string | null
     priceDetails?: string | null
     createdAt?: Date | string
@@ -22645,7 +22910,12 @@ export namespace Prisma {
   export type OrderUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -22664,7 +22934,12 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -22698,6 +22973,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFieldUpdateOperationsInput | number
     collate?: BoolFieldUpdateOperationsInput | boolean
     stapling?: StringFieldUpdateOperationsInput | string
+    binding?: StringFieldUpdateOperationsInput | string
+    lamination?: StringFieldUpdateOperationsInput | string
     finishingNotes?: NullableStringFieldUpdateOperationsInput | string | null
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22715,6 +22992,8 @@ export namespace Prisma {
     pagesPerSheet?: IntFieldUpdateOperationsInput | number
     collate?: BoolFieldUpdateOperationsInput | boolean
     stapling?: StringFieldUpdateOperationsInput | string
+    binding?: StringFieldUpdateOperationsInput | string
+    lamination?: StringFieldUpdateOperationsInput | string
     finishingNotes?: NullableStringFieldUpdateOperationsInput | string | null
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23097,6 +23376,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -23111,6 +23391,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -23234,6 +23515,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23248,6 +23530,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23274,7 +23557,12 @@ export namespace Prisma {
   export type OrderCreateWithoutPrintJobsInput = {
     id?: string
     orderNumber: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -23293,7 +23581,12 @@ export namespace Prisma {
     orderNumber: string
     shopId: string
     customerId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -23393,6 +23686,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -23407,6 +23701,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -23433,7 +23728,12 @@ export namespace Prisma {
   export type OrderUpdateWithoutPrintJobsInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -23452,7 +23752,12 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -23570,6 +23875,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23584,6 +23890,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24142,7 +24449,12 @@ export namespace Prisma {
     id?: string
     orderNumber: string
     customerId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -24188,6 +24500,7 @@ export namespace Prisma {
     agentName: string
     machineHostname?: string | null
     osVersion?: string | null
+    ipAddress?: string | null
     authTokenHash: string
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
@@ -24272,7 +24585,12 @@ export namespace Prisma {
   export type OrderUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -24290,7 +24608,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -24307,7 +24630,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -24415,6 +24743,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24428,6 +24757,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24441,6 +24771,7 @@ export namespace Prisma {
     agentName?: StringFieldUpdateOperationsInput | string
     machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
     osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     authTokenHash?: StringFieldUpdateOperationsInput | string
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24528,7 +24859,12 @@ export namespace Prisma {
     id?: string
     orderNumber: string
     shopId: string
+    customerPhone?: string | null
     status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
     totalDocuments?: number
     totalPages?: number
     estimatedAmount?: number
@@ -24542,7 +24878,12 @@ export namespace Prisma {
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -24560,7 +24901,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number
@@ -24577,7 +24923,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
     shopId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totalDocuments?: IntFieldUpdateOperationsInput | number
     totalPages?: IntFieldUpdateOperationsInput | number
     estimatedAmount?: FloatFieldUpdateOperationsInput | number

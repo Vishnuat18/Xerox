@@ -38,7 +38,6 @@ import {
   PrintPreviewSpec 
 } from '@/components/customer/PrintPreviewModal';
 import { countFilePages } from '@/lib/pdf-page-counter';
-import { saveCustomerToFirestore, saveOrderToFirestore } from '@/lib/firebase';
 
 interface PricingRule {
   paperSize: string;
@@ -212,13 +211,7 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
         phone: cleanPhone,
       };
 
-      // 2. Sync to Firebase Firestore
-      await saveCustomerToFirestore({
-        fullName: cleanName,
-        phone: cleanPhone,
-      });
-
-      // 3. Mark ONE-TIME setup complete in localStorage
+      // 2. Mark ONE-TIME setup complete in localStorage
       localStorage.setItem('sph_customer_onboarded', 'true');
       localStorage.setItem('sph_customer_profile', JSON.stringify(profileData));
 
@@ -523,6 +516,8 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
         body: JSON.stringify({
           shopSlug: shop.slug,
           customerId: customer.id,
+          customerPhone: customerPhone.trim() || undefined,
+          customerName: customerName.trim() || undefined,
           documents: documentsPayload,
           customerNotes: customerNotes.trim() || null,
         }),
@@ -536,37 +531,12 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
       setCompletedOrder(orderJson.data.order);
       setCrossShopOrders((prev) => [orderJson.data.order, ...prev]);
 
-      // Mirror order in Firebase Firestore
-      try {
-        await saveOrderToFirestore({
-          orderNumber: orderJson.data.order.orderNumber,
-          shopId: shop.id,
-          shopSlug: shop.slug,
-          shopName: shop.name,
-          customerName: customerName.trim(),
-          customerPhone: customerPhone.replace(/[^0-9]/g, ''),
-          totalPages: breakdown.totalPagesCount,
-          totalDocuments: filesWithSpecs.length,
-          estimatedAmount: breakdown.grandTotal,
-          finalAmount: breakdown.grandTotal,
-          status: 'QUEUED',
-          paymentStatus: 'PENDING',
-          createdAt: new Date().toISOString(),
-        });
-      } catch (err) {
-        console.warn('Firestore mirror order fallback:', err);
-      }
-
-      // Persist customer profile across all shops on the platform
+      // Persist customer profile across all shops on the platform in MySQL
       try {
         await fetch('/api/v1/customer/auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fullName: customerName.trim(), phone: customerPhone.trim() }),
-        });
-        await saveCustomerToFirestore({
-          fullName: customerName.trim(),
-          phone: customerPhone.trim(),
         });
         localStorage.setItem('sph_customer_onboarded', 'true');
         localStorage.setItem('sph_customer_profile', JSON.stringify({

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Printer, AlertCircle, CheckCircle2, User, Phone, KeyRound, ArrowRight, ShieldCheck, Sparkles, QrCode, Eye, EyeOff } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
-import { signInWithGoogle } from '@/lib/firebase';
+import { triggerGoogleAuth } from '@/lib/google-auth';
 
 function LoginFormContent() {
   const router = useRouter();
@@ -32,42 +32,41 @@ function LoginFormContent() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState(loggedOut ? 'You have safely signed out.' : '');
 
-  // Handle Shop Owner Sign In with Google
+  // Handle Shop Owner Sign In with Google (MySQL Backend)
   const handleGoogleOwnerLogin = async () => {
     setIsGoogleLoading(true);
     setErrorMessage('');
     setSuccessMessage('');
 
     try {
-      const { user, token } = await signInWithGoogle();
-      if (!user || !user.email) {
+      const googleUser = await triggerGoogleAuth();
+      if (!googleUser || !googleUser.email) {
         throw new Error('Google sign-in did not return a valid email address.');
       }
 
-      const res = await fetch('/api/v1/auth/firebase', {
+      const res = await fetch('/api/v1/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: user.email,
-          fullName: user.displayName || 'Shop Owner',
-          uid: user.uid,
-          idToken: token,
+          email: googleUser.email,
+          fullName: googleUser.fullName,
+          sub: googleUser.sub,
           action: 'login',
         }),
       });
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error?.message || 'Authentication failed with Firebase.');
+        throw new Error(data.error?.message || 'Authentication failed with MySQL database.');
       }
 
-      setSuccessMessage(`Welcome ${user.displayName || user.email}! Opening shop dashboard...`);
+      setSuccessMessage(`Welcome ${data.data?.user?.fullName || googleUser.email}! Opening shop dashboard...`);
       setTimeout(() => {
         router.push(redirectTarget);
         router.refresh();
       }, 400);
     } catch (err: any) {
-      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+      if (err.message !== 'Google sign-in cancelled.') {
         setErrorMessage(err.message || 'Google Sign-In failed. Please try again or use email/password.');
       }
     } finally {

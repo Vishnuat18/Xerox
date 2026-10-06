@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       throw new NotFoundError('Shop not found');
     }
 
-    const subDetails = calculateSubscriptionDetails(shop.subscription);
+    const subDetails = calculateSubscriptionDetails(shop.subscription ?? undefined);
 
     return apiSuccess({
       shopId: shop.id,

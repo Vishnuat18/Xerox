@@ -161,7 +161,12 @@ exports.Prisma.OrderScalarFieldEnum = {
   orderNumber: 'orderNumber',
   shopId: 'shopId',
   customerId: 'customerId',
+  customerPhone: 'customerPhone',
   status: 'status',
+  paymentStatus: 'paymentStatus',
+  paymentMethod: 'paymentMethod',
+  paymentReference: 'paymentReference',
+  paidAt: 'paidAt',
   totalDocuments: 'totalDocuments',
   totalPages: 'totalPages',
   estimatedAmount: 'estimatedAmount',
@@ -197,6 +202,8 @@ exports.Prisma.DocumentPrintSpecScalarFieldEnum = {
   pagesPerSheet: 'pagesPerSheet',
   collate: 'collate',
   stapling: 'stapling',
+  binding: 'binding',
+  lamination: 'lamination',
   finishingNotes: 'finishingNotes',
   priceDetails: 'priceDetails',
   createdAt: 'createdAt',
@@ -209,6 +216,7 @@ exports.Prisma.PrintAgentScalarFieldEnum = {
   agentName: 'agentName',
   machineHostname: 'machineHostname',
   osVersion: 'osVersion',
+  ipAddress: 'ipAddress',
   authTokenHash: 'authTokenHash',
   isConnected: 'isConnected',
   lastHeartbeatAt: 'lastHeartbeatAt',
@@ -343,7 +351,11 @@ exports.Prisma.OrderOrderByRelevanceFieldEnum = {
   orderNumber: 'orderNumber',
   shopId: 'shopId',
   customerId: 'customerId',
+  customerPhone: 'customerPhone',
   status: 'status',
+  paymentStatus: 'paymentStatus',
+  paymentMethod: 'paymentMethod',
+  paymentReference: 'paymentReference',
   customerNotes: 'customerNotes',
   rejectionReason: 'rejectionReason'
 };
@@ -367,6 +379,8 @@ exports.Prisma.DocumentPrintSpecOrderByRelevanceFieldEnum = {
   orientation: 'orientation',
   pageRange: 'pageRange',
   stapling: 'stapling',
+  binding: 'binding',
+  lamination: 'lamination',
   finishingNotes: 'finishingNotes',
   priceDetails: 'priceDetails'
 };
@@ -377,6 +391,7 @@ exports.Prisma.PrintAgentOrderByRelevanceFieldEnum = {
   agentName: 'agentName',
   machineHostname: 'machineHostname',
   osVersion: 'osVersion',
+  ipAddress: 'ipAddress',
   authTokenHash: 'authTokenHash'
 };
 

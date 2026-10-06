@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
     const {
       shopSlug,
       customerId,
+      customerPhone,
+      customerName,
       documents,
       customerNotes,
     } = body;
@@ -146,6 +148,56 @@ export async function POST(req: NextRequest) {
 
     const totalEstimatedAmount = Math.max(1, printSubtotal - bulkDiscountAmount + finishingSubtotal);
 
+    // Resolve or automatically link customer in MySQL database
+    let validCustomerId = customerId;
+    let actualCustomerPhone = customerPhone || null;
+
+    if (customerId) {
+      const existing = await db.customer.findUnique({ where: { id: customerId } });
+      if (existing) {
+        validCustomerId = existing.id;
+        actualCustomerPhone = existing.phone;
+      } else {
+        validCustomerId = null;
+      }
+    }
+
+    if (!validCustomerId && customerPhone) {
+      const cleanPhone = customerPhone.replace(/[^0-9]/g, '');
+      if (cleanPhone) {
+        const existing = await db.customer.findUnique({ where: { phone: cleanPhone } });
+        if (existing) {
+          validCustomerId = existing.id;
+          actualCustomerPhone = existing.phone;
+        } else {
+          const created = await db.customer.create({
+            data: {
+              fullName: customerName || 'Walk-in Customer',
+              phone: cleanPhone,
+              shopId: shop.id,
+            },
+          });
+          validCustomerId = created.id;
+          actualCustomerPhone = created.phone;
+        }
+      }
+    }
+
+    if (!validCustomerId) {
+      let defaultCustomer = await db.customer.findFirst({ where: { shopId: shop.id } });
+      if (!defaultCustomer) {
+        defaultCustomer = await db.customer.create({
+          data: {
+            fullName: customerName || 'Walk-in Customer',
+            phone: '9876543210',
+            shopId: shop.id,
+          },
+        });
+      }
+      validCustomerId = defaultCustomer.id;
+      actualCustomerPhone = defaultCustomer.phone;
+    }
+
     // Generate neat human-readable order number: SPH-YYMMDD-XXXX
     const datePrefix = new Date().toISOString().slice(2, 10).replace(/-/g, '');
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
@@ -155,13 +207,46 @@ export async function POST(req: NextRequest) {
       data: {
         orderNumber,
         shopId: shop.id,
-        customerId: customerId || 'cust-rahul-001',
+        customerId: validCustomerId,
+        customerPhone: actualCustomerPhone,
         status: 'SUBMITTED',
         totalDocuments: formattedDocuments.length,
         totalPages: totalPagesCount,
         estimatedAmount: parseFloat(totalEstimatedAmount.toFixed(2)),
         customerNotes: customerNotes || null,
-        documents: formattedDocuments,
+        documents: {
+          create: formattedDocuments.map((doc) => ({
+            originalFilename: doc.originalFilename,
+            storageKey: doc.storageKey,
+            fileSizeBytes: doc.fileSizeBytes,
+            mimeType: doc.mimeType,
+            sha256Checksum: doc.sha256Checksum,
+            detectedPageCount: doc.detectedPageCount,
+            specs: {
+              create: {
+                copies: doc.specs.copies,
+                color: doc.specs.color,
+                duplex: doc.specs.duplex,
+                paperSize: doc.specs.paperSize,
+                orientation: doc.specs.orientation,
+                pageRange: doc.specs.pageRange,
+                pagesPerSheet: doc.specs.pagesPerSheet,
+                collate: doc.specs.collate,
+                stapling: doc.specs.stapling,
+                binding: doc.specs.binding,
+                lamination: doc.specs.lamination,
+                finishingNotes: doc.specs.finishingNotes || '',
+              },
+            },
+          })),
+        },
+      },
+      include: {
+        documents: {
+          include: {
+            specs: true,
+          },
+        },
       },
     });
 

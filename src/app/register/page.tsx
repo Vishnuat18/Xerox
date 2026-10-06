@@ -7,7 +7,7 @@ import { Store, AlertCircle, ShieldAlert, Laptop, ArrowRight, CheckCircle2, Eye,
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
 import { getSystemDeviceFingerprint, SystemFingerprint } from '@/lib/device-fingerprint';
-import { signInWithGoogle } from '@/lib/firebase';
+import { triggerGoogleAuth } from '@/lib/google-auth';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -111,20 +111,19 @@ export default function RegisterPage() {
     setErrorMessage('');
 
     try {
-      const { user, token } = await signInWithGoogle();
-      if (!user || !user.email) {
+      const googleUser = await triggerGoogleAuth();
+      if (!googleUser || !googleUser.email) {
         throw new Error('Google sign-in did not return a valid email address.');
       }
 
-      const res = await fetch('/api/v1/auth/firebase', {
+      const res = await fetch('/api/v1/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: user.email,
-          fullName: user.displayName || formData.fullName || 'Shop Owner',
-          shopName: formData.shopName || `${user.displayName || 'Xerox'} Print Hub`,
-          uid: user.uid,
-          idToken: token,
+          email: googleUser.email,
+          fullName: googleUser.fullName || formData.fullName || 'Shop Owner',
+          shopName: formData.shopName || `${googleUser.fullName || 'Xerox'} Print Hub`,
+          sub: googleUser.sub,
           deviceId: deviceInfo?.deviceId,
           hardwareFingerprint: deviceInfo?.hardwareFingerprint,
           action: 'register',
@@ -133,13 +132,13 @@ export default function RegisterPage() {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error?.message || 'Failed to setup shop with Google.');
+        throw new Error(data.error?.message || 'Failed to setup shop in MySQL with Google.');
       }
 
       router.push('/dashboard');
       router.refresh();
     } catch (err: any) {
-      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+      if (err.message !== 'Google sign-in cancelled.') {
         setErrorMessage(err.message || 'Google registration failed.');
       }
     } finally {

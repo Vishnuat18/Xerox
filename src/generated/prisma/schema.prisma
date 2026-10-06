@@ -63,7 +63,7 @@ model User {
 model Customer {
   id        String   @id @default(cuid())
   shopId    String
-  phone     String
+  phone     String   @unique
   fullName  String
   email     String?
   createdAt DateTime @default(now())
@@ -80,19 +80,24 @@ model Customer {
 // -------------------------------------------------------------
 
 model Order {
-  id              String   @id @default(cuid())
-  orderNumber     String   @unique // e.g., SPH-20261001-000123
-  shopId          String
-  customerId      String
-  status          String   @default("SUBMITTED") // SUBMITTED, RECEIVED, REVIEWING, QUEUED, PRINTING, READY, COMPLETED, CANCELLED, FAILED
-  totalDocuments  Int      @default(1)
-  totalPages      Int      @default(1)
-  estimatedAmount Float    @default(0.0)
-  finalAmount     Float?
-  customerNotes   String?  @db.Text
-  rejectionReason String?  @db.Text
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String    @id @default(cuid())
+  orderNumber      String    @unique // e.g., SPH-20261001-000123
+  shopId           String
+  customerId       String
+  customerPhone    String?
+  status           String    @default("SUBMITTED") // SUBMITTED, RECEIVED, REVIEWING, QUEUED, PRINTING, READY, COMPLETED, CANCELLED, FAILED
+  paymentStatus    String    @default("PENDING") // PENDING, PAID, REFUNDED
+  paymentMethod    String? // UPI, CASH, CARD
+  paymentReference String?
+  paidAt           DateTime?
+  totalDocuments   Int       @default(1)
+  totalPages       Int       @default(1)
+  estimatedAmount  Float     @default(0.0)
+  finalAmount      Float?
+  customerNotes    String?   @db.Text
+  rejectionReason  String?   @db.Text
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   shop      Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
   customer  Customer        @relation(fields: [customerId], references: [id])
@@ -100,6 +105,7 @@ model Order {
   printJobs PrintJob[]
 
   @@index([shopId, status])
+  @@index([customerPhone])
   @@map("orders")
 }
 
@@ -134,6 +140,8 @@ model DocumentPrintSpec {
   pagesPerSheet  Int      @default(1) // 1, 2, 4, 6
   collate        Boolean  @default(true)
   stapling       String   @default("NONE") // "NONE", "CORNER", "SIDE"
+  binding        String   @default("NONE") // "NONE", "SPIRAL", "HARDCOVER", "PROJECT"
+  lamination     String   @default("NONE") // "NONE", "GLOSSY", "MATTE"
   finishingNotes String?  @db.Text
   priceDetails   String?  @db.Text
   createdAt      DateTime @default(now())
@@ -154,6 +162,7 @@ model PrintAgent {
   agentName       String
   machineHostname String?
   osVersion       String?
+  ipAddress       String?
   authTokenHash   String
   isConnected     Boolean   @default(false)
   lastHeartbeatAt DateTime?
