@@ -304,6 +304,17 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.DocumentStorageScalarFieldEnum = {
+  id: 'id',
+  storageKey: 'storageKey',
+  fileData: 'fileData',
+  mimeType: 'mimeType',
+  filename: 'filename',
+  fileSize: 'fileSize',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -449,6 +460,13 @@ exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
   ipAddress: 'ipAddress'
 };
 
+exports.Prisma.DocumentStorageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  storageKey: 'storageKey',
+  mimeType: 'mimeType',
+  filename: 'filename'
+};
+
 
 exports.Prisma.ModelName = {
   Shop: 'Shop',
@@ -463,7 +481,8 @@ exports.Prisma.ModelName = {
   PricingRule: 'PricingRule',
   SubscriptionPlan: 'SubscriptionPlan',
   Subscription: 'Subscription',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  DocumentStorage: 'DocumentStorage'
 };
 
 /**

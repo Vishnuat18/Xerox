@@ -9,7 +9,7 @@ export interface FileResolutionResult {
   buffer: Buffer;
   mimeType: string;
   filename: string;
-  source: 'disk' | 'generated_demo';
+  source: 'disk' | 'generated_demo' | 'database';
 }
 
 /**
@@ -191,8 +191,41 @@ export async function getDocumentStream(
   storageKey: string,
   autoPrint: boolean = false
 ): Promise<FileResolutionResult> {
-  const diskPath = findFileOnDisk(storageKey);
   const baseFilename = path.basename(storageKey);
+
+  // 1. First check MySQL database storage (Vercel persistent storage)
+  try {
+    const { db } = await import('@/lib/db');
+    const dbRecord = await db.documentStorage.findUnique({
+      where: { storageKey },
+    });
+
+    if (dbRecord && dbRecord.fileData) {
+      logger.info(`Serving document stream from MySQL database storage: ${storageKey}`);
+      let buffer: Buffer = Buffer.from(dbRecord.fileData);
+
+      const isRealPdf =
+        (dbRecord.filename.toLowerCase().endsWith('.pdf') || storageKey.toLowerCase().endsWith('.pdf')) &&
+        buffer.length >= 200 &&
+        buffer.subarray(0, 5).toString() === '%PDF-';
+
+      if (isRealPdf && autoPrint) {
+        buffer = (await injectAutoPrintAction(new Uint8Array(buffer))) as any;
+      }
+
+      return {
+        buffer,
+        mimeType: dbRecord.mimeType || 'application/pdf',
+        filename: dbRecord.filename || baseFilename,
+        source: 'database',
+      };
+    }
+  } catch (dbErr) {
+    logger.warn(`Could not query database document_storage for ${storageKey}: ${(dbErr as Error).message}`);
+  }
+
+  // 2. Fall back to local disk
+  const diskPath = findFileOnDisk(storageKey);
 
   if (diskPath) {
     logger.info(`Serving PDF stream from disk: ${diskPath}`);

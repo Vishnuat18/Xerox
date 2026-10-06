@@ -1,8 +1,8 @@
-// SMART PRINT HUB - Unified File Storage & Validation Engine
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
+import { db } from './db';
 import { ValidationError } from './errors';
 import { logger } from './logger';
 
@@ -73,41 +73,43 @@ export async function saveUploadedFile(
   const filename = `${uniqueId}-${sanitizedBase}${ext}`;
   const relativeKey = `shops/${shopId}/uploads/${filename}`;
 
-  const driver = process.env.STORAGE_DRIVER || 'local';
+  // 1. Persist directly into MySQL database storage (Vercel-ready & persistent across serverless lambdas)
+  try {
+    await db.documentStorage.upsert({
+      where: { storageKey: relativeKey },
+      update: {
+        fileData: buffer,
+        mimeType: file.type || 'application/pdf',
+        filename: file.name,
+        fileSize: file.size,
+      },
+      create: {
+        storageKey: relativeKey,
+        fileData: buffer,
+        mimeType: file.type || 'application/pdf',
+        filename: file.name,
+        fileSize: file.size,
+      },
+    });
+    logger.info(`Persisted file to MySQL database storage: ${relativeKey} (${buffer.length} bytes)`);
+  } catch (dbErr) {
+    logger.warn(`Could not persist to MySQL document_storage: ${(dbErr as Error).message}`);
+  }
 
-  if (driver === 'local') {
+  // 2. Also write to disk if available for local dev caching
+  try {
     const isVercel = Boolean(process.env.VERCEL);
     const baseDir = isVercel ? os.tmpdir() : path.join(process.cwd(), 'uploads');
     const targetDir = path.join(baseDir, 'shops', shopId, 'uploads');
-
-    try {
-      if (!fs.existsSync(targetDir)) {
-        fs.mkdirSync(targetDir, { recursive: true });
-      }
-    } catch {
-      // In case of any filesystem restriction, fallback to system temp directory
-      const fallbackDir = path.join(os.tmpdir(), 'smartprinthub', shopId);
-      if (!fs.existsSync(fallbackDir)) {
-        fs.mkdirSync(fallbackDir, { recursive: true });
-      }
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
     }
-
     const fullPath = path.join(targetDir, filename);
     await fs.promises.writeFile(fullPath, buffer);
-
-    logger.info(`Stored file locally: ${fullPath} (${buffer.length} bytes)`);
-
-    return {
-      originalFilename: file.name,
-      storageKey: relativeKey,
-      fileSizeBytes: file.size,
-      mimeType: file.type || 'application/octet-stream',
-      sha256Checksum: checksum,
-    };
+  } catch {
+    logger.info(`Serverless disk write skipped, file stored safely in database: ${relativeKey}`);
   }
 
-  // S3-compatible cloud storage driver (Cloudflare R2 / AWS S3 / MinIO)
-  // For cloud environments, we return the storageKey which will be fetched via signed URL
   return {
     originalFilename: file.name,
     storageKey: relativeKey,

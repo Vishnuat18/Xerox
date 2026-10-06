@@ -78,6 +78,11 @@ export type Subscription = $Result.DefaultSelection<Prisma.$SubscriptionPayload>
  * 
  */
 export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
+/**
+ * Model DocumentStorage
+ * 
+ */
+export type DocumentStorage = $Result.DefaultSelection<Prisma.$DocumentStoragePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -333,6 +338,16 @@ export class PrismaClient<
     * ```
     */
   get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documentStorage`: Exposes CRUD operations for the **DocumentStorage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentStorages
+    * const documentStorages = await prisma.documentStorage.findMany()
+    * ```
+    */
+  get documentStorage(): Prisma.DocumentStorageDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -785,7 +800,8 @@ export namespace Prisma {
     PricingRule: 'PricingRule',
     SubscriptionPlan: 'SubscriptionPlan',
     Subscription: 'Subscription',
-    AuditLog: 'AuditLog'
+    AuditLog: 'AuditLog',
+    DocumentStorage: 'DocumentStorage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -801,7 +817,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "shop" | "user" | "customer" | "order" | "orderDocument" | "documentPrintSpec" | "printAgent" | "printer" | "printJob" | "pricingRule" | "subscriptionPlan" | "subscription" | "auditLog"
+      modelProps: "shop" | "user" | "customer" | "order" | "orderDocument" | "documentPrintSpec" | "printAgent" | "printer" | "printJob" | "pricingRule" | "subscriptionPlan" | "subscription" | "auditLog" | "documentStorage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1663,6 +1679,72 @@ export namespace Prisma {
           }
         }
       }
+      DocumentStorage: {
+        payload: Prisma.$DocumentStoragePayload<ExtArgs>
+        fields: Prisma.DocumentStorageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentStorageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentStorageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentStorageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentStorageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>
+          }
+          findMany: {
+            args: Prisma.DocumentStorageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>[]
+          }
+          create: {
+            args: Prisma.DocumentStorageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>
+          }
+          createMany: {
+            args: Prisma.DocumentStorageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DocumentStorageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>
+          }
+          update: {
+            args: Prisma.DocumentStorageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentStorageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentStorageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DocumentStorageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentStoragePayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentStorageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentStorage>
+          }
+          groupBy: {
+            args: Prisma.DocumentStorageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentStorageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentStorageCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentStorageCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1760,6 +1842,7 @@ export namespace Prisma {
     subscriptionPlan?: SubscriptionPlanOmit
     subscription?: SubscriptionOmit
     auditLog?: AuditLogOmit
+    documentStorage?: DocumentStorageOmit
   }
 
   /* Types for Logging */
@@ -16090,6 +16173,955 @@ export namespace Prisma {
 
 
   /**
+   * Model DocumentStorage
+   */
+
+  export type AggregateDocumentStorage = {
+    _count: DocumentStorageCountAggregateOutputType | null
+    _avg: DocumentStorageAvgAggregateOutputType | null
+    _sum: DocumentStorageSumAggregateOutputType | null
+    _min: DocumentStorageMinAggregateOutputType | null
+    _max: DocumentStorageMaxAggregateOutputType | null
+  }
+
+  export type DocumentStorageAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type DocumentStorageSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type DocumentStorageMinAggregateOutputType = {
+    id: string | null
+    storageKey: string | null
+    fileData: Uint8Array | null
+    mimeType: string | null
+    filename: string | null
+    fileSize: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentStorageMaxAggregateOutputType = {
+    id: string | null
+    storageKey: string | null
+    fileData: Uint8Array | null
+    mimeType: string | null
+    filename: string | null
+    fileSize: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentStorageCountAggregateOutputType = {
+    id: number
+    storageKey: number
+    fileData: number
+    mimeType: number
+    filename: number
+    fileSize: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentStorageAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type DocumentStorageSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type DocumentStorageMinAggregateInputType = {
+    id?: true
+    storageKey?: true
+    fileData?: true
+    mimeType?: true
+    filename?: true
+    fileSize?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentStorageMaxAggregateInputType = {
+    id?: true
+    storageKey?: true
+    fileData?: true
+    mimeType?: true
+    filename?: true
+    fileSize?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentStorageCountAggregateInputType = {
+    id?: true
+    storageKey?: true
+    fileData?: true
+    mimeType?: true
+    filename?: true
+    fileSize?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentStorageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentStorage to aggregate.
+     */
+    where?: DocumentStorageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentStorages to fetch.
+     */
+    orderBy?: DocumentStorageOrderByWithRelationInput | DocumentStorageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DocumentStorageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentStorages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentStorages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DocumentStorages
+    **/
+    _count?: true | DocumentStorageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DocumentStorageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DocumentStorageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentStorageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentStorageMaxAggregateInputType
+  }
+
+  export type GetDocumentStorageAggregateType<T extends DocumentStorageAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentStorage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentStorage[P]>
+      : GetScalarType<T[P], AggregateDocumentStorage[P]>
+  }
+
+
+
+
+  export type DocumentStorageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentStorageWhereInput
+    orderBy?: DocumentStorageOrderByWithAggregationInput | DocumentStorageOrderByWithAggregationInput[]
+    by: DocumentStorageScalarFieldEnum[] | DocumentStorageScalarFieldEnum
+    having?: DocumentStorageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentStorageCountAggregateInputType | true
+    _avg?: DocumentStorageAvgAggregateInputType
+    _sum?: DocumentStorageSumAggregateInputType
+    _min?: DocumentStorageMinAggregateInputType
+    _max?: DocumentStorageMaxAggregateInputType
+  }
+
+  export type DocumentStorageGroupByOutputType = {
+    id: string
+    storageKey: string
+    fileData: Uint8Array
+    mimeType: string
+    filename: string
+    fileSize: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentStorageCountAggregateOutputType | null
+    _avg: DocumentStorageAvgAggregateOutputType | null
+    _sum: DocumentStorageSumAggregateOutputType | null
+    _min: DocumentStorageMinAggregateOutputType | null
+    _max: DocumentStorageMaxAggregateOutputType | null
+  }
+
+  type GetDocumentStorageGroupByPayload<T extends DocumentStorageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentStorageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentStorageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentStorageGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentStorageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentStorageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    storageKey?: boolean
+    fileData?: boolean
+    mimeType?: boolean
+    filename?: boolean
+    fileSize?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["documentStorage"]>
+
+
+
+  export type DocumentStorageSelectScalar = {
+    id?: boolean
+    storageKey?: boolean
+    fileData?: boolean
+    mimeType?: boolean
+    filename?: boolean
+    fileSize?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentStorageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "storageKey" | "fileData" | "mimeType" | "filename" | "fileSize" | "createdAt" | "updatedAt", ExtArgs["result"]["documentStorage"]>
+
+  export type $DocumentStoragePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentStorage"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      storageKey: string
+      fileData: Uint8Array
+      mimeType: string
+      filename: string
+      fileSize: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentStorage"]>
+    composites: {}
+  }
+
+  type DocumentStorageGetPayload<S extends boolean | null | undefined | DocumentStorageDefaultArgs> = $Result.GetResult<Prisma.$DocumentStoragePayload, S>
+
+  type DocumentStorageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentStorageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentStorageCountAggregateInputType | true
+    }
+
+  export interface DocumentStorageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentStorage'], meta: { name: 'DocumentStorage' } }
+    /**
+     * Find zero or one DocumentStorage that matches the filter.
+     * @param {DocumentStorageFindUniqueArgs} args - Arguments to find a DocumentStorage
+     * @example
+     * // Get one DocumentStorage
+     * const documentStorage = await prisma.documentStorage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentStorageFindUniqueArgs>(args: SelectSubset<T, DocumentStorageFindUniqueArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one DocumentStorage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentStorageFindUniqueOrThrowArgs} args - Arguments to find a DocumentStorage
+     * @example
+     * // Get one DocumentStorage
+     * const documentStorage = await prisma.documentStorage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentStorageFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentStorageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first DocumentStorage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageFindFirstArgs} args - Arguments to find a DocumentStorage
+     * @example
+     * // Get one DocumentStorage
+     * const documentStorage = await prisma.documentStorage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentStorageFindFirstArgs>(args?: SelectSubset<T, DocumentStorageFindFirstArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first DocumentStorage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageFindFirstOrThrowArgs} args - Arguments to find a DocumentStorage
+     * @example
+     * // Get one DocumentStorage
+     * const documentStorage = await prisma.documentStorage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentStorageFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentStorageFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more DocumentStorages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentStorages
+     * const documentStorages = await prisma.documentStorage.findMany()
+     * 
+     * // Get first 10 DocumentStorages
+     * const documentStorages = await prisma.documentStorage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentStorageWithIdOnly = await prisma.documentStorage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DocumentStorageFindManyArgs>(args?: SelectSubset<T, DocumentStorageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a DocumentStorage.
+     * @param {DocumentStorageCreateArgs} args - Arguments to create a DocumentStorage.
+     * @example
+     * // Create one DocumentStorage
+     * const DocumentStorage = await prisma.documentStorage.create({
+     *   data: {
+     *     // ... data to create a DocumentStorage
+     *   }
+     * })
+     * 
+     */
+    create<T extends DocumentStorageCreateArgs>(args: SelectSubset<T, DocumentStorageCreateArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many DocumentStorages.
+     * @param {DocumentStorageCreateManyArgs} args - Arguments to create many DocumentStorages.
+     * @example
+     * // Create many DocumentStorages
+     * const documentStorage = await prisma.documentStorage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DocumentStorageCreateManyArgs>(args?: SelectSubset<T, DocumentStorageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DocumentStorage.
+     * @param {DocumentStorageDeleteArgs} args - Arguments to delete one DocumentStorage.
+     * @example
+     * // Delete one DocumentStorage
+     * const DocumentStorage = await prisma.documentStorage.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentStorage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DocumentStorageDeleteArgs>(args: SelectSubset<T, DocumentStorageDeleteArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one DocumentStorage.
+     * @param {DocumentStorageUpdateArgs} args - Arguments to update one DocumentStorage.
+     * @example
+     * // Update one DocumentStorage
+     * const documentStorage = await prisma.documentStorage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DocumentStorageUpdateArgs>(args: SelectSubset<T, DocumentStorageUpdateArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more DocumentStorages.
+     * @param {DocumentStorageDeleteManyArgs} args - Arguments to filter DocumentStorages to delete.
+     * @example
+     * // Delete a few DocumentStorages
+     * const { count } = await prisma.documentStorage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DocumentStorageDeleteManyArgs>(args?: SelectSubset<T, DocumentStorageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentStorages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentStorages
+     * const documentStorage = await prisma.documentStorage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DocumentStorageUpdateManyArgs>(args: SelectSubset<T, DocumentStorageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DocumentStorage.
+     * @param {DocumentStorageUpsertArgs} args - Arguments to update or create a DocumentStorage.
+     * @example
+     * // Update or create a DocumentStorage
+     * const documentStorage = await prisma.documentStorage.upsert({
+     *   create: {
+     *     // ... data to create a DocumentStorage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentStorage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentStorageUpsertArgs>(args: SelectSubset<T, DocumentStorageUpsertArgs<ExtArgs>>): Prisma__DocumentStorageClient<$Result.GetResult<Prisma.$DocumentStoragePayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of DocumentStorages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageCountArgs} args - Arguments to filter DocumentStorages to count.
+     * @example
+     * // Count the number of DocumentStorages
+     * const count = await prisma.documentStorage.count({
+     *   where: {
+     *     // ... the filter for the DocumentStorages we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentStorageCountArgs>(
+      args?: Subset<T, DocumentStorageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentStorageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentStorage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentStorageAggregateArgs>(args: Subset<T, DocumentStorageAggregateArgs>): Prisma.PrismaPromise<GetDocumentStorageAggregateType<T>>
+
+    /**
+     * Group by DocumentStorage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentStorageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DocumentStorageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentStorageGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentStorageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentStorageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentStorageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentStorage model
+   */
+  readonly fields: DocumentStorageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentStorage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentStorageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentStorage model
+   */ 
+  interface DocumentStorageFieldRefs {
+    readonly id: FieldRef<"DocumentStorage", 'String'>
+    readonly storageKey: FieldRef<"DocumentStorage", 'String'>
+    readonly fileData: FieldRef<"DocumentStorage", 'Bytes'>
+    readonly mimeType: FieldRef<"DocumentStorage", 'String'>
+    readonly filename: FieldRef<"DocumentStorage", 'String'>
+    readonly fileSize: FieldRef<"DocumentStorage", 'Int'>
+    readonly createdAt: FieldRef<"DocumentStorage", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentStorage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DocumentStorage findUnique
+   */
+  export type DocumentStorageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * Filter, which DocumentStorage to fetch.
+     */
+    where: DocumentStorageWhereUniqueInput
+  }
+
+  /**
+   * DocumentStorage findUniqueOrThrow
+   */
+  export type DocumentStorageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * Filter, which DocumentStorage to fetch.
+     */
+    where: DocumentStorageWhereUniqueInput
+  }
+
+  /**
+   * DocumentStorage findFirst
+   */
+  export type DocumentStorageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * Filter, which DocumentStorage to fetch.
+     */
+    where?: DocumentStorageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentStorages to fetch.
+     */
+    orderBy?: DocumentStorageOrderByWithRelationInput | DocumentStorageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentStorages.
+     */
+    cursor?: DocumentStorageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentStorages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentStorages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentStorages.
+     */
+    distinct?: DocumentStorageScalarFieldEnum | DocumentStorageScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentStorage findFirstOrThrow
+   */
+  export type DocumentStorageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * Filter, which DocumentStorage to fetch.
+     */
+    where?: DocumentStorageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentStorages to fetch.
+     */
+    orderBy?: DocumentStorageOrderByWithRelationInput | DocumentStorageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentStorages.
+     */
+    cursor?: DocumentStorageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentStorages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentStorages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentStorages.
+     */
+    distinct?: DocumentStorageScalarFieldEnum | DocumentStorageScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentStorage findMany
+   */
+  export type DocumentStorageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * Filter, which DocumentStorages to fetch.
+     */
+    where?: DocumentStorageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentStorages to fetch.
+     */
+    orderBy?: DocumentStorageOrderByWithRelationInput | DocumentStorageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DocumentStorages.
+     */
+    cursor?: DocumentStorageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentStorages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentStorages.
+     */
+    skip?: number
+    distinct?: DocumentStorageScalarFieldEnum | DocumentStorageScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentStorage create
+   */
+  export type DocumentStorageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentStorage.
+     */
+    data: XOR<DocumentStorageCreateInput, DocumentStorageUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentStorage createMany
+   */
+  export type DocumentStorageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentStorages.
+     */
+    data: DocumentStorageCreateManyInput | DocumentStorageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DocumentStorage update
+   */
+  export type DocumentStorageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentStorage.
+     */
+    data: XOR<DocumentStorageUpdateInput, DocumentStorageUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentStorage to update.
+     */
+    where: DocumentStorageWhereUniqueInput
+  }
+
+  /**
+   * DocumentStorage updateMany
+   */
+  export type DocumentStorageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentStorages.
+     */
+    data: XOR<DocumentStorageUpdateManyMutationInput, DocumentStorageUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentStorages to update
+     */
+    where?: DocumentStorageWhereInput
+    /**
+     * Limit how many DocumentStorages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentStorage upsert
+   */
+  export type DocumentStorageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentStorage to update in case it exists.
+     */
+    where: DocumentStorageWhereUniqueInput
+    /**
+     * In case the DocumentStorage found by the `where` argument doesn't exist, create a new DocumentStorage with this data.
+     */
+    create: XOR<DocumentStorageCreateInput, DocumentStorageUncheckedCreateInput>
+    /**
+     * In case the DocumentStorage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentStorageUpdateInput, DocumentStorageUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentStorage delete
+   */
+  export type DocumentStorageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+    /**
+     * Filter which DocumentStorage to delete.
+     */
+    where: DocumentStorageWhereUniqueInput
+  }
+
+  /**
+   * DocumentStorage deleteMany
+   */
+  export type DocumentStorageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentStorages to delete
+     */
+    where?: DocumentStorageWhereInput
+    /**
+     * Limit how many DocumentStorages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentStorage without action
+   */
+  export type DocumentStorageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentStorage
+     */
+    select?: DocumentStorageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentStorage
+     */
+    omit?: DocumentStorageOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16329,6 +17361,20 @@ export namespace Prisma {
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+  export const DocumentStorageScalarFieldEnum: {
+    id: 'id',
+    storageKey: 'storageKey',
+    fileData: 'fileData',
+    mimeType: 'mimeType',
+    filename: 'filename',
+    fileSize: 'fileSize',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentStorageScalarFieldEnum = (typeof DocumentStorageScalarFieldEnum)[keyof typeof DocumentStorageScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -16519,6 +17565,16 @@ export namespace Prisma {
   export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
 
 
+  export const DocumentStorageOrderByRelevanceFieldEnum: {
+    id: 'id',
+    storageKey: 'storageKey',
+    mimeType: 'mimeType',
+    filename: 'filename'
+  };
+
+  export type DocumentStorageOrderByRelevanceFieldEnum = (typeof DocumentStorageOrderByRelevanceFieldEnum)[keyof typeof DocumentStorageOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references 
    */
@@ -16556,6 +17612,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
     
   /**
    * Deep Input Types
@@ -17787,6 +18850,76 @@ export namespace Prisma {
     details?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     ipAddress?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
+  }
+
+  export type DocumentStorageWhereInput = {
+    AND?: DocumentStorageWhereInput | DocumentStorageWhereInput[]
+    OR?: DocumentStorageWhereInput[]
+    NOT?: DocumentStorageWhereInput | DocumentStorageWhereInput[]
+    id?: StringFilter<"DocumentStorage"> | string
+    storageKey?: StringFilter<"DocumentStorage"> | string
+    fileData?: BytesFilter<"DocumentStorage"> | Uint8Array
+    mimeType?: StringFilter<"DocumentStorage"> | string
+    filename?: StringFilter<"DocumentStorage"> | string
+    fileSize?: IntFilter<"DocumentStorage"> | number
+    createdAt?: DateTimeFilter<"DocumentStorage"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentStorage"> | Date | string
+  }
+
+  export type DocumentStorageOrderByWithRelationInput = {
+    id?: SortOrder
+    storageKey?: SortOrder
+    fileData?: SortOrder
+    mimeType?: SortOrder
+    filename?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _relevance?: DocumentStorageOrderByRelevanceInput
+  }
+
+  export type DocumentStorageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    storageKey?: string
+    AND?: DocumentStorageWhereInput | DocumentStorageWhereInput[]
+    OR?: DocumentStorageWhereInput[]
+    NOT?: DocumentStorageWhereInput | DocumentStorageWhereInput[]
+    fileData?: BytesFilter<"DocumentStorage"> | Uint8Array
+    mimeType?: StringFilter<"DocumentStorage"> | string
+    filename?: StringFilter<"DocumentStorage"> | string
+    fileSize?: IntFilter<"DocumentStorage"> | number
+    createdAt?: DateTimeFilter<"DocumentStorage"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentStorage"> | Date | string
+  }, "id" | "storageKey">
+
+  export type DocumentStorageOrderByWithAggregationInput = {
+    id?: SortOrder
+    storageKey?: SortOrder
+    fileData?: SortOrder
+    mimeType?: SortOrder
+    filename?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentStorageCountOrderByAggregateInput
+    _avg?: DocumentStorageAvgOrderByAggregateInput
+    _max?: DocumentStorageMaxOrderByAggregateInput
+    _min?: DocumentStorageMinOrderByAggregateInput
+    _sum?: DocumentStorageSumOrderByAggregateInput
+  }
+
+  export type DocumentStorageScalarWhereWithAggregatesInput = {
+    AND?: DocumentStorageScalarWhereWithAggregatesInput | DocumentStorageScalarWhereWithAggregatesInput[]
+    OR?: DocumentStorageScalarWhereWithAggregatesInput[]
+    NOT?: DocumentStorageScalarWhereWithAggregatesInput | DocumentStorageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DocumentStorage"> | string
+    storageKey?: StringWithAggregatesFilter<"DocumentStorage"> | string
+    fileData?: BytesWithAggregatesFilter<"DocumentStorage"> | Uint8Array
+    mimeType?: StringWithAggregatesFilter<"DocumentStorage"> | string
+    filename?: StringWithAggregatesFilter<"DocumentStorage"> | string
+    fileSize?: IntWithAggregatesFilter<"DocumentStorage"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentStorage"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentStorage"> | Date | string
   }
 
   export type ShopCreateInput = {
@@ -19152,6 +20285,83 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DocumentStorageCreateInput = {
+    id?: string
+    storageKey: string
+    fileData: Uint8Array
+    mimeType?: string
+    filename: string
+    fileSize: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentStorageUncheckedCreateInput = {
+    id?: string
+    storageKey: string
+    fileData: Uint8Array
+    mimeType?: string
+    filename: string
+    fileSize: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentStorageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    fileData?: BytesFieldUpdateOperationsInput | Uint8Array
+    mimeType?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentStorageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    fileData?: BytesFieldUpdateOperationsInput | Uint8Array
+    mimeType?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentStorageCreateManyInput = {
+    id?: string
+    storageKey: string
+    fileData: Uint8Array
+    mimeType?: string
+    filename: string
+    fileSize: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentStorageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    fileData?: BytesFieldUpdateOperationsInput | Uint8Array
+    mimeType?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentStorageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    fileData?: BytesFieldUpdateOperationsInput | Uint8Array
+    mimeType?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -20271,6 +21481,70 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type BytesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel>
+    in?: Uint8Array[]
+    notIn?: Uint8Array[]
+    not?: NestedBytesFilter<$PrismaModel> | Uint8Array
+  }
+
+  export type DocumentStorageOrderByRelevanceInput = {
+    fields: DocumentStorageOrderByRelevanceFieldEnum | DocumentStorageOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type DocumentStorageCountOrderByAggregateInput = {
+    id?: SortOrder
+    storageKey?: SortOrder
+    fileData?: SortOrder
+    mimeType?: SortOrder
+    filename?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentStorageAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type DocumentStorageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    storageKey?: SortOrder
+    fileData?: SortOrder
+    mimeType?: SortOrder
+    filename?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentStorageMinOrderByAggregateInput = {
+    id?: SortOrder
+    storageKey?: SortOrder
+    fileData?: SortOrder
+    mimeType?: SortOrder
+    filename?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentStorageSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type BytesWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel>
+    in?: Uint8Array[]
+    notIn?: Uint8Array[]
+    not?: NestedBytesWithAggregatesFilter<$PrismaModel> | Uint8Array
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBytesFilter<$PrismaModel>
+    _max?: NestedBytesFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedManyWithoutShopInput = {
     create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
     connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
@@ -21323,6 +22597,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
   }
 
+  export type BytesFieldUpdateOperationsInput = {
+    set?: Uint8Array
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -21558,6 +22836,23 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBytesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel>
+    in?: Uint8Array[]
+    notIn?: Uint8Array[]
+    not?: NestedBytesFilter<$PrismaModel> | Uint8Array
+  }
+
+  export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel>
+    in?: Uint8Array[]
+    notIn?: Uint8Array[]
+    not?: NestedBytesWithAggregatesFilter<$PrismaModel> | Uint8Array
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBytesFilter<$PrismaModel>
+    _max?: NestedBytesFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutShopInput = {

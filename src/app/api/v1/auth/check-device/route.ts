@@ -16,15 +16,10 @@ export async function GET(req: NextRequest) {
 
   const effectiveDeviceId = deviceId || cookieDeviceId;
 
-  const result = deviceRegistry.checkDevice(
-    effectiveDeviceId,
-    fingerprint,
-    registeredShopCookie
-  );
-
+  // System restriction disabled during test period
   return apiSuccess({
-    isRegistered: result.isRegistered,
-    existingShop: result.existingShop || null,
-    reason: result.reason || null,
+    isRegistered: false,
+    existingShop: null,
+    reason: null,
   });
 }

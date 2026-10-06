@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Store, AlertCircle, ShieldAlert, Laptop, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { Store, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
-import { getSystemDeviceFingerprint, SystemFingerprint } from '@/lib/device-fingerprint';
 import { triggerGoogleAuth } from '@/lib/google-auth';
 
 export default function RegisterPage() {
@@ -24,41 +23,6 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  
-  // Hardware & Device Security State
-  const [deviceInfo, setDeviceInfo] = useState<SystemFingerprint | null>(null);
-  const [isCheckingDevice, setIsCheckingDevice] = useState(true);
-  const [deviceBlocked, setDeviceBlocked] = useState(false);
-  const [existingShopInfo, setExistingShopInfo] = useState<{
-    shopName: string;
-    ownerEmailMasked: string;
-    registeredAt: string;
-  } | null>(null);
-
-  useEffect(() => {
-    async function checkSystem() {
-      try {
-        const fp = await getSystemDeviceFingerprint();
-        setDeviceInfo(fp);
-
-        const res = await fetch(
-          `/api/v1/auth/check-device?deviceId=${encodeURIComponent(fp.deviceId)}&fingerprint=${encodeURIComponent(fp.hardwareFingerprint)}`
-        );
-        const data = await res.json();
-
-        if (data.success && data.data?.isRegistered) {
-          setDeviceBlocked(true);
-          setExistingShopInfo(data.data.existingShop);
-        }
-      } catch (err) {
-        console.error('System pre-check error', err);
-      } finally {
-        setIsCheckingDevice(false);
-      }
-    }
-
-    checkSystem();
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -66,16 +30,12 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (deviceBlocked) return;
-
     setIsLoading(true);
     setErrorMessage('');
 
     try {
       const payload = {
         ...formData,
-        deviceId: deviceInfo?.deviceId,
-        hardwareFingerprint: deviceInfo?.hardwareFingerprint,
       };
 
       const res = await fetch('/api/v1/auth/register-owner', {
@@ -87,12 +47,6 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        if (data.error?.code === 'DEVICE_ALREADY_REGISTERED' || res.status === 403) {
-          setDeviceBlocked(true);
-          if (data.error?.details?.existingShop) {
-            setExistingShopInfo(data.error.details.existingShop);
-          }
-        }
         throw new Error(data.error?.message || 'Registration failed. Please check your details.');
       }
 
@@ -106,7 +60,6 @@ export default function RegisterPage() {
   };
 
   const handleGoogleRegister = async () => {
-    if (deviceBlocked) return;
     setIsGoogleLoading(true);
     setErrorMessage('');
 
@@ -124,8 +77,6 @@ export default function RegisterPage() {
           fullName: googleUser.fullName || formData.fullName || 'Shop Owner',
           shopName: formData.shopName || `${googleUser.fullName || 'Xerox'} Print Hub`,
           sub: googleUser.sub,
-          deviceId: deviceInfo?.deviceId,
-          hardwareFingerprint: deviceInfo?.hardwareFingerprint,
           action: 'register',
         }),
       });
@@ -165,49 +116,6 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* DEVICE RESTRICTION BLOCK BANNER: ONE SHOP PER SYSTEM */}
-          {deviceBlocked ? (
-            <div className="bg-white rounded-2xl border border-amber-200/90 p-6 space-y-4 shadow-sm animate-in fade-in duration-300">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-700 shrink-0">
-                  <ShieldAlert className="h-5 w-5" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-zinc-900">
-                    System Limit Reached: 1 Account per Computer
-                  </h3>
-                  <p className="text-xs text-zinc-600 leading-relaxed">
-                    This computer is already registered with an active shop account:
-                  </p>
-                  <div className="mt-2 p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs font-mono space-y-1">
-                    <p className="font-semibold text-zinc-900">
-                      Shop: {existingShopInfo?.shopName || 'Registered Xerox Shop'}
-                    </p>
-                    <p className="text-zinc-500">
-                      Account: {existingShopInfo?.ownerEmailMasked || 'registered email'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-100 text-[11px] text-amber-900 leading-relaxed">
-                To maintain fair access and prevent repeated free-trial creation, each physical system is permitted only one shop owner registration.
-              </div>
-
-              <div className="pt-2 flex flex-col gap-2">
-                <Link
-                  href="/login"
-                  className="w-full py-2.5 rounded-lg text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
-                >
-                  <span>Sign In to Existing Account</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <p className="text-center text-[11px] text-zinc-400">
-                  Need to transfer ownership or need help? <a href="mailto:support@smartprinthub.com" className="text-zinc-700 underline font-medium">Contact Support</a>
-                </p>
-              </div>
-            </div>
-          ) : (
             <form onSubmit={handleRegister} className="bg-white rounded-2xl border border-zinc-200/80 p-6 space-y-3.5 shadow-sm">
               {errorMessage && (
                 <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
@@ -215,18 +123,6 @@ export default function RegisterPage() {
                   <span>{errorMessage}</span>
                 </div>
               )}
-
-              {/* Hardware verified security badge */}
-              <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[11px] text-zinc-500">
-                <div className="flex items-center gap-1.5">
-                  <Laptop className="h-3 w-3 text-zinc-400" />
-                  <span>Hardware verification:</span>
-                </div>
-                <div className="flex items-center gap-1 text-emerald-700 font-medium">
-                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                  <span>Verified Device (1 Shop per System)</span>
-                </div>
-              </div>
 
               {/* Quick Google One-Click Registration */}
               <div className="space-y-2.5 pt-1">
@@ -334,14 +230,13 @@ export default function RegisterPage() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isLoading || isCheckingDevice}
+                  disabled={isLoading}
                   className="w-full py-2.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50 shadow-2xs"
                 >
                   {isLoading ? 'Setting up shop & counter QR...' : 'Create Shop Account'}
                 </button>
               </div>
             </form>
-          )}
 
           <p className="text-center text-xs text-zinc-400">
             Already registered?{' '}
