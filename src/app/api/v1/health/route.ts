@@ -8,32 +8,35 @@ export async function GET() {
   try {
     const startTime = Date.now();
     
-    // Check database connection
-    await db.$queryRaw`SELECT 1`;
-    const dbLatencyMs = Date.now() - startTime;
+    let dbStatus = 'CONNECTED';
+    let dbLatencyMs = 0;
+    let counts = { shops: 0, orders: 0, printers: 0 };
 
-    // Fetch counts
-    const [shopCount, orderCount, printerCount] = await Promise.all([
-      db.shop.count(),
-      db.order.count(),
-      db.printer.count(),
-    ]);
+    try {
+      await db.shop.findFirst({ select: { id: true } });
+      dbLatencyMs = Date.now() - startTime;
+
+      const [shopCount, orderCount, printerCount] = await Promise.all([
+        db.shop.count().catch(() => 0),
+        db.order.count().catch(() => 0),
+        db.printer.count().catch(() => 0),
+      ]);
+      counts = { shops: shopCount, orders: orderCount, printers: printerCount };
+    } catch (dbErr) {
+      dbStatus = 'RECONNECTING';
+    }
 
     return apiSuccess({
-      status: 'HEALTHY',
+      status: dbStatus === 'CONNECTED' ? 'HEALTHY' : 'DEGRADED',
       service: 'smart-print-hub-api',
       version: '1.0.0',
       milestone: 'M1 - Project Foundation',
       environment: process.env.NODE_ENV || 'development',
       uptimeSeconds: Math.floor(process.uptime()),
       database: {
-        status: 'CONNECTED',
+        status: dbStatus,
         latencyMs: dbLatencyMs,
-        counts: {
-          shops: shopCount,
-          orders: orderCount,
-          printers: printerCount,
-        },
+        counts,
       },
       timestamp: new Date().toISOString(),
     });

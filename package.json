@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "smart-print-hub",
   "version": "1.0.0",
   "description": "Smart Print Hub - Automated Xerox Shop Management & Multi-Printer Workflow System",

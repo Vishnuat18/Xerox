@@ -15,6 +15,14 @@ import {
   CheckCircle2,
   Sparkles
 } from 'lucide-react';
+import {
+  A4SizeIcon,
+  BlackWhiteIcon,
+  ColorPrintingIcon,
+  OneSidedIcon,
+  TwoSidedIcon,
+  DuplexPrintingIcon,
+} from '@/components/icons/PrintIcons';
 
 export type PaperSize = 'A1' | 'A2' | 'A3' | 'A4' | 'A5' | 'A6';
 export type Orientation = 'PORTRAIT' | 'LANDSCAPE';
@@ -395,20 +403,22 @@ export function PrintPreviewModal({
                 <button
                   type="button"
                   onClick={() => onUpdateSpec({ color: 'BW' })}
-                  className={`py-1.5 rounded-md font-medium transition-all ${
+                  className={`py-1.5 rounded-md font-medium transition-all inline-flex items-center justify-center gap-1.5 ${
                     spec.color === 'BW' ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
-                  Black & White
+                  <BlackWhiteIcon className="h-3.5 w-3.5 shrink-0" />
+                  <span>Black &amp; White</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onUpdateSpec({ color: 'COLOR' })}
-                  className={`py-1.5 rounded-md font-medium transition-all ${
+                  className={`py-1.5 rounded-md font-medium transition-all inline-flex items-center justify-center gap-1.5 ${
                     spec.color === 'COLOR' ? 'bg-white text-emerald-800 shadow-2xs' : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
-                  Full Color
+                  <ColorPrintingIcon className="h-3.5 w-3.5 shrink-0" />
+                  <span>Full Color</span>
                 </button>
               </div>
             </div>
@@ -422,20 +432,22 @@ export function PrintPreviewModal({
                 <button
                   type="button"
                   onClick={() => onUpdateSpec({ duplex: 'SIMPLEX' })}
-                  className={`py-1.5 rounded-md font-medium transition-all ${
+                  className={`py-1.5 rounded-md font-medium transition-all inline-flex items-center justify-center gap-1.5 ${
                     spec.duplex === 'SIMPLEX' ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
-                  1-Sided
+                  <OneSidedIcon className="h-3.5 w-3.5 shrink-0" />
+                  <span>1-Sided</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onUpdateSpec({ duplex: 'DUPLEX' })}
-                  className={`py-1.5 rounded-md font-medium transition-all ${
+                  className={`py-1.5 rounded-md font-medium transition-all inline-flex items-center justify-center gap-1.5 ${
                     spec.duplex === 'DUPLEX' ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
-                  2-Sided (Duplex)
+                  <TwoSidedIcon className="h-3.5 w-3.5 shrink-0" />
+                  <span>2-Sided</span>
                 </button>
               </div>
             </div>

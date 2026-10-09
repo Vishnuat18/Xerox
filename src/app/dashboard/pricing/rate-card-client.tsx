@@ -258,7 +258,7 @@ export function RateCardClient() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 w-full">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-200/80">
         <div>
@@ -650,7 +650,7 @@ export function RateCardClient() {
 
       {/* TAB 3: BULK VOLUME DISCOUNTS */}
       {activeTab === 'discounts' && (
-        <div className="space-y-4 max-w-2xl">
+        <div className="space-y-4 w-full max-w-4xl">
           <div className="bg-white rounded-xl border border-zinc-200/90 p-4 space-y-4 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
               <div>

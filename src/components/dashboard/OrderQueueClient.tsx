@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Printer, 
   Clock, 
@@ -21,8 +21,41 @@ import {
   ExternalLink,
   Eye,
   Zap,
-  Play
+  Play,
+  Search,
+  ChevronDown,
+  MoreHorizontal,
+  Plus
 } from 'lucide-react';
+import {
+  InQueueIcon,
+  PrintingIcon,
+  CompletedIcon,
+  FailedIcon,
+  PausedIcon,
+  RetryIcon,
+  CancelIcon,
+  ErrorIcon,
+  DocumentIcon,
+  PdfFileIcon,
+  ImageFileIcon,
+  TextFileIcon,
+  MultiplePagesIcon,
+  DuplexPrintingIcon,
+  OneSidedIcon,
+  TwoSidedIcon,
+  A4SizeIcon,
+  BlackWhiteIcon,
+  ColorPrintingIcon,
+  LaserPrinterIcon,
+  PhotocopierIcon,
+  MfpPrinterIcon,
+  ViewDetailsIcon,
+  PrinterOnlineIcon,
+  PrinterOfflineIcon,
+  getDocumentIcon,
+  getPrinterModelIcon,
+} from '@/components/icons/PrintIcons';
 
 interface DocumentSpec {
   copies: number;
@@ -81,6 +114,10 @@ export function OrderQueueClient({
   const [overrideAmount, setOverrideAmount] = useState<string>('');
   const [previewingDocId, setPreviewingDocId] = useState<string | null>(null);
   const [spoolingDocId, setSpoolingDocId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [printerFilter, setPrinterFilter] = useState<string>('ALL');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Spooler dispatch state
   const [selectedPrinterId, setSelectedPrinterId] = useState<string>(printers[0]?.id || 'printer-hp-001');
@@ -88,7 +125,54 @@ export function OrderQueueClient({
 
   const activeOrders = orders.filter((o) => !['COMPLETED', 'CANCELLED'].includes(o.status));
   const completedOrders = orders.filter((o) => ['COMPLETED', 'CANCELLED'].includes(o.status));
-  const displayedOrders = filter === 'ACTIVE' ? activeOrders : completedOrders;
+  const baseOrders = filter === 'ACTIVE' ? activeOrders : completedOrders;
+  
+  // Apply search and filters
+  const displayedOrders = baseOrders.filter((o) => {
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch = 
+        o.orderNumber.toLowerCase().includes(q) ||
+        o.customer.fullName.toLowerCase().includes(q) ||
+        o.documents.some(d => d.originalFilename.toLowerCase().includes(q));
+      if (!matchesSearch) return false;
+    }
+    if (statusFilter !== 'ALL' && o.status !== statusFilter) return false;
+    return true;
+  });
+
+  // Fast refresh handler
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      const res = await fetch('/api/v1/orders/queue', { cache: 'no-store' });
+      const json = await res.json();
+      if (json.success && json.data?.orders) {
+        setOrders(json.data.orders);
+      }
+    } catch (err) {
+      // Fallback: reload page
+      window.location.reload();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 300);
+    }
+  }, []);
+
+  // Auto-refresh every 5 seconds for instant updates
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/v1/orders/queue', { cache: 'no-store' });
+        const json = await res.json();
+        if (json.success && json.data?.orders) {
+          setOrders(json.data.orders);
+        }
+      } catch {
+        // Silent fail for auto-refresh
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleOpenInspector = (order: Order) => {
     setInspectingOrder(order);
@@ -290,307 +374,374 @@ export function OrderQueueClient({
     }, 1800);
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, queuePosition?: number) => {
     switch (status) {
       case 'SUBMITTED':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-            New Order
-          </span>
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
+              <InQueueIcon className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+              Pending
+            </span>
+            <span className="text-[10px] text-zinc-400 pl-1">Awaiting assignment</span>
+          </div>
         );
       case 'QUEUED':
+        return (
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/80">
+              <InQueueIcon className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+              Queued
+            </span>
+            <span className="text-[10px] text-zinc-400 pl-1">Position #{queuePosition || 1} in queue</span>
+          </div>
+        );
       case 'PRINTING':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/60">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Printing to Spooler
-          </span>
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+              <PrintingIcon className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+              Printing
+            </span>
+            <div className="w-20 h-1 bg-zinc-100 rounded-full overflow-hidden ml-1">
+              <div className="h-full bg-emerald-500 rounded-full animate-pulse" style={{ width: '65%' }} />
+            </div>
+          </div>
+        );
+      case 'PAUSED':
+        return (
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
+              <PausedIcon className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+              Paused
+            </span>
+            <span className="text-[10px] text-zinc-400 pl-1">Queue paused</span>
+          </div>
         );
       case 'READY':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-teal-50 text-teal-800 border border-teal-200/60">
-            Ready for Pickup
-          </span>
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-teal-50 text-teal-700 border border-teal-200/80">
+              <CompletedIcon className="h-3.5 w-3.5 text-teal-600 shrink-0" />
+              Ready
+            </span>
+            <span className="text-[10px] text-zinc-400 pl-1">For pickup</span>
+          </div>
         );
       case 'COMPLETED':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 text-zinc-600">
-            Completed & Paid
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-zinc-100 text-zinc-700 border border-zinc-200/60">
+            <CompletedIcon className="h-3.5 w-3.5 text-zinc-700 shrink-0" />
+            Completed
           </span>
+        );
+      case 'CANCELLED':
+        return (
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+              <FailedIcon className="h-3.5 w-3.5 text-rose-600 shrink-0" />
+              Failed
+            </span>
+            <span className="text-[10px] text-rose-400 pl-1">Cancelled by user</span>
+          </div>
         );
       default:
         return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 text-zinc-600">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-zinc-100 text-zinc-600">
             {status}
           </span>
         );
     }
   };
 
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+    return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       
-      {/* Quiet Top Metrics & Filter Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-200/70">
-        <div className="flex items-center gap-6 text-xs text-zinc-500">
-          <div>
-            <span className="text-zinc-400 block text-[10px] uppercase font-mono">Queue</span>
-            <span className="text-xl font-semibold text-zinc-900 font-sans tracking-tight">
-              {activeOrders.length}
-            </span>
+      {/* Page Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-zinc-900 tracking-tight">Print Queue</h1>
+          <p className="text-sm text-zinc-500 mt-0.5">Manage and monitor all print jobs in real time.</p>
+        </div>
+        <button
+          onClick={() => {/* Could open a new print job form */}}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-zinc-900 hover:bg-zinc-800 text-white transition-all shadow-sm"
+        >
+          <Plus className="h-4 w-4" />
+          New Print Job
+        </button>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-200/70">
+        {/* Left: Tabs */}
+        <div className="flex items-center gap-3">
+          <div className="inline-flex p-0.5 rounded-lg bg-zinc-100 border border-zinc-200/60 text-[13px]">
+            <button
+              onClick={() => setFilter('ACTIVE')}
+              className={`px-3.5 py-1.5 rounded-md transition-all font-medium ${
+                filter === 'ACTIVE'
+                  ? 'bg-white text-zinc-900 shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-900'
+              }`}
+            >
+              Active Queue ({activeOrders.length})
+            </button>
+            <button
+              onClick={() => setFilter('COMPLETED')}
+              className={`px-3.5 py-1.5 rounded-md transition-all font-medium ${
+                filter === 'COMPLETED'
+                  ? 'bg-white text-zinc-900 shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-900'
+              }`}
+            >
+              Completed {completedOrders.length}
+            </button>
           </div>
-          <div className="h-7 w-px bg-zinc-200/80" />
-          <div>
-            <span className="text-zinc-400 block text-[10px] uppercase font-mono">Completed</span>
-            <span className="text-xl font-semibold text-zinc-900 font-sans tracking-tight">
-              {completedOrders.length}
-            </span>
-          </div>
-          <div className="h-7 w-px bg-zinc-200/80" />
-          <div>
-            <span className="text-zinc-400 block text-[10px] uppercase font-mono">Printers</span>
-            <div className="flex items-center gap-1.5 text-zinc-900 font-semibold text-xs mt-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              <span>{printers.length} Online</span>
-            </div>
-          </div>
+
+          {/* Refresh Button */}
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="h-8 w-8 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-zinc-900 flex items-center justify-center transition-all disabled:opacity-50"
+            title="Refresh queue (auto-refreshes every 5s)"
+          >
+            <RetryIcon className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
         </div>
 
-        {/* Minimal Segmented Filter Tabs */}
-        <div className="inline-flex p-0.5 rounded-lg bg-zinc-100 border border-zinc-200/60 self-start sm:self-auto text-xs">
-          <button
-            onClick={() => setFilter('ACTIVE')}
-            className={`px-3 py-1 rounded-md transition-all font-medium ${
-              filter === 'ACTIVE'
-                ? 'bg-white text-zinc-900 shadow-2xs'
-                : 'text-zinc-500 hover:text-zinc-900'
-            }`}
+        {/* Right: Search + Filters */}
+        <div className="flex items-center gap-2">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+            <input
+              type="text"
+              placeholder="Search orders..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-44 pl-8 pr-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-900/10 focus:border-zinc-300"
+            />
+          </div>
+          
+          {/* Printer Filter */}
+          <select
+            value={printerFilter}
+            onChange={(e) => setPrinterFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-[13px] text-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-900/10"
           >
-            Active Queue ({activeOrders.length})
-          </button>
-          <button
-            onClick={() => setFilter('COMPLETED')}
-            className={`px-3 py-1 rounded-md transition-all font-medium ${
-              filter === 'COMPLETED'
-                ? 'bg-white text-zinc-900 shadow-2xs'
-                : 'text-zinc-500 hover:text-zinc-900'
-            }`}
+            <option value="ALL">All Printers</option>
+            {printers.map((p) => (
+              <option key={p.id} value={p.id}>{p.displayName}</option>
+            ))}
+          </select>
+
+          {/* Status Filter */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-[13px] text-zinc-700 focus:outline-none focus:ring-1 focus:ring-zinc-900/10"
           >
-            Completed
-          </button>
+            <option value="ALL">All Status</option>
+            <option value="SUBMITTED">Pending</option>
+            <option value="QUEUED">Queued</option>
+            <option value="PRINTING">Printing</option>
+            <option value="READY">Ready</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
         </div>
       </div>
 
-      {/* Orders List / Empty State */}
+      {/* Orders Table */}
       {displayedOrders.length === 0 ? (
         <div className="py-16 text-center border border-dashed border-zinc-200 rounded-2xl bg-zinc-50/50">
-          <Clock className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
+          <InQueueIcon className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
           <p className="text-sm font-medium text-zinc-700">No {filter.toLowerCase()} print jobs</p>
           <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
             When customers scan your counter QR and submit print requirements, they will appear here instantly.
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {displayedOrders.map((order) => {
-            const isProcessing = processingId === order.id;
+        <div className="rounded-xl border border-zinc-200/80 bg-white overflow-hidden">
+          {/* Table Header */}
+          <div className="hidden md:grid grid-cols-[50px_1fr_1.2fr_1.5fr_0.8fr_0.6fr_1fr_0.7fr] gap-0 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+            <span>#</span>
+            <span>Order</span>
+            <span>Documents</span>
+            <span>Details</span>
+            <span>Printer</span>
+            <span>Amount</span>
+            <span>Status</span>
+            <span className="text-right">Actions</span>
+          </div>
 
-            return (
-              <div 
-                key={order.id} 
-                className="rounded-xl border border-zinc-200/80 bg-white p-4 transition-all hover:border-zinc-300 hover:shadow-2xs space-y-3"
-              >
-                {/* Order Top Row: Number, Customer, Status, Total */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5">
+          {/* Table Rows */}
+          <div className="divide-y divide-zinc-100">
+            {displayedOrders.map((order, index) => {
+              const isProcessing = processingId === order.id;
+              const firstDoc = order.documents[0];
+              const specs = firstDoc?.specs;
+              const isColor = specs?.color === 'COLOR';
+              const isDuplex = specs?.duplex?.includes('DUPLEX');
+              const PrinterIconComp = getPrinterModelIcon(printers[0]?.displayName);
+
+              return (
+                <div 
+                  key={order.id} 
+                  className="grid grid-cols-1 md:grid-cols-[50px_1fr_1.2fr_1.5fr_0.8fr_0.6fr_1fr_0.7fr] gap-0 px-4 py-3 hover:bg-zinc-50/50 transition-colors items-center group"
+                >
+                  {/* # */}
+                  <span className="hidden md:block text-[13px] font-mono text-zinc-400">
+                    {String(index + 1).padStart(3, '0')}
+                  </span>
+
+                  {/* Order Number / Date */}
+                  <div className="min-w-0">
                     <button
                       onClick={() => handleOpenInspector(order)}
-                      className="font-mono text-xs font-semibold text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-2 py-0.5 rounded transition-colors"
-                      title="Inspect order details"
+                      className="inline-flex items-center gap-1 text-[13px] font-semibold text-zinc-900 hover:text-blue-700 transition-colors text-left"
                     >
-                      {order.orderNumber}
+                      <ViewDetailsIcon className="h-3.5 w-3.5 text-zinc-400 group-hover:text-blue-600 shrink-0" />
+                      <span>{order.orderNumber}</span>
                     </button>
-                    <span className="text-xs font-medium text-zinc-800">
-                      {order.customer.fullName}
+                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                      {formatDate(order.createdAt)}
+                    </p>
+                  </div>
+
+                  {/* Documents */}
+                  <div className="min-w-0 py-1">
+                    {order.documents.slice(0, 2).map((doc, dIdx) => {
+                      const DocIcon = getDocumentIcon(doc.originalFilename);
+                      return (
+                        <div key={doc.id || dIdx} className="flex items-center gap-1.5 truncate">
+                          <DocIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                          <span className="text-[12px] text-zinc-700 truncate">{doc.originalFilename}</span>
+                        </div>
+                      );
+                    })}
+                    {order.documents.length > 2 && (
+                      <span className="text-[11px] text-zinc-400 pl-5">+{order.documents.length - 2} more</span>
+                    )}
+                  </div>
+
+                  {/* Details - Print Specs */}
+                  <div className="flex flex-wrap items-center gap-1 py-1">
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                      <MultiplePagesIcon className="h-3 w-3 text-zinc-500 shrink-0" />
+                      {order.totalPages} Pgs
                     </span>
-                    <span className="text-xs text-zinc-400 font-mono">
-                      {order.customer.phone}
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                      {specs?.copies || 1} Copies
+                    </span>
+                    {isColor ? (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                        <ColorPrintingIcon className="h-3 w-3 shrink-0" />
+                        Color
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                        <BlackWhiteIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                        B&amp;W
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                      {isDuplex ? (
+                        <>
+                          <TwoSidedIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                          2-Sided
+                        </>
+                      ) : (
+                        <>
+                          <OneSidedIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                          1-Sided
+                        </>
+                      )}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                      <A4SizeIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                      {specs?.paperSize || 'A4'}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 self-end sm:self-auto">
-                    <div className="text-right">
-                      <div className="flex items-center gap-1.5 justify-end">
-                        <span className="text-sm font-bold text-zinc-900">
-                          ₹{(order.finalAmount ?? order.estimatedAmount).toFixed(2)}
-                        </span>
-                        {order.finalAmount !== null && order.finalAmount !== undefined && order.finalAmount !== order.estimatedAmount && (
-                          <span className="text-[10px] text-zinc-400 line-through font-mono">
-                            ₹{order.estimatedAmount.toFixed(2)}
-                          </span>
-                        )}
-                      </div>
-                      {order.finalAmount !== null && order.finalAmount !== undefined && order.finalAmount !== order.estimatedAmount && (
-                        <span className="text-[9px] font-mono text-emerald-700 bg-emerald-50 px-1 rounded block">
-                          Counter Adjusted
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      {order.paymentStatus === 'PAID' && (
-                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                          ✓ Paid
-                        </span>
-                      )}
-                      {order.paymentStatus === 'CASH_AT_COUNTER' && (
-                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
-                          Cash
-                        </span>
-                      )}
-                      {getStatusBadge(order.status)}
-                    </div>
+                  {/* Printer */}
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <PrinterIconComp className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                    <span className="text-[12px] text-zinc-600 truncate">
+                      {printers[0]?.displayName || 'Unassigned'}
+                    </span>
                   </div>
-                </div>
 
-                {/* Document & Milestone 4 Specifications Breakdown */}
-                <div className="rounded-lg bg-zinc-50/70 border border-zinc-100 p-3 space-y-2 text-xs">
-                  {order.documents.map((doc, idx) => {
-                    const specs = doc.specs;
-                    const isColor = specs?.color === 'COLOR';
-                    const isDuplex = specs?.duplex?.includes('DUPLEX');
+                  {/* Amount */}
+                  <div>
+                    <span className="text-[13px] font-bold text-zinc-900">
+                      ₹{(order.finalAmount ?? order.estimatedAmount).toFixed(0)}
+                    </span>
+                  </div>
 
-                    return (
-                      <div key={doc.id || idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 truncate">
-                          <FileText className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
-                          <span className="font-medium text-zinc-700 truncate max-w-xs">
-                            {doc.originalFilename}
-                          </span>
-                          <span className="text-[11px] text-zinc-400 font-mono">
-                            ({doc.detectedPageCount} {doc.detectedPageCount === 1 ? 'page' : 'pages'})
-                          </span>
-                        </div>
+                  {/* Status */}
+                  <div>
+                    {getStatusBadge(order.status, index + 1)}
+                  </div>
 
-                        {/* Specification Badges */}
-                        <div className="flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
-                          <span className="px-1.5 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                            {specs?.copies || 1} {specs?.copies === 1 ? 'copy' : 'copies'}
-                          </span>
-                          <span className={`px-1.5 py-0.5 rounded border font-medium ${
-                            isColor ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-white border-zinc-200 text-zinc-700'
-                          }`}>
-                            {isColor ? 'Color' : 'B&W'}
-                          </span>
-                          <span className="px-1.5 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                            {isDuplex ? '2-Sided' : '1-Sided'}
-                          </span>
-                          <span className="px-1.5 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                            {specs?.paperSize || 'A4'}
-                          </span>
-                          {specs?.orientation === 'LANDSCAPE' && (
-                            <span className="px-1.5 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                              Landscape
-                            </span>
-                          )}
-                          {specs?.stapling && specs.stapling !== 'NONE' && (
-                            <span className="px-1.5 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-800 font-medium">
-                              Stapled
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  {/* Customer Special Notes */}
-                  {order.customerNotes && (
-                    <div className="pt-1.5 text-[11px] text-zinc-600 border-t border-zinc-200/50">
-                      <span className="text-zinc-400 font-medium">Note: </span>
-                      {order.customerNotes}
-                    </div>
-                  )}
-                </div>
-
-                {/* Action Controls for Shop Floor Operator */}
-                <div className="flex items-center justify-between pt-1">
-                  <button
-                    onClick={() => handleOpenInspector(order)}
-                    className="text-[11px] text-zinc-500 hover:text-zinc-900 font-medium flex items-center gap-1"
-                  >
-                    <span>Inspect & Spool</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </button>
-
-                  <div className="flex items-center gap-2">
+                  {/* Actions */}
+                  <div className="flex items-center gap-1.5 justify-end">
                     {order.status === 'SUBMITTED' && (
                       <button
                         disabled={isProcessing}
                         onClick={() => handleDispatchToSpooler(order)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50"
                       >
-                        <Printer className="h-3 w-3" />
-                        Send to Spooler
+                        <PrintingIcon className="h-3 w-3 text-white" />
+                        Assign
                       </button>
                     )}
-
                     {['QUEUED', 'PRINTING'].includes(order.status) && (
                       <button
                         disabled={isProcessing}
                         onClick={() => updateOrderStatus(order.id, 'READY')}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-600 hover:bg-teal-700 text-white transition-all disabled:opacity-50"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold bg-teal-600 hover:bg-teal-700 text-white transition-all disabled:opacity-50"
                       >
-                        <Check className="h-3 w-3" />
-                        Mark as Ready
+                        <CompletedIcon className="h-3 w-3 text-white" />
+                        Ready
                       </button>
                     )}
-
                     {order.status === 'READY' && (
                       <button
                         disabled={isProcessing}
                         onClick={() => updateOrderStatus(order.id, 'COMPLETED')}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white transition-all disabled:opacity-50"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-all disabled:opacity-50"
                       >
-                        <CheckCircle2 className="h-3 w-3" />
-                        Complete & Paid
+                        <CompletedIcon className="h-3 w-3 text-white" />
+                        Done
                       </button>
                     )}
+                    <button
+                      onClick={() => handleOpenInspector(order)}
+                      className="h-7 w-7 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-zinc-900 flex items-center justify-center transition-all"
+                      title="View Details"
+                    >
+                      <ViewDetailsIcon className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 </div>
-
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      )}
-
-      {/* Quiet Connected Printers Strip */}
-      <div className="pt-4 border-t border-zinc-200/70">
-        <div className="flex items-center justify-between text-xs text-zinc-400 mb-2">
-          <span>Connected Printers</span>
-          <span className="text-[11px]">Windows Spooler linked</span>
-        </div>
-        <div className="grid sm:grid-cols-2 gap-2">
-          {printers.map((p) => (
-            <div 
-              key={p.id} 
-              className="flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-200/60 text-xs"
-            >
-              <div className="flex items-center gap-2 truncate">
-                <Printer className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
-                <span className="font-medium text-zinc-800 truncate">{p.displayName}</span>
-              </div>
-              <div className="flex items-center gap-1.5 shrink-0 text-[11px] text-zinc-500">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <span>Online</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Two-Frame Split Workspace Side Panel (NOT a Popup Modal) */}
+      )}      {/* Two-Frame Split Workspace Side Panel (Order Inspector Workspace) */}
       {inspectingOrder && (
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Backdrop */}
@@ -602,34 +753,34 @@ export function OrderQueueClient({
             }}
           />
 
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
-            <div className="w-screen max-w-6xl bg-white border-l border-zinc-200 shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-250">
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-2 sm:pl-8">
+            <div className="w-screen max-w-6xl bg-white border-l border-zinc-200/90 shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-250">
               
-              {/* Top Panel Header */}
+              {/* Top Panel Header Bar */}
               <div className="px-5 py-3.5 border-b border-zinc-200/90 bg-white flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-bold bg-zinc-100 text-zinc-900 px-2.5 py-1 rounded-md border border-zinc-200">
-                      {inspectingOrder.orderNumber}
-                    </span>
-                    <span className="text-sm font-semibold text-zinc-900 hidden sm:inline">
+                  <span className="font-mono text-xs sm:text-sm font-bold bg-zinc-100 text-zinc-900 px-3 py-1.5 rounded-xl border border-zinc-200 shadow-2xs">
+                    {inspectingOrder.orderNumber}
+                  </span>
+                  <div className="flex items-center gap-1.5 text-xs text-zinc-600">
+                    <span className="font-bold text-zinc-900 text-sm">
                       {inspectingOrder.customer.fullName}
                     </span>
-                    <span className="text-xs text-zinc-400 font-mono hidden md:inline">
+                    <span className="text-zinc-400 font-mono">
                       • {new Date(inspectingOrder.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                   {getStatusBadge(inspectingOrder.status)}
                 </div>
 
-                {/* Header Right Actions: Printer selector, Master Print All, and Close */}
+                {/* Header Right Actions: Printer selector dropdown and Close */}
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="hidden sm:flex items-center gap-1.5 text-xs">
-                    <Printer className="h-3.5 w-3.5 text-zinc-400" />
+                  <div className="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-1.5 rounded-xl text-xs shadow-2xs">
+                    <Printer className="h-4 w-4 text-zinc-600 shrink-0" />
                     <select
                       value={selectedPrinterId}
                       onChange={(e) => setSelectedPrinterId(e.target.value)}
-                      className="rounded-lg border border-zinc-200 bg-white px-2 py-1 text-xs text-zinc-800 focus:outline-none focus:ring-1 focus:ring-zinc-900 font-medium max-w-[180px] truncate"
+                      className="bg-transparent text-xs text-zinc-800 focus:outline-none font-semibold max-w-[200px] truncate"
                     >
                       {printers.map((p) => (
                         <option key={p.id} value={p.id}>
@@ -641,23 +792,11 @@ export function OrderQueueClient({
 
                   <button
                     type="button"
-                    disabled={Boolean(spoolingStep)}
-                    onClick={() => handlePrintAllDocuments(inspectingOrder)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white transition-all shadow-2xs disabled:opacity-50"
-                    title="Spool all documents to printer without downloading"
-                  >
-                    <Zap className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                    <span className="hidden xs:inline">Print All</span>
-                    <span className="text-[10px] font-mono opacity-80">({inspectingOrder.documents.length})</span>
-                  </button>
-
-                  <button
-                    type="button"
                     onClick={() => {
                       setInspectingOrder(null);
                       setSpoolingStep(null);
                     }}
-                    className="h-8 w-8 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg flex items-center justify-center transition-colors"
+                    className="h-9 w-9 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-xl flex items-center justify-center transition-colors border border-zinc-200"
                     title="Close panel (Esc)"
                   >
                     <X className="h-4 w-4" />
@@ -666,53 +805,55 @@ export function OrderQueueClient({
               </div>
 
               {/* TWO-FRAME SPLIT WORKSPACE BODY */}
-              <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-zinc-200 overflow-hidden">
+              <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-zinc-200/90 overflow-hidden bg-white">
                 
                 {/* ======================================================== */}
-                {/* FRAME 1 (LEFT PART): Customer Details & Cost Updation     */}
+                {/* FRAME 1 (LEFT PART): Customer Details & Order Progress    */}
                 {/* ======================================================== */}
-                <div className="lg:col-span-5 h-full overflow-y-auto p-5 sm:p-6 space-y-5 bg-white">
+                <div className="lg:col-span-5 h-full overflow-y-auto p-5 space-y-4 bg-white">
                   
-                  {/* Customer Profile Card */}
-                  <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="text-sm font-bold text-zinc-900">
-                            {inspectingOrder.customer.fullName}
-                          </h3>
-                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
-                            Verified
-                          </span>
+                  {/* Card 1: Customer Profile Box */}
+                  <div className="rounded-2xl border border-zinc-200/90 bg-white p-4 space-y-3 shadow-2xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-zinc-100 border border-zinc-200/60 flex items-center justify-center text-zinc-700 font-bold shrink-0">
+                          {inspectingOrder.customer.fullName ? inspectingOrder.customer.fullName.charAt(0).toUpperCase() : 'C'}
                         </div>
-                        <p className="text-xs text-zinc-500 font-mono mt-0.5">
-                          +91 {inspectingOrder.customer.phone.replace(/[^0-9]/g, '').slice(-10)}
-                        </p>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h3 className="text-sm font-bold text-zinc-900">
+                              {inspectingOrder.customer.fullName}
+                            </h3>
+                            <CheckCircle2 className="h-3.5 w-3.5 text-zinc-900 fill-zinc-900 text-white" />
+                          </div>
+                          <p className="text-xs text-zinc-500 font-mono mt-0.5">
+                            +91 {inspectingOrder.customer.phone.replace(/[^0-9]/g, '').slice(-10)}
+                          </p>
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-1.5">
                         <a
                           href={`tel:${inspectingOrder.customer.phone}`}
-                          className="px-2.5 py-1 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 flex items-center gap-1 font-medium text-xs shadow-2xs"
+                          className="px-3 py-1.5 rounded-xl border border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50 flex items-center gap-1.5 font-semibold text-xs shadow-2xs"
                         >
-                          <Phone className="h-3 w-3 text-zinc-500" />
+                          <Phone className="h-3.5 w-3.5 text-zinc-600" />
                           <span>Call</span>
                         </a>
                         <a
                           href={`https://wa.me/91${inspectingOrder.customer.phone.replace(/[^0-9]/g, '').slice(-10)}?text=Hello%20${encodeURIComponent(inspectingOrder.customer.fullName)},%20your%20prints%20(Order%20${inspectingOrder.orderNumber})%20are%20ready%20at%20the%20shop!`}
                           target="_blank"
                           rel="noreferrer"
-                          className="px-2.5 py-1 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 flex items-center gap-1 font-medium text-xs shadow-2xs"
+                          className="px-3 py-1.5 rounded-xl border border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50 flex items-center gap-1.5 font-semibold text-xs shadow-2xs"
                         >
-                          <MessageSquare className="h-3 w-3 text-emerald-600" />
+                          <MessageSquare className="h-3.5 w-3.5 text-emerald-600" />
                           <span>WhatsApp</span>
                         </a>
                       </div>
                     </div>
 
-                    {/* Special Instructions Note */}
                     {inspectingOrder.customerNotes && (
-                      <div className="p-2.5 rounded-lg bg-amber-50/80 border border-amber-200/80 text-xs text-amber-900 space-y-0.5">
+                      <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-900 space-y-0.5 mt-2">
                         <span className="font-semibold block text-[10px] uppercase font-mono tracking-wider text-amber-700">
                           Customer Instructions:
                         </span>
@@ -721,189 +862,88 @@ export function OrderQueueClient({
                     )}
                   </div>
 
-                  {/* Order Stepper Status */}
-                  <div className="rounded-xl border border-zinc-200/90 bg-white p-4 space-y-3">
+                  {/* Card 2: Order Progress Stepper */}
+                  <div className="rounded-2xl border border-zinc-200/90 bg-white p-4 space-y-4 shadow-2xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-zinc-800">Order Progress</span>
+                      <span className="text-xs font-bold text-zinc-900">Order Progress</span>
                       {getStatusBadge(inspectingOrder.status)}
                     </div>
 
-                    <div className="grid grid-cols-4 gap-1 text-center font-mono text-[10px]">
-                      {['SUBMITTED', 'PRINTING', 'READY', 'COMPLETED'].map((st, idx) => {
-                        const statusOrder = ['SUBMITTED', 'PRINTING', 'READY', 'COMPLETED'];
-                        const currentIdx = statusOrder.indexOf(inspectingOrder.status);
-                        const isPassed = currentIdx >= idx;
-                        const isCurrent = inspectingOrder.status === st;
+                    {/* Stepper Visualization */}
+                    <div className="py-1">
+                      <div className="relative flex items-center justify-between">
+                        {/* Connecting Line */}
+                        <div className="absolute top-2.5 left-3 right-3 h-0.5 bg-zinc-200 -z-0" />
+                        
+                        {['SUBMITTED', 'PRINTING', 'READY', 'COMPLETED'].map((st, idx) => {
+                          const statusOrder = ['SUBMITTED', 'PRINTING', 'READY', 'COMPLETED'];
+                          const currentIdx = statusOrder.indexOf(inspectingOrder.status);
+                          const isPassed = currentIdx >= idx;
 
-                        return (
-                          <div key={st} className="space-y-1">
-                            <div className={`h-1.5 rounded-full transition-all ${
-                              isPassed ? 'bg-emerald-500' : 'bg-zinc-200'
-                            }`} />
-                            <span className={`block truncate ${
-                              isCurrent ? 'font-bold text-zinc-900' : 'text-zinc-400'
-                            }`}>
-                              {st === 'SUBMITTED' ? 'Sent' : st === 'PRINTING' ? 'Printing' : st === 'READY' ? 'Ready' : 'Done'}
-                            </span>
-                          </div>
-                        );
-                      })}
+                          return (
+                            <div key={st} className="relative z-10 flex flex-col items-center space-y-1 bg-white px-1">
+                              <div className={`h-5 w-5 rounded-full flex items-center justify-center transition-all ${
+                                isPassed ? 'bg-zinc-900 text-white' : 'bg-white border-2 border-zinc-300 text-transparent'
+                              }`}>
+                                <Check className="h-3 w-3 stroke-[3]" />
+                              </div>
+                              <span className={`text-[10px] font-semibold ${
+                                isPassed ? 'text-zinc-900' : 'text-zinc-400'
+                              }`}>
+                                {st === 'SUBMITTED' ? 'Sent' : st === 'PRINTING' ? 'Printing' : st === 'READY' ? 'Ready' : 'Done'}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
-                  {/* LIVE COST UPDATION & OVERRIDE FRAME */}
-                  <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-4 space-y-4">
+                  {/* Card 3: Total Amount & Payment Status */}
+                  <div className="rounded-2xl border border-zinc-200/90 bg-white p-4 space-y-3 shadow-2xs">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <Sliders className="h-4 w-4 text-zinc-700" />
-                        <span className="text-xs font-bold text-zinc-900 uppercase font-mono tracking-wider">
-                          Counter Cost Updation
+                      <span className="text-xs font-medium text-zinc-500">Total Amount</span>
+                      <div className="text-right">
+                        <span className="text-[10px] text-zinc-400 block font-mono uppercase">Payment Status</span>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-zinc-100 text-zinc-700 border border-zinc-200 mt-0.5">
+                          {inspectingOrder.paymentStatus === 'PAID' ? 'Paid' : 'Pending'}
                         </span>
                       </div>
-                      <span className="text-[11px] font-mono text-zinc-400">
-                        Auto: ₹{inspectingOrder.estimatedAmount.toFixed(2)}
+                    </div>
+
+                    <div className="my-1">
+                      <span className="text-3xl font-black text-zinc-900 tracking-tight font-sans">
+                        ₹{(inspectingOrder.finalAmount ?? inspectingOrder.estimatedAmount).toFixed(2)}
                       </span>
                     </div>
 
-                    {/* Amount Input with Save */}
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] text-zinc-400 font-mono uppercase block">
-                        Final Charged Amount
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div className="relative flex-1">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-zinc-500 text-sm">
-                            ₹
-                          </span>
-                          <input
-                            type="number"
-                            step="0.5"
-                            min="0"
-                            value={overrideAmount}
-                            onChange={(e) => setOverrideAmount(e.target.value)}
-                            placeholder={inspectingOrder.estimatedAmount.toFixed(2)}
-                            className="w-full pl-7 pr-3 py-2 rounded-lg border border-zinc-300 bg-white font-mono font-bold text-base text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 shadow-2xs"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          disabled={Boolean(processingId)}
-                          onClick={() => {
-                            const num = parseFloat(overrideAmount);
-                            if (!isNaN(num) && num >= 0) {
-                              updateOrderStatus(inspectingOrder.id, undefined, num);
-                            }
-                          }}
-                          className="px-4 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-xs transition-colors shrink-0 shadow-2xs disabled:opacity-50"
-                        >
-                          Save Price
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Quick Cost Adjustment Chips */}
-                    <div className="space-y-1">
-                      <span className="text-[10px] text-zinc-400 font-mono uppercase block">
-                        Quick Modifiers & Add-ons
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-                        <button
-                          type="button"
-                          onClick={() => setOverrideAmount(inspectingOrder.estimatedAmount.toString())}
-                          className="px-2 py-1 rounded-md bg-white border border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:border-zinc-300"
-                        >
-                          Reset Auto (₹{inspectingOrder.estimatedAmount.toFixed(2)})
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const cur = parseFloat(overrideAmount) || inspectingOrder.estimatedAmount;
-                            setOverrideAmount((cur + 5).toFixed(2));
-                          }}
-                          className="px-2 py-1 rounded-md bg-white border border-zinc-200 text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 font-medium"
-                        >
-                          +₹5 (Staple)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const cur = parseFloat(overrideAmount) || inspectingOrder.estimatedAmount;
-                            setOverrideAmount((cur + 20).toFixed(2));
-                          }}
-                          className="px-2 py-1 rounded-md bg-white border border-zinc-200 text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 font-medium"
-                        >
-                          +₹20 (Spiral)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const cur = parseFloat(overrideAmount) || inspectingOrder.estimatedAmount;
-                            setOverrideAmount((cur + 50).toFixed(2));
-                          }}
-                          className="px-2 py-1 rounded-md bg-white border border-zinc-200 text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 font-medium"
-                        >
-                          +₹50 (Hardcover)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const cur = parseFloat(overrideAmount) || inspectingOrder.estimatedAmount;
-                            setOverrideAmount(Math.round(cur).toFixed(2));
-                          }}
-                          className="px-2 py-1 rounded-md bg-white border border-zinc-200 text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 font-medium"
-                        >
-                          Round Off
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Payment Status & Quick Cash Collector */}
-                    <div className="pt-3 border-t border-zinc-200/70 flex items-center justify-between text-xs">
-                      <div>
-                        <span className="text-zinc-400 block text-[10px] uppercase font-mono">Payment Status</span>
-                        {inspectingOrder.paymentStatus === 'PAID' ? (
-                          <span className="inline-flex items-center gap-1 text-emerald-800 font-semibold mt-0.5">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                            Paid ({inspectingOrder.paymentMethod || 'COUNTER'})
-                          </span>
-                        ) : inspectingOrder.paymentStatus === 'CASH_AT_COUNTER' ? (
-                          <span className="text-amber-800 font-semibold mt-0.5 block">
-                            Customer paying cash at counter
-                          </span>
-                        ) : (
-                          <span className="text-zinc-500 font-medium mt-0.5 block">
-                            Pending payment
-                          </span>
-                        )}
-                      </div>
-
-                      {inspectingOrder.paymentStatus !== 'PAID' && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const num = parseFloat(overrideAmount) || inspectingOrder.finalAmount || inspectingOrder.estimatedAmount;
-                            updateOrderStatus(inspectingOrder.id, undefined, num, 'PAID', 'CASH');
-                          }}
-                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs transition-colors shadow-2xs"
-                        >
-                          Mark Cash Paid
-                        </button>
-                      )}
-                    </div>
-
+                    {/* Mark Cash Paid Button */}
+                    {inspectingOrder.paymentStatus !== 'PAID' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const num = parseFloat(overrideAmount) || inspectingOrder.finalAmount || inspectingOrder.estimatedAmount;
+                          updateOrderStatus(inspectingOrder.id, undefined, num, 'PAID', 'CASH');
+                        }}
+                        className="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs transition-all shadow-xs flex items-center justify-center gap-2"
+                      >
+                        <Zap className="h-4 w-4 text-amber-400 fill-amber-400" />
+                        <span>Mark Cash Paid</span>
+                      </button>
+                    )}
                   </div>
 
-                  {/* Shop Operator Status Quick Actions */}
-                  <div className="space-y-2 pt-2">
+                  {/* Bottom Quick Status Action Buttons */}
+                  <div className="space-y-2 pt-1">
                     <button
                       type="button"
                       onClick={() => {
                         const num = parseFloat(overrideAmount);
                         updateOrderStatus(inspectingOrder.id, 'READY', !isNaN(num) ? num : undefined);
                       }}
-                      className="w-full py-2.5 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-800 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 text-zinc-900 font-semibold text-xs transition-all flex items-center justify-center gap-2"
                     >
-                      <Check className="h-3.5 w-3.5" />
+                      <Check className="h-4 w-4 text-zinc-800" />
                       <span>Mark as Ready for Pickup</span>
                     </button>
 
@@ -913,9 +953,9 @@ export function OrderQueueClient({
                         const num = parseFloat(overrideAmount);
                         updateOrderStatus(inspectingOrder.id, 'COMPLETED', !isNaN(num) ? num : undefined, 'PAID', inspectingOrder.paymentMethod || 'CASH');
                       }}
-                      className="w-full py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-xl bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-2xs"
                     >
-                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      <CheckCircle2 className="h-4 w-4 text-zinc-800" />
                       <span>Complete Order & Mark Paid</span>
                     </button>
                   </div>
@@ -923,143 +963,129 @@ export function OrderQueueClient({
                 </div>
 
                 {/* ======================================================== */}
-                {/* FRAME 2 (RIGHT PART): Documents, Options & Direct Print   */}
+                {/* FRAME 2 (RIGHT PART): Documents List & Direct Print Action*/}
                 {/* ======================================================== */}
-                <div className="lg:col-span-7 h-full overflow-y-auto p-5 sm:p-6 space-y-4 bg-zinc-50/50">
+                <div className="lg:col-span-7 h-full overflow-y-auto p-5 space-y-4 bg-zinc-50/40">
                   
-                  {/* Zero-Download Print Guarantee Banner */}
-                  <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/60 p-3.5 flex items-start gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                      <Zap className="h-4 w-4" />
-                    </div>
-                    <div className="space-y-0.5 text-xs text-emerald-900">
-                      <p className="font-semibold">Zero-Download Hardware Spooling Active</p>
-                      <p className="text-emerald-700/90 text-[11px] leading-relaxed">
-                        Documents are streamed directly into your counter printer buffer via <code className="font-mono bg-emerald-100 px-1 rounded">winspool.drv</code>. No files are saved to your PC's desktop or downloads folder.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Real-time Hardware Spooler Progress Notification */}
-                  {spoolingStep && (
-                    <div className="p-3.5 rounded-xl bg-zinc-900 text-white font-mono text-xs space-y-1.5 animate-in fade-in shadow-lg">
-                      <div className="flex items-center gap-2 text-emerald-400">
-                        <div className="animate-spin h-3.5 w-3.5 border-2 border-emerald-400 border-t-transparent rounded-full" />
-                        <span className="font-bold">Hardware Spooler Stream in Progress</span>
-                      </div>
-                      <p className="text-[11px] text-zinc-300 leading-relaxed">{spoolingStep}</p>
-                    </div>
-                  )}
-
                   {/* Document Resources Header */}
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs font-bold text-zinc-900 uppercase font-mono tracking-wider">
-                      Customer Document Resources ({inspectingOrder.documents.length})
-                    </span>
-                    <span className="text-[11px] font-mono text-zinc-500">
-                      Total {inspectingOrder.totalPages} pages across files
+                  <div className="flex items-center justify-between pb-1">
+                    <h3 className="text-base font-bold text-zinc-900">
+                      Documents ({inspectingOrder.documents.length})
+                    </h3>
+                    <span className="text-xs font-medium text-zinc-500">
+                      Total {inspectingOrder.totalPages} pages
                     </span>
                   </div>
 
-                  {/* Document List with Detailed Options and Direct Print Action */}
-                  <div className="space-y-3">
+                  {/* Document Cards List */}
+                  <div className="space-y-4">
                     {inspectingOrder.documents.map((doc, idx) => {
                       const specs = doc.specs;
                       const isColor = specs?.color === 'COLOR';
                       const isDuplex = specs?.duplex?.includes('DUPLEX');
                       const isSpoolingThis = spoolingDocId === doc.id;
                       const isPreviewingThis = previewingDocId === doc.id;
+                      const DocIcon = getDocumentIcon(doc.originalFilename);
 
                       return (
                         <div
                           key={doc.id || idx}
-                          className="bg-white rounded-xl border border-zinc-200/90 p-4 space-y-3.5 shadow-2xs hover:border-zinc-300 transition-colors"
+                          className="bg-white rounded-2xl border border-zinc-200/90 p-5 space-y-4 shadow-xs"
                         >
-                          {/* Document Name and Verified Page Count */}
+                          {/* Top Row: File Icon, Filename & Page Pill */}
                           <div className="flex items-start justify-between gap-3">
-                            <div className="flex items-start gap-2.5 truncate">
-                              <div className="p-2 rounded-lg bg-zinc-100 text-zinc-600 shrink-0">
-                                <FileText className="h-4 w-4" />
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="h-10 w-10 rounded-xl bg-zinc-100 border border-zinc-200/60 flex items-center justify-center text-zinc-800 shrink-0">
+                                <DocIcon className="h-5 w-5" />
                               </div>
-                              <div className="truncate">
-                                <h4 className="text-xs font-bold text-zinc-900 truncate">
+                              <div className="min-w-0">
+                                <h4 className="text-sm font-bold text-zinc-900 truncate">
                                   {doc.originalFilename}
                                 </h4>
-                                <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
-                                  Verified {doc.detectedPageCount} {doc.detectedPageCount === 1 ? 'page' : 'pages'} • {specs?.copies || 1} {specs?.copies === 1 ? 'copy' : 'copies'}
+                                <p className="text-xs text-zinc-500 mt-0.5">
+                                  {doc.detectedPageCount} pages • {specs?.copies || 1} copy
                                 </p>
                               </div>
                             </div>
 
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0">
+                            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 text-zinc-700 border border-zinc-200 shrink-0">
                               {doc.detectedPageCount} pgs
                             </span>
                           </div>
 
-                          {/* Mentioned Options Badges Bar */}
-                          <div className="p-2.5 rounded-lg bg-zinc-50/80 border border-zinc-100 flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-                            <span className="px-2 py-0.5 rounded bg-zinc-900 text-white font-semibold">
-                              Paper: {specs?.paperSize || 'A4'}
-                            </span>
-                            <span className={`px-2 py-0.5 rounded border font-semibold ${
-                              isColor ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-white border-zinc-200 text-zinc-700'
-                            }`}>
-                              {isColor ? 'Full Color' : 'Black & White'}
-                            </span>
-                            <span className="px-2 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                              {isDuplex ? '2-Sided (Back to Back)' : '1-Sided (Single)'}
-                            </span>
-                            <span className="px-2 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                              Orientation: {specs?.orientation || 'PORTRAIT'}
-                            </span>
-                            <span className="px-2 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-                              Copies: {specs?.copies || 1}
-                            </span>
-                            {specs?.pageRange && specs.pageRange !== 'ALL' && (
-                              <span className="px-2 py-0.5 rounded bg-purple-50 border border-purple-200 text-purple-800 font-medium">
-                                Pages: {specs.pageRange}
-                              </span>
-                            )}
-                            {specs?.stapling && specs.stapling !== 'NONE' && (
-                              <span className="px-2 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-800 font-medium">
-                                Finishing: {specs.stapling}
-                              </span>
-                            )}
+                          {/* Print Specs Grid (4 boxes) */}
+                          <div className="p-3 rounded-xl bg-zinc-50 border border-zinc-100 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                            <div className="flex items-center gap-2">
+                              <A4SizeIcon className="h-4 w-4 text-zinc-600 shrink-0" />
+                              <div>
+                                <span className="font-bold text-zinc-900 block">{specs?.paperSize || 'A4'}</span>
+                                <span className="text-[10px] text-zinc-400">Paper Size</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              {isColor ? (
+                                <ColorPrintingIcon className="h-4 w-4 shrink-0" />
+                              ) : (
+                                <BlackWhiteIcon className="h-4 w-4 text-zinc-700 shrink-0" />
+                              )}
+                              <div>
+                                <span className="font-bold text-zinc-900 block">{isColor ? 'Color' : 'B&W'}</span>
+                                <span className="text-[10px] text-zinc-400">Mode</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              {isDuplex ? (
+                                <TwoSidedIcon className="h-4 w-4 text-zinc-700 shrink-0" />
+                              ) : (
+                                <OneSidedIcon className="h-4 w-4 text-zinc-700 shrink-0" />
+                              )}
+                              <div>
+                                <span className="font-bold text-zinc-900 block">{isDuplex ? '2-Sided' : '1-Sided'}</span>
+                                <span className="text-[10px] text-zinc-400">Duplex</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <Sliders className="h-4 w-4 text-zinc-500 shrink-0" />
+                              <div>
+                                <span className="font-bold text-zinc-900 block">{specs?.orientation || 'Portrait'}</span>
+                                <span className="text-[10px] text-zinc-400">Orientation</span>
+                              </div>
+                            </div>
                           </div>
 
-                          {/* Direct Print Actions Toolbar */}
+                          {/* Action Buttons Toolbar */}
                           <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-zinc-100">
-                            <div className="flex items-center gap-1.5">
-                              {/* Toggle In-Frame Preview */}
+                            <div className="flex items-center gap-2">
                               <button
                                 type="button"
                                 onClick={() => setPreviewingDocId(isPreviewingThis ? null : doc.id)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-semibold transition-all shadow-2xs"
                               >
-                                <Eye className="h-3.5 w-3.5 text-zinc-500" />
+                                <Eye className="h-3.5 w-3.5 text-zinc-600" />
                                 <span>{isPreviewingThis ? 'Hide Preview' : 'Preview'}</span>
                               </button>
 
-                              {/* Browser Print Stream Button */}
                               <button
                                 type="button"
                                 onClick={() => handleBrowserPrintDocument(doc)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
-                                title="Open native browser print dialog without downloading file"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-semibold transition-all shadow-2xs"
                               >
-                                <ExternalLink className="h-3.5 w-3.5 text-zinc-500" />
+                                <ExternalLink className="h-3.5 w-3.5 text-zinc-600" />
                                 <span>Browser Print</span>
                               </button>
                             </div>
 
-                            {/* DIRECT HARDWARE ZERO-DOWNLOAD PRINT BUTTON */}
+                            {/* Solid Black Direct Print Button */}
                             <button
                               type="button"
                               disabled={isSpoolingThis || Boolean(spoolingStep)}
                               onClick={() => handleDirectPrintDocument(doc)}
-                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-2xs disabled:opacity-50"
+                              className="inline-flex items-center gap-2 px-4.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold transition-all shadow-xs disabled:opacity-50 ml-auto"
                             >
-                              <Printer className="h-3.5 w-3.5" />
+                              <PrintingIcon className="h-4 w-4" />
                               <span>Direct Print (Zero Download)</span>
                             </button>
                           </div>
@@ -1068,47 +1094,27 @@ export function OrderQueueClient({
                           {isPreviewingThis && (
                             <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200/90 animate-in fade-in space-y-3">
                               <div className="flex items-center justify-between text-xs text-zinc-600">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-bold text-zinc-900">Zero-Download Live Stream</span>
-                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">
-                                    Direct Vector Stream
-                                  </span>
-                                </div>
+                                <span className="font-bold text-zinc-900">Zero-Download Live Stream</span>
                                 <a
                                   href={`/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey || doc.originalFilename)}`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="inline-flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 font-medium hover:underline"
-                                  title="View full vector PDF in browser tab without saving file"
+                                  className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline"
                                 >
-                                  <ExternalLink className="h-3 w-3 text-zinc-400" />
+                                  <ExternalLink className="h-3.5 w-3.5 text-zinc-500" />
                                   <span>Open In Tab</span>
                                 </a>
                               </div>
 
-                              {/* Real Document Iframe */}
-                              <div className="w-full h-[460px] rounded-lg border border-zinc-300 bg-white overflow-hidden shadow-2xs">
+                              <div className="w-full h-[460px] rounded-xl border border-zinc-300 bg-white overflow-hidden shadow-xs">
                                 <iframe
                                   src={`/api/v1/files/stream?key=${encodeURIComponent(doc.storageKey || doc.originalFilename)}#toolbar=1&navpanes=0`}
                                   className="w-full h-full border-0"
                                   title={doc.originalFilename}
                                 />
                               </div>
-
-                              <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono pt-1">
-                                <span>{doc.detectedPageCount} pages verified • {specs?.paperSize || 'A4'} • {specs?.copies || 1} {specs?.copies === 1 ? 'copy' : 'copies'}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => triggerZeroDownloadPrint(doc)}
-                                  className="text-emerald-700 hover:text-emerald-800 font-bold inline-flex items-center gap-1 transition-colors"
-                                >
-                                  <Printer className="h-3.5 w-3.5" />
-                                  <span>Print Now</span>
-                                </button>
-                              </div>
                             </div>
                           )}
-
                         </div>
                       );
                     })}
@@ -1117,7 +1123,6 @@ export function OrderQueueClient({
                 </div>
 
               </div>
-
             </div>
           </div>
         </div>

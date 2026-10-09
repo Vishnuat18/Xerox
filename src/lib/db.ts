@@ -5,15 +5,44 @@ declare global {
   var prismaGlobal: PrismaClient | undefined;
 }
 
-const prisma =
+const basePrisma =
   globalThis.prismaGlobal ??
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
   });
 
 if (process.env.NODE_ENV !== 'production') {
-  globalThis.prismaGlobal = prisma;
+  globalThis.prismaGlobal = basePrisma;
 }
+
+const prisma = basePrisma.$extends({
+  query: {
+    $allModels: {
+      async $allOperations({ model, operation, args, query }) {
+        let retries = 3;
+        while (retries > 0) {
+          try {
+            return await query(args);
+          } catch (error: any) {
+            retries--;
+            const isConnectionError =
+              error?.code === 'P1001' ||
+              error?.code === 'P1002' ||
+              error?.message?.includes("Can't reach database server") ||
+              error?.message?.includes("Connection lost") ||
+              error?.message?.includes("ETIMEDOUT") ||
+              error?.message?.includes("ECONNRESET");
+            if (!isConnectionError || retries === 0) {
+              throw error;
+            }
+            console.warn(`[db] Retrying ${model}.${operation} after transient connection blip (attempts left: ${retries})...`);
+            await new Promise((r) => setTimeout(r, 300));
+          }
+        }
+      },
+    },
+  },
+});
 
 // Attach helper functions for pricing configuration compatibility
 const dbExtended = Object.assign(prisma, {

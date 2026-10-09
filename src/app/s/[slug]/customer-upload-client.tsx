@@ -38,6 +38,15 @@ import {
   PrintPreviewSpec 
 } from '@/components/customer/PrintPreviewModal';
 import { countFilePages } from '@/lib/pdf-page-counter';
+import {
+  getDocumentIcon,
+  BlackWhiteIcon,
+  ColorPrintingIcon,
+  OneSidedIcon,
+  TwoSidedIcon,
+  A4SizeIcon,
+  MultiplePagesIcon,
+} from '@/components/icons/PrintIcons';
 
 interface PricingRule {
   paperSize: string;
@@ -835,7 +844,7 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                   {/* File Title, Print Preview Button & Remove Button */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 truncate">
-                      <FileText className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                      {React.createElement(getDocumentIcon(item.file.name), { className: "h-4 w-4 text-zinc-500 shrink-0" })}
                       <span className="text-xs font-semibold text-zinc-800 truncate">
                         {item.file.name}
                       </span>
@@ -957,20 +966,22 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                           <button
                             type="button"
                             onClick={() => updateFileSpec(idx, { color: 'BW' })}
-                            className={`py-1 rounded-md transition-all font-medium ${
-                              spec.color === 'BW' ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-500'
+                            className={`py-1 rounded-md transition-all font-medium inline-flex items-center justify-center gap-1 ${
+                              spec.color === 'BW' ? 'bg-white text-zinc-900 shadow-2xs font-semibold' : 'text-zinc-500'
                             }`}
                           >
-                            B&W
+                            <BlackWhiteIcon className="h-3 w-3 shrink-0" />
+                            <span>B&amp;W</span>
                           </button>
                           <button
                             type="button"
                             onClick={() => updateFileSpec(idx, { color: 'COLOR' })}
-                            className={`py-1 rounded-md transition-all font-medium ${
-                              spec.color === 'COLOR' ? 'bg-white text-emerald-800 shadow-2xs' : 'text-zinc-500'
+                            className={`py-1 rounded-md transition-all font-medium inline-flex items-center justify-center gap-1 ${
+                              spec.color === 'COLOR' ? 'bg-white text-emerald-800 shadow-2xs font-semibold' : 'text-zinc-500'
                             }`}
                           >
-                            Color
+                            <ColorPrintingIcon className="h-3 w-3 shrink-0" />
+                            <span>Color</span>
                           </button>
                         </div>
                       </div>
@@ -984,20 +995,22 @@ export function CustomerUploadClient({ shop }: { shop: ShopProps }) {
                           <button
                             type="button"
                             onClick={() => updateFileSpec(idx, { duplex: 'SIMPLEX' })}
-                            className={`py-1 rounded-md transition-all font-medium ${
-                              spec.duplex === 'SIMPLEX' ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-500'
+                            className={`py-1 rounded-md transition-all font-medium inline-flex items-center justify-center gap-1 ${
+                              spec.duplex === 'SIMPLEX' ? 'bg-white text-zinc-900 shadow-2xs font-semibold' : 'text-zinc-500'
                             }`}
                           >
-                            1-Side
+                            <OneSidedIcon className="h-3 w-3 shrink-0" />
+                            <span>1-Side</span>
                           </button>
                           <button
                             type="button"
                             onClick={() => updateFileSpec(idx, { duplex: 'DUPLEX' })}
-                            className={`py-1 rounded-md transition-all font-medium ${
-                              spec.duplex === 'DUPLEX' ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-500'
+                            className={`py-1 rounded-md transition-all font-medium inline-flex items-center justify-center gap-1 ${
+                              spec.duplex === 'DUPLEX' ? 'bg-white text-zinc-900 shadow-2xs font-semibold' : 'text-zinc-500'
                             }`}
                           >
-                            2-Sided
+                            <TwoSidedIcon className="h-3 w-3 shrink-0" />
+                            <span>2-Sided</span>
                           </button>
                         </div>
                       </div>

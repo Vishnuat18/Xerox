@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+html {
+  zoom: 0.8; /* Full screen 80% scale: scales all layout, dimensions, components, fonts, images and borders */
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
+}
+
+body {
+  min-height: 125vh;
+  min-height: 125dvh;
+}
+
 :root {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

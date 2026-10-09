@@ -1,5 +1,3 @@
-// SMART PRINT HUB - Prisma Database Schema (MySQL Compatible)
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -10,53 +8,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// -------------------------------------------------------------
-// 1. Tenants & Accounts
-// -------------------------------------------------------------
-
 model Shop {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  phone       String
-  email       String
-  address     String?  @db.Text
-  city        String?
-  state       String?
-  pincode     String?
-  gstNumber   String?
-  qrCodeUrl   String?  @db.Text
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  users        User[]
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  phone        String
+  email        String
+  address      String?       @db.Text
+  city         String?
+  state        String?
+  pincode      String?
+  gstNumber    String?
+  qrCodeUrl    String?       @db.Text
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  auditLogs    AuditLog[]
   customers    Customer[]
   orders       Order[]
   pricingRules PricingRule[]
-  printers     Printer[]
   printAgents  PrintAgent[]
+  printers     Printer[]
   subscription Subscription?
-  auditLogs    AuditLog[]
+  users        User[]
 
   @@map("shops")
 }
 
 model User {
-  id           String    @id @default(cuid())
+  id           String     @id @default(cuid())
   shopId       String?
-  email        String    @unique
+  email        String     @unique
   passwordHash String
   fullName     String
   phone        String?
-  role         String    @default("SHOP_OWNER") // "SUPER_ADMIN", "SHOP_OWNER", "SHOP_OPERATOR"
-  isVerified   Boolean   @default(false)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  role         String     @default("SHOP_OWNER")
+  isVerified   Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  auditLogs    AuditLog[]
+  shop         Shop?      @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
-  shop      Shop?      @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  auditLogs AuditLog[]
-
+  @@index([shopId], map: "users_shopId_fkey")
   @@map("users")
 }
 
@@ -67,243 +60,224 @@ model Customer {
   fullName  String
   email     String?
   createdAt DateTime @default(now())
-
-  shop   Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  orders Order[]
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  orders    Order[]
 
   @@index([shopId, phone])
   @@map("customers")
 }
 
-// -------------------------------------------------------------
-// 2. Orders & Documents
-// -------------------------------------------------------------
-
 model Order {
-  id               String   @id @default(cuid())
-  orderNumber      String   @unique // e.g., SPH-20261001-000123
+  id               String          @id @default(cuid())
+  orderNumber      String          @unique
   shopId           String
   customerId       String
   customerPhone    String?
-  status           String   @default("SUBMITTED") // SUBMITTED, RECEIVED, REVIEWING, QUEUED, PRINTING, READY, COMPLETED, CANCELLED, FAILED
-  paymentStatus    String   @default("PENDING") // PENDING, PAID, REFUNDED
-  paymentMethod    String?  // UPI, CASH, CARD
+  status           String          @default("SUBMITTED")
+  paymentStatus    String          @default("PENDING")
+  paymentMethod    String?
   paymentReference String?
   paidAt           DateTime?
-  totalDocuments   Int      @default(1)
-  totalPages       Int      @default(1)
-  estimatedAmount  Float    @default(0.0)
+  totalDocuments   Int             @default(1)
+  totalPages       Int             @default(1)
+  estimatedAmount  Float           @default(0)
   finalAmount      Float?
-  customerNotes    String?  @db.Text
-  rejectionReason  String?  @db.Text
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  shop      Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  customer  Customer        @relation(fields: [customerId], references: [id])
-  documents OrderDocument[]
-  printJobs PrintJob[]
+  customerNotes    String?         @db.Text
+  rejectionReason  String?         @db.Text
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  documents        OrderDocument[]
+  customer         Customer        @relation(fields: [customerId], references: [id])
+  shop             Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  printJobs        PrintJob[]
 
   @@index([shopId, status])
   @@index([customerPhone])
+  @@index([customerId], map: "orders_customerId_fkey")
   @@map("orders")
 }
 
 model OrderDocument {
-  id               String   @id @default(cuid())
-  orderId          String
-  originalFilename String
-  storageKey       String   @db.VarChar(512)
-  fileSizeBytes    Int
-  mimeType         String
-  sha256Checksum   String
-  detectedPageCount Int     @default(1)
-  previewImageKey  String?  @db.Text
-  createdAt        DateTime @default(now())
+  id                String             @id @default(cuid())
+  orderId           String
+  originalFilename  String
+  storageKey        String             @db.VarChar(512)
+  fileSizeBytes     Int
+  mimeType          String
+  sha256Checksum    String
+  detectedPageCount Int                @default(1)
+  previewImageKey   String?            @db.Text
+  createdAt         DateTime           @default(now())
+  specs             DocumentPrintSpec?
+  order             Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  printJobs         PrintJob[]
 
-  order     Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  specs     DocumentPrintSpec?
-  printJobs PrintJob[]
-
+  @@index([orderId], map: "order_documents_orderId_fkey")
   @@map("order_documents")
 }
 
 model DocumentPrintSpec {
-  id             String   @id @default(cuid())
-  documentId     String   @unique
-  copies         Int      @default(1)
-  color          String   @default("BW") // "BW", "COLOR"
-  duplex         String   @default("SIMPLEX") // "SIMPLEX", "DUPLEX_LONG_EDGE", "DUPLEX_SHORT_EDGE"
-  paperSize      String   @default("A4") // "A4", "A3", "A5", "LETTER", "LEGAL"
-  orientation    String   @default("AUTO") // "PORTRAIT", "LANDSCAPE", "AUTO"
-  pageRange      String   @default("ALL") // "ALL" or "1-5,8"
-  pagesPerSheet  Int      @default(1) // 1, 2, 4, 6
-  collate        Boolean  @default(true)
-  stapling       String   @default("NONE") // "NONE", "CORNER", "SIDE"
-  binding        String   @default("NONE") // "NONE", "SPIRAL", "HARDCOVER", "PROJECT"
-  lamination     String   @default("NONE") // "NONE", "GLOSSY", "MATTE"
-  finishingNotes String?  @db.Text
-  priceDetails   String?  @db.Text
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  document OrderDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  id             String        @id @default(cuid())
+  documentId     String        @unique
+  copies         Int           @default(1)
+  color          String        @default("BW")
+  duplex         String        @default("SIMPLEX")
+  paperSize      String        @default("A4")
+  orientation    String        @default("AUTO")
+  pageRange      String        @default("ALL")
+  pagesPerSheet  Int           @default(1)
+  collate        Boolean       @default(true)
+  stapling       String        @default("NONE")
+  binding        String        @default("NONE")
+  lamination     String        @default("NONE")
+  finishingNotes String?       @db.Text
+  priceDetails   String?       @db.Text
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  document       OrderDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   @@map("document_print_specs")
 }
 
-// -------------------------------------------------------------
-// 3. Printers & Local Agent
-// -------------------------------------------------------------
-
 model PrintAgent {
-  id              String    @id @default(cuid())
+  id              String     @id @default(cuid())
   shopId          String
   agentName       String
   machineHostname String?
   osVersion       String?
   ipAddress       String?
   authTokenHash   String
-  isConnected     Boolean   @default(false)
+  isConnected     Boolean    @default(false)
   lastHeartbeatAt DateTime?
-  createdAt       DateTime  @default(now())
+  createdAt       DateTime   @default(now())
+  shop            Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  printJobs       PrintJob[]
+  printers        Printer[]
 
-  shop      Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  printers  Printer[]
-  printJobs PrintJob[]
-
+  @@index([shopId], map: "print_agents_shopId_fkey")
   @@map("print_agents")
 }
 
 model Printer {
-  id                  String   @id @default(cuid())
+  id                  String      @id @default(cuid())
   shopId              String
   agentId             String?
   windowsPrinterName  String
   displayName         String
   manufacturer        String?
   model               String?
-  connectionType      String   @default("WINDOWS_SPOOLER") // "USB", "NETWORK", "WINDOWS_SPOOLER"
+  connectionType      String      @default("WINDOWS_SPOOLER")
   ipAddress           String?
-  supportsColor       Boolean  @default(false)
-  supportsDuplex      Boolean  @default(false)
-  supportedPaperSizes String   @default("A4") // comma-separated e.g. "A4,A3"
-  status              String   @default("UNKNOWN") // "ONLINE", "OFFLINE", "PRINTING", "PAPER_EMPTY", "UNKNOWN"
-  isActive            Boolean  @default(true)
-  currentQueueCount   Int      @default(0)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  supportsColor       Boolean     @default(false)
+  supportsDuplex      Boolean     @default(false)
+  supportedPaperSizes String      @default("A4")
+  status              String      @default("UNKNOWN")
+  isActive            Boolean     @default(true)
+  currentQueueCount   Int         @default(0)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  printJobs           PrintJob[]
+  agent               PrintAgent? @relation(fields: [agentId], references: [id])
+  shop                Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
-  shop      Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  agent     PrintAgent? @relation(fields: [agentId], references: [id], onDelete: SetNull)
-  printJobs PrintJob[]
-
+  @@index([agentId], map: "printers_agentId_fkey")
+  @@index([shopId], map: "printers_shopId_fkey")
   @@map("printers")
 }
 
 model PrintJob {
-  id             String    @id @default(cuid())
-  orderId        String
-  documentId     String
-  printerId      String?
-  agentId        String?
-  status         String    @default("PENDING") // PENDING, ASSIGNED, DOWNLOADING, SPOOLING, PRINTING, SUCCESS, FAILED, CANCELLED
-  spoolerJobId   Int?
-  errorMessage   String?   @db.Text
-  dispatchedAt   DateTime?
-  completedAt    DateTime?
-  createdAt      DateTime  @default(now())
+  id           String        @id @default(cuid())
+  orderId      String
+  documentId   String
+  printerId    String?
+  agentId      String?
+  status       String        @default("PENDING")
+  spoolerJobId Int?
+  errorMessage String?       @db.Text
+  dispatchedAt DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  agent        PrintAgent?   @relation(fields: [agentId], references: [id])
+  document     OrderDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  order        Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  printer      Printer?      @relation(fields: [printerId], references: [id])
 
-  order    Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  document OrderDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  printer  Printer?      @relation(fields: [printerId], references: [id], onDelete: SetNull)
-  agent    PrintAgent?   @relation(fields: [agentId], references: [id], onDelete: SetNull)
-
+  @@index([agentId], map: "print_jobs_agentId_fkey")
+  @@index([documentId], map: "print_jobs_documentId_fkey")
+  @@index([orderId], map: "print_jobs_orderId_fkey")
+  @@index([printerId], map: "print_jobs_printerId_fkey")
   @@map("print_jobs")
 }
 
-// -------------------------------------------------------------
-// 4. Pricing Rules & SaaS Subscriptions
-// -------------------------------------------------------------
-
 model PricingRule {
-  id                String   @id @default(cuid())
-  shopId            String
-  paperSize         String   @default("A4") // "A4", "A3", "A5", "LETTER", "LEGAL"
-  bwSinglePrice     Float    @default(2.00)
-  bwDoublePrice     Float    @default(3.00)
-  colorSinglePrice  Float    @default(10.00)
-  colorDoublePrice  Float    @default(18.00)
-  isActive          Boolean  @default(true)
-  createdAt         DateTime @default(now())
-
-  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  id               String   @id @default(cuid())
+  shopId           String
+  paperSize        String   @default("A4")
+  bwSinglePrice    Float    @default(2)
+  bwDoublePrice    Float    @default(3)
+  colorSinglePrice Float    @default(10)
+  colorDoublePrice Float    @default(18)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  shop             Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
   @@unique([shopId, paperSize])
   @@map("pricing_rules")
 }
 
 model SubscriptionPlan {
-  id               String   @id // "STARTER", "PROFESSIONAL", "BUSINESS"
+  id               String         @id
   name             String
   monthlyPrice     Float
   yearlyPrice      Float
   maxPrinters      Int
   maxMonthlyOrders Int
-  featuresJson     String   @db.Text
-  createdAt        DateTime @default(now())
-
-  subscriptions Subscription[]
+  featuresJson     String         @db.Text
+  createdAt        DateTime       @default(now())
+  subscriptions    Subscription[]
 
   @@map("subscription_plans")
 }
 
 model Subscription {
-  id                 String    @id @default(cuid())
-  shopId             String    @unique
+  id                 String           @id @default(cuid())
+  shopId             String           @unique
   planId             String
-  status             String    @default("TRIALING") // TRIALING, ACTIVE, PAST_DUE, CANCELLED
-  trialStartAt       DateTime  @default(now())
+  status             String           @default("TRIALING")
+  trialStartAt       DateTime         @default(now())
   trialEndAt         DateTime
   currentPeriodStart DateTime?
   currentPeriodEnd   DateTime?
-  createdAt          DateTime  @default(now())
+  createdAt          DateTime         @default(now())
+  plan               SubscriptionPlan @relation(fields: [planId], references: [id])
+  shop               Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
-  shop Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  plan SubscriptionPlan @relation(fields: [planId], references: [id])
-
+  @@index([planId], map: "subscriptions_planId_fkey")
   @@map("subscriptions")
 }
-
-// -------------------------------------------------------------
-// 5. System Audit Logging
-// -------------------------------------------------------------
 
 model AuditLog {
   id         String   @id @default(cuid())
   shopId     String?
   userId     String?
-  action     String   // e.g. "AUTH_LOGIN", "SPEC_OVERRIDE", "JOB_DISPATCH"
-  entityType String   // e.g. "ORDER", "PRINTER", "AUTH"
+  action     String
+  entityType String
   entityId   String
   details    String?  @db.Text
   ipAddress  String?
   createdAt  DateTime @default(now())
+  shop       Shop?    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id])
 
-  shop Shop? @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
+  @@index([shopId], map: "audit_logs_shopId_fkey")
+  @@index([userId], map: "audit_logs_userId_fkey")
   @@map("audit_logs")
 }
-
-// -------------------------------------------------------------
-// 6. Persistent Cloud & Database File Storage (Vercel-Ready)
-// -------------------------------------------------------------
 
 model DocumentStorage {
   id         String   @id @default(cuid())
   storageKey String   @unique @db.VarChar(512)
-  fileData   Bytes    @db.LongBlob
+  fileData   Bytes
   mimeType   String   @default("application/pdf")
   filename   String
   fileSize   Int

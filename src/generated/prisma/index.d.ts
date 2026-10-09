@@ -1937,23 +1937,23 @@ export namespace Prisma {
    */
 
   export type ShopCountOutputType = {
-    users: number
+    auditLogs: number
     customers: number
     orders: number
     pricingRules: number
-    printers: number
     printAgents: number
-    auditLogs: number
+    printers: number
+    users: number
   }
 
   export type ShopCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | ShopCountOutputTypeCountUsersArgs
+    auditLogs?: boolean | ShopCountOutputTypeCountAuditLogsArgs
     customers?: boolean | ShopCountOutputTypeCountCustomersArgs
     orders?: boolean | ShopCountOutputTypeCountOrdersArgs
     pricingRules?: boolean | ShopCountOutputTypeCountPricingRulesArgs
-    printers?: boolean | ShopCountOutputTypeCountPrintersArgs
     printAgents?: boolean | ShopCountOutputTypeCountPrintAgentsArgs
-    auditLogs?: boolean | ShopCountOutputTypeCountAuditLogsArgs
+    printers?: boolean | ShopCountOutputTypeCountPrintersArgs
+    users?: boolean | ShopCountOutputTypeCountUsersArgs
   }
 
   // Custom InputTypes
@@ -1970,8 +1970,8 @@ export namespace Prisma {
   /**
    * ShopCountOutputType without action
    */
-  export type ShopCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
+  export type ShopCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuditLogWhereInput
   }
 
   /**
@@ -1998,13 +1998,6 @@ export namespace Prisma {
   /**
    * ShopCountOutputType without action
    */
-  export type ShopCountOutputTypeCountPrintersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PrinterWhereInput
-  }
-
-  /**
-   * ShopCountOutputType without action
-   */
   export type ShopCountOutputTypeCountPrintAgentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PrintAgentWhereInput
   }
@@ -2012,8 +2005,15 @@ export namespace Prisma {
   /**
    * ShopCountOutputType without action
    */
-  export type ShopCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AuditLogWhereInput
+  export type ShopCountOutputTypeCountPrintersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrinterWhereInput
+  }
+
+  /**
+   * ShopCountOutputType without action
+   */
+  export type ShopCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
 
@@ -2155,13 +2155,13 @@ export namespace Prisma {
    */
 
   export type PrintAgentCountOutputType = {
-    printers: number
     printJobs: number
+    printers: number
   }
 
   export type PrintAgentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    printers?: boolean | PrintAgentCountOutputTypeCountPrintersArgs
     printJobs?: boolean | PrintAgentCountOutputTypeCountPrintJobsArgs
+    printers?: boolean | PrintAgentCountOutputTypeCountPrintersArgs
   }
 
   // Custom InputTypes
@@ -2178,15 +2178,15 @@ export namespace Prisma {
   /**
    * PrintAgentCountOutputType without action
    */
-  export type PrintAgentCountOutputTypeCountPrintersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PrinterWhereInput
+  export type PrintAgentCountOutputTypeCountPrintJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrintJobWhereInput
   }
 
   /**
    * PrintAgentCountOutputType without action
    */
-  export type PrintAgentCountOutputTypeCountPrintJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PrintJobWhereInput
+  export type PrintAgentCountOutputTypeCountPrintersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrinterWhereInput
   }
 
 
@@ -2492,14 +2492,14 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    users?: boolean | Shop$usersArgs<ExtArgs>
+    auditLogs?: boolean | Shop$auditLogsArgs<ExtArgs>
     customers?: boolean | Shop$customersArgs<ExtArgs>
     orders?: boolean | Shop$ordersArgs<ExtArgs>
     pricingRules?: boolean | Shop$pricingRulesArgs<ExtArgs>
-    printers?: boolean | Shop$printersArgs<ExtArgs>
     printAgents?: boolean | Shop$printAgentsArgs<ExtArgs>
+    printers?: boolean | Shop$printersArgs<ExtArgs>
     subscription?: boolean | Shop$subscriptionArgs<ExtArgs>
-    auditLogs?: boolean | Shop$auditLogsArgs<ExtArgs>
+    users?: boolean | Shop$usersArgs<ExtArgs>
     _count?: boolean | ShopCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["shop"]>
 
@@ -2524,28 +2524,28 @@ export namespace Prisma {
 
   export type ShopOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "name" | "phone" | "email" | "address" | "city" | "state" | "pincode" | "gstNumber" | "qrCodeUrl" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["shop"]>
   export type ShopInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | Shop$usersArgs<ExtArgs>
+    auditLogs?: boolean | Shop$auditLogsArgs<ExtArgs>
     customers?: boolean | Shop$customersArgs<ExtArgs>
     orders?: boolean | Shop$ordersArgs<ExtArgs>
     pricingRules?: boolean | Shop$pricingRulesArgs<ExtArgs>
-    printers?: boolean | Shop$printersArgs<ExtArgs>
     printAgents?: boolean | Shop$printAgentsArgs<ExtArgs>
+    printers?: boolean | Shop$printersArgs<ExtArgs>
     subscription?: boolean | Shop$subscriptionArgs<ExtArgs>
-    auditLogs?: boolean | Shop$auditLogsArgs<ExtArgs>
+    users?: boolean | Shop$usersArgs<ExtArgs>
     _count?: boolean | ShopCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $ShopPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Shop"
     objects: {
-      users: Prisma.$UserPayload<ExtArgs>[]
+      auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
       customers: Prisma.$CustomerPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
       pricingRules: Prisma.$PricingRulePayload<ExtArgs>[]
-      printers: Prisma.$PrinterPayload<ExtArgs>[]
       printAgents: Prisma.$PrintAgentPayload<ExtArgs>[]
+      printers: Prisma.$PrinterPayload<ExtArgs>[]
       subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
-      auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      users: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2902,14 +2902,14 @@ export namespace Prisma {
    */
   export interface Prisma__ShopClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    users<T extends Shop$usersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    auditLogs<T extends Shop$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Shop$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     customers<T extends Shop$customersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     orders<T extends Shop$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     pricingRules<T extends Shop$pricingRulesArgs<ExtArgs> = {}>(args?: Subset<T, Shop$pricingRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PricingRulePayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
-    printers<T extends Shop$printersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$printersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     printAgents<T extends Shop$printAgentsArgs<ExtArgs> = {}>(args?: Subset<T, Shop$printAgentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrintAgentPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    printers<T extends Shop$printersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$printersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     subscription<T extends Shop$subscriptionArgs<ExtArgs> = {}>(args?: Subset<T, Shop$subscriptionArgs<ExtArgs>>): Prisma__SubscriptionClient<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
-    auditLogs<T extends Shop$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Shop$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    users<T extends Shop$usersArgs<ExtArgs> = {}>(args?: Subset<T, Shop$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3296,27 +3296,27 @@ export namespace Prisma {
   }
 
   /**
-   * Shop.users
+   * Shop.auditLogs
    */
-  export type Shop$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Shop$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the User
+     * Select specific fields to fetch from the AuditLog
      */
-    select?: UserSelect<ExtArgs> | null
+    select?: AuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
+     * Omit specific fields from the AuditLog
      */
-    omit?: UserOmit<ExtArgs> | null
+    omit?: AuditLogOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
+    include?: AuditLogInclude<ExtArgs> | null
+    where?: AuditLogWhereInput
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
+    cursor?: AuditLogWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
   }
 
   /**
@@ -3392,30 +3392,6 @@ export namespace Prisma {
   }
 
   /**
-   * Shop.printers
-   */
-  export type Shop$printersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Printer
-     */
-    select?: PrinterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Printer
-     */
-    omit?: PrinterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PrinterInclude<ExtArgs> | null
-    where?: PrinterWhereInput
-    orderBy?: PrinterOrderByWithRelationInput | PrinterOrderByWithRelationInput[]
-    cursor?: PrinterWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PrinterScalarFieldEnum | PrinterScalarFieldEnum[]
-  }
-
-  /**
    * Shop.printAgents
    */
   export type Shop$printAgentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3440,6 +3416,30 @@ export namespace Prisma {
   }
 
   /**
+   * Shop.printers
+   */
+  export type Shop$printersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Printer
+     */
+    select?: PrinterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Printer
+     */
+    omit?: PrinterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrinterInclude<ExtArgs> | null
+    where?: PrinterWhereInput
+    orderBy?: PrinterOrderByWithRelationInput | PrinterOrderByWithRelationInput[]
+    cursor?: PrinterWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrinterScalarFieldEnum | PrinterScalarFieldEnum[]
+  }
+
+  /**
    * Shop.subscription
    */
   export type Shop$subscriptionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3459,27 +3459,27 @@ export namespace Prisma {
   }
 
   /**
-   * Shop.auditLogs
+   * Shop.users
    */
-  export type Shop$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Shop$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the AuditLog
+     * Select specific fields to fetch from the User
      */
-    select?: AuditLogSelect<ExtArgs> | null
+    select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the AuditLog
+     * Omit specific fields from the User
      */
-    omit?: AuditLogOmit<ExtArgs> | null
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: AuditLogInclude<ExtArgs> | null
-    where?: AuditLogWhereInput
-    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
-    cursor?: AuditLogWhereUniqueInput
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -3705,8 +3705,8 @@ export namespace Prisma {
     isVerified?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    shop?: boolean | User$shopArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    shop?: boolean | User$shopArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3727,16 +3727,16 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shopId" | "email" | "passwordHash" | "fullName" | "phone" | "role" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    shop?: boolean | User$shopArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    shop?: boolean | User$shopArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      shop: Prisma.$ShopPayload<ExtArgs> | null
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      shop: Prisma.$ShopPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4089,8 +4089,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    shop<T extends User$shopArgs<ExtArgs> = {}>(args?: Subset<T, User$shopArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    shop<T extends User$shopArgs<ExtArgs> = {}>(args?: Subset<T, User$shopArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4473,25 +4473,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.shop
-   */
-  export type User$shopArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Shop
-     */
-    select?: ShopSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Shop
-     */
-    omit?: ShopOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ShopInclude<ExtArgs> | null
-    where?: ShopWhereInput
-  }
-
-  /**
    * User.auditLogs
    */
   export type User$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4513,6 +4494,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.shop
+   */
+  export type User$shopArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shop
+     */
+    select?: ShopSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shop
+     */
+    omit?: ShopOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShopInclude<ExtArgs> | null
+    where?: ShopWhereInput
   }
 
   /**
@@ -5818,9 +5818,9 @@ export namespace Prisma {
     rejectionReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    shop?: boolean | ShopDefaultArgs<ExtArgs>
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
     documents?: boolean | Order$documentsArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
     printJobs?: boolean | Order$printJobsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -5850,9 +5850,9 @@ export namespace Prisma {
 
   export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "shopId" | "customerId" | "customerPhone" | "status" | "paymentStatus" | "paymentMethod" | "paymentReference" | "paidAt" | "totalDocuments" | "totalPages" | "estimatedAmount" | "finalAmount" | "customerNotes" | "rejectionReason" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    shop?: boolean | ShopDefaultArgs<ExtArgs>
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
     documents?: boolean | Order$documentsArgs<ExtArgs>
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
     printJobs?: boolean | Order$printJobsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -5860,9 +5860,9 @@ export namespace Prisma {
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Order"
     objects: {
-      shop: Prisma.$ShopPayload<ExtArgs>
-      customer: Prisma.$CustomerPayload<ExtArgs>
       documents: Prisma.$OrderDocumentPayload<ExtArgs>[]
+      customer: Prisma.$CustomerPayload<ExtArgs>
+      shop: Prisma.$ShopPayload<ExtArgs>
       printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -6224,9 +6224,9 @@ export namespace Prisma {
    */
   export interface Prisma__OrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
-    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     documents<T extends Order$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Order$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderDocumentPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     printJobs<T extends Order$printJobsArgs<ExtArgs> = {}>(args?: Subset<T, Order$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6926,8 +6926,8 @@ export namespace Prisma {
     detectedPageCount?: boolean
     previewImageKey?: boolean
     createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
     specs?: boolean | OrderDocument$specsArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
     printJobs?: boolean | OrderDocument$printJobsArgs<ExtArgs>
     _count?: boolean | OrderDocumentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderDocument"]>
@@ -6949,8 +6949,8 @@ export namespace Prisma {
 
   export type OrderDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "originalFilename" | "storageKey" | "fileSizeBytes" | "mimeType" | "sha256Checksum" | "detectedPageCount" | "previewImageKey" | "createdAt", ExtArgs["result"]["orderDocument"]>
   export type OrderDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
     specs?: boolean | OrderDocument$specsArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
     printJobs?: boolean | OrderDocument$printJobsArgs<ExtArgs>
     _count?: boolean | OrderDocumentCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6958,8 +6958,8 @@ export namespace Prisma {
   export type $OrderDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OrderDocument"
     objects: {
-      order: Prisma.$OrderPayload<ExtArgs>
       specs: Prisma.$DocumentPrintSpecPayload<ExtArgs> | null
+      order: Prisma.$OrderPayload<ExtArgs>
       printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7313,8 +7313,8 @@ export namespace Prisma {
    */
   export interface Prisma__OrderDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     specs<T extends OrderDocument$specsArgs<ExtArgs> = {}>(args?: Subset<T, OrderDocument$specsArgs<ExtArgs>>): Prisma__DocumentPrintSpecClient<$Result.GetResult<Prisma.$DocumentPrintSpecPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     printJobs<T extends OrderDocument$printJobsArgs<ExtArgs> = {}>(args?: Subset<T, OrderDocument$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9063,8 +9063,8 @@ export namespace Prisma {
     lastHeartbeatAt?: boolean
     createdAt?: boolean
     shop?: boolean | ShopDefaultArgs<ExtArgs>
-    printers?: boolean | PrintAgent$printersArgs<ExtArgs>
     printJobs?: boolean | PrintAgent$printJobsArgs<ExtArgs>
+    printers?: boolean | PrintAgent$printersArgs<ExtArgs>
     _count?: boolean | PrintAgentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["printAgent"]>
 
@@ -9086,8 +9086,8 @@ export namespace Prisma {
   export type PrintAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shopId" | "agentName" | "machineHostname" | "osVersion" | "ipAddress" | "authTokenHash" | "isConnected" | "lastHeartbeatAt" | "createdAt", ExtArgs["result"]["printAgent"]>
   export type PrintAgentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     shop?: boolean | ShopDefaultArgs<ExtArgs>
-    printers?: boolean | PrintAgent$printersArgs<ExtArgs>
     printJobs?: boolean | PrintAgent$printJobsArgs<ExtArgs>
+    printers?: boolean | PrintAgent$printersArgs<ExtArgs>
     _count?: boolean | PrintAgentCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -9095,8 +9095,8 @@ export namespace Prisma {
     name: "PrintAgent"
     objects: {
       shop: Prisma.$ShopPayload<ExtArgs>
-      printers: Prisma.$PrinterPayload<ExtArgs>[]
       printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
+      printers: Prisma.$PrinterPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9450,8 +9450,8 @@ export namespace Prisma {
   export interface Prisma__PrintAgentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
-    printers<T extends PrintAgent$printersArgs<ExtArgs> = {}>(args?: Subset<T, PrintAgent$printersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     printJobs<T extends PrintAgent$printJobsArgs<ExtArgs> = {}>(args?: Subset<T, PrintAgent$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    printers<T extends PrintAgent$printersArgs<ExtArgs> = {}>(args?: Subset<T, PrintAgent$printersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9834,30 +9834,6 @@ export namespace Prisma {
   }
 
   /**
-   * PrintAgent.printers
-   */
-  export type PrintAgent$printersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Printer
-     */
-    select?: PrinterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Printer
-     */
-    omit?: PrinterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PrinterInclude<ExtArgs> | null
-    where?: PrinterWhereInput
-    orderBy?: PrinterOrderByWithRelationInput | PrinterOrderByWithRelationInput[]
-    cursor?: PrinterWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PrinterScalarFieldEnum | PrinterScalarFieldEnum[]
-  }
-
-  /**
    * PrintAgent.printJobs
    */
   export type PrintAgent$printJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9879,6 +9855,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PrintJobScalarFieldEnum | PrintJobScalarFieldEnum[]
+  }
+
+  /**
+   * PrintAgent.printers
+   */
+  export type PrintAgent$printersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Printer
+     */
+    select?: PrinterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Printer
+     */
+    omit?: PrinterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrinterInclude<ExtArgs> | null
+    where?: PrinterWhereInput
+    orderBy?: PrinterOrderByWithRelationInput | PrinterOrderByWithRelationInput[]
+    cursor?: PrinterWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrinterScalarFieldEnum | PrinterScalarFieldEnum[]
   }
 
   /**
@@ -10194,9 +10194,9 @@ export namespace Prisma {
     currentQueueCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    shop?: boolean | ShopDefaultArgs<ExtArgs>
-    agent?: boolean | Printer$agentArgs<ExtArgs>
     printJobs?: boolean | Printer$printJobsArgs<ExtArgs>
+    agent?: boolean | Printer$agentArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
     _count?: boolean | PrinterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["printer"]>
 
@@ -10224,18 +10224,18 @@ export namespace Prisma {
 
   export type PrinterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shopId" | "agentId" | "windowsPrinterName" | "displayName" | "manufacturer" | "model" | "connectionType" | "ipAddress" | "supportsColor" | "supportsDuplex" | "supportedPaperSizes" | "status" | "isActive" | "currentQueueCount" | "createdAt" | "updatedAt", ExtArgs["result"]["printer"]>
   export type PrinterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    shop?: boolean | ShopDefaultArgs<ExtArgs>
-    agent?: boolean | Printer$agentArgs<ExtArgs>
     printJobs?: boolean | Printer$printJobsArgs<ExtArgs>
+    agent?: boolean | Printer$agentArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
     _count?: boolean | PrinterCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $PrinterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Printer"
     objects: {
-      shop: Prisma.$ShopPayload<ExtArgs>
-      agent: Prisma.$PrintAgentPayload<ExtArgs> | null
       printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
+      agent: Prisma.$PrintAgentPayload<ExtArgs> | null
+      shop: Prisma.$ShopPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10595,9 +10595,9 @@ export namespace Prisma {
    */
   export interface Prisma__PrinterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
-    agent<T extends Printer$agentArgs<ExtArgs> = {}>(args?: Subset<T, Printer$agentArgs<ExtArgs>>): Prisma__PrintAgentClient<$Result.GetResult<Prisma.$PrintAgentPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     printJobs<T extends Printer$printJobsArgs<ExtArgs> = {}>(args?: Subset<T, Printer$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    agent<T extends Printer$agentArgs<ExtArgs> = {}>(args?: Subset<T, Printer$agentArgs<ExtArgs>>): Prisma__PrintAgentClient<$Result.GetResult<Prisma.$PrintAgentPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10987,25 +10987,6 @@ export namespace Prisma {
   }
 
   /**
-   * Printer.agent
-   */
-  export type Printer$agentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PrintAgent
-     */
-    select?: PrintAgentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PrintAgent
-     */
-    omit?: PrintAgentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PrintAgentInclude<ExtArgs> | null
-    where?: PrintAgentWhereInput
-  }
-
-  /**
    * Printer.printJobs
    */
   export type Printer$printJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11027,6 +11008,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PrintJobScalarFieldEnum | PrintJobScalarFieldEnum[]
+  }
+
+  /**
+   * Printer.agent
+   */
+  export type Printer$agentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrintAgent
+     */
+    select?: PrintAgentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrintAgent
+     */
+    omit?: PrintAgentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrintAgentInclude<ExtArgs> | null
+    where?: PrintAgentWhereInput
   }
 
   /**
@@ -11294,10 +11294,10 @@ export namespace Prisma {
     dispatchedAt?: boolean
     completedAt?: boolean
     createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-    document?: boolean | OrderDocumentDefaultArgs<ExtArgs>
-    printer?: boolean | PrintJob$printerArgs<ExtArgs>
     agent?: boolean | PrintJob$agentArgs<ExtArgs>
+    document?: boolean | OrderDocumentDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+    printer?: boolean | PrintJob$printerArgs<ExtArgs>
   }, ExtArgs["result"]["printJob"]>
 
 
@@ -11318,19 +11318,19 @@ export namespace Prisma {
 
   export type PrintJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "documentId" | "printerId" | "agentId" | "status" | "spoolerJobId" | "errorMessage" | "dispatchedAt" | "completedAt" | "createdAt", ExtArgs["result"]["printJob"]>
   export type PrintJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-    document?: boolean | OrderDocumentDefaultArgs<ExtArgs>
-    printer?: boolean | PrintJob$printerArgs<ExtArgs>
     agent?: boolean | PrintJob$agentArgs<ExtArgs>
+    document?: boolean | OrderDocumentDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+    printer?: boolean | PrintJob$printerArgs<ExtArgs>
   }
 
   export type $PrintJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PrintJob"
     objects: {
-      order: Prisma.$OrderPayload<ExtArgs>
-      document: Prisma.$OrderDocumentPayload<ExtArgs>
-      printer: Prisma.$PrinterPayload<ExtArgs> | null
       agent: Prisma.$PrintAgentPayload<ExtArgs> | null
+      document: Prisma.$OrderDocumentPayload<ExtArgs>
+      order: Prisma.$OrderPayload<ExtArgs>
+      printer: Prisma.$PrinterPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11684,10 +11684,10 @@ export namespace Prisma {
    */
   export interface Prisma__PrintJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
-    document<T extends OrderDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDocumentDefaultArgs<ExtArgs>>): Prisma__OrderDocumentClient<$Result.GetResult<Prisma.$OrderDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
-    printer<T extends PrintJob$printerArgs<ExtArgs> = {}>(args?: Subset<T, PrintJob$printerArgs<ExtArgs>>): Prisma__PrinterClient<$Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     agent<T extends PrintJob$agentArgs<ExtArgs> = {}>(args?: Subset<T, PrintJob$agentArgs<ExtArgs>>): Prisma__PrintAgentClient<$Result.GetResult<Prisma.$PrintAgentPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    document<T extends OrderDocumentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDocumentDefaultArgs<ExtArgs>>): Prisma__OrderDocumentClient<$Result.GetResult<Prisma.$OrderDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    printer<T extends PrintJob$printerArgs<ExtArgs> = {}>(args?: Subset<T, PrintJob$printerArgs<ExtArgs>>): Prisma__PrinterClient<$Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12071,25 +12071,6 @@ export namespace Prisma {
   }
 
   /**
-   * PrintJob.printer
-   */
-  export type PrintJob$printerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Printer
-     */
-    select?: PrinterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Printer
-     */
-    omit?: PrinterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PrinterInclude<ExtArgs> | null
-    where?: PrinterWhereInput
-  }
-
-  /**
    * PrintJob.agent
    */
   export type PrintJob$agentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12106,6 +12087,25 @@ export namespace Prisma {
      */
     include?: PrintAgentInclude<ExtArgs> | null
     where?: PrintAgentWhereInput
+  }
+
+  /**
+   * PrintJob.printer
+   */
+  export type PrintJob$printerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Printer
+     */
+    select?: PrinterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Printer
+     */
+    omit?: PrinterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrinterInclude<ExtArgs> | null
+    where?: PrinterWhereInput
   }
 
   /**
@@ -14376,8 +14376,8 @@ export namespace Prisma {
     currentPeriodStart?: boolean
     currentPeriodEnd?: boolean
     createdAt?: boolean
-    shop?: boolean | ShopDefaultArgs<ExtArgs>
     plan?: boolean | SubscriptionPlanDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subscription"]>
 
 
@@ -14396,15 +14396,15 @@ export namespace Prisma {
 
   export type SubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shopId" | "planId" | "status" | "trialStartAt" | "trialEndAt" | "currentPeriodStart" | "currentPeriodEnd" | "createdAt", ExtArgs["result"]["subscription"]>
   export type SubscriptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    shop?: boolean | ShopDefaultArgs<ExtArgs>
     plan?: boolean | SubscriptionPlanDefaultArgs<ExtArgs>
+    shop?: boolean | ShopDefaultArgs<ExtArgs>
   }
 
   export type $SubscriptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Subscription"
     objects: {
-      shop: Prisma.$ShopPayload<ExtArgs>
       plan: Prisma.$SubscriptionPlanPayload<ExtArgs>
+      shop: Prisma.$ShopPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14756,8 +14756,8 @@ export namespace Prisma {
    */
   export interface Prisma__SubscriptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     plan<T extends SubscriptionPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubscriptionPlanDefaultArgs<ExtArgs>>): Prisma__SubscriptionPlanClient<$Result.GetResult<Prisma.$SubscriptionPlanPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    shop<T extends ShopDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShopDefaultArgs<ExtArgs>>): Prisma__ShopClient<$Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17643,14 +17643,14 @@ export namespace Prisma {
     isActive?: BoolFilter<"Shop"> | boolean
     createdAt?: DateTimeFilter<"Shop"> | Date | string
     updatedAt?: DateTimeFilter<"Shop"> | Date | string
-    users?: UserListRelationFilter
+    auditLogs?: AuditLogListRelationFilter
     customers?: CustomerListRelationFilter
     orders?: OrderListRelationFilter
     pricingRules?: PricingRuleListRelationFilter
-    printers?: PrinterListRelationFilter
     printAgents?: PrintAgentListRelationFilter
+    printers?: PrinterListRelationFilter
     subscription?: XOR<SubscriptionNullableScalarRelationFilter, SubscriptionWhereInput> | null
-    auditLogs?: AuditLogListRelationFilter
+    users?: UserListRelationFilter
   }
 
   export type ShopOrderByWithRelationInput = {
@@ -17668,14 +17668,14 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    users?: UserOrderByRelationAggregateInput
+    auditLogs?: AuditLogOrderByRelationAggregateInput
     customers?: CustomerOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     pricingRules?: PricingRuleOrderByRelationAggregateInput
-    printers?: PrinterOrderByRelationAggregateInput
     printAgents?: PrintAgentOrderByRelationAggregateInput
+    printers?: PrinterOrderByRelationAggregateInput
     subscription?: SubscriptionOrderByWithRelationInput
-    auditLogs?: AuditLogOrderByRelationAggregateInput
+    users?: UserOrderByRelationAggregateInput
     _relevance?: ShopOrderByRelevanceInput
   }
 
@@ -17697,14 +17697,14 @@ export namespace Prisma {
     isActive?: BoolFilter<"Shop"> | boolean
     createdAt?: DateTimeFilter<"Shop"> | Date | string
     updatedAt?: DateTimeFilter<"Shop"> | Date | string
-    users?: UserListRelationFilter
+    auditLogs?: AuditLogListRelationFilter
     customers?: CustomerListRelationFilter
     orders?: OrderListRelationFilter
     pricingRules?: PricingRuleListRelationFilter
-    printers?: PrinterListRelationFilter
     printAgents?: PrintAgentListRelationFilter
+    printers?: PrinterListRelationFilter
     subscription?: XOR<SubscriptionNullableScalarRelationFilter, SubscriptionWhereInput> | null
-    auditLogs?: AuditLogListRelationFilter
+    users?: UserListRelationFilter
   }, "id" | "slug">
 
   export type ShopOrderByWithAggregationInput = {
@@ -17761,8 +17761,8 @@ export namespace Prisma {
     isVerified?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    shop?: XOR<ShopNullableScalarRelationFilter, ShopWhereInput> | null
     auditLogs?: AuditLogListRelationFilter
+    shop?: XOR<ShopNullableScalarRelationFilter, ShopWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17776,8 +17776,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shop?: ShopOrderByWithRelationInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
+    shop?: ShopOrderByWithRelationInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -17795,8 +17795,8 @@ export namespace Prisma {
     isVerified?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    shop?: XOR<ShopNullableScalarRelationFilter, ShopWhereInput> | null
     auditLogs?: AuditLogListRelationFilter
+    shop?: XOR<ShopNullableScalarRelationFilter, ShopWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -17917,9 +17917,9 @@ export namespace Prisma {
     rejectionReason?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
-    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     documents?: OrderDocumentListRelationFilter
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
     printJobs?: PrintJobListRelationFilter
   }
 
@@ -17942,9 +17942,9 @@ export namespace Prisma {
     rejectionReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shop?: ShopOrderByWithRelationInput
-    customer?: CustomerOrderByWithRelationInput
     documents?: OrderDocumentOrderByRelationAggregateInput
+    customer?: CustomerOrderByWithRelationInput
+    shop?: ShopOrderByWithRelationInput
     printJobs?: PrintJobOrderByRelationAggregateInput
     _relevance?: OrderOrderByRelevanceInput
   }
@@ -17971,9 +17971,9 @@ export namespace Prisma {
     rejectionReason?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
-    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     documents?: OrderDocumentListRelationFilter
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
     printJobs?: PrintJobListRelationFilter
   }, "id" | "orderNumber">
 
@@ -18041,8 +18041,8 @@ export namespace Prisma {
     detectedPageCount?: IntFilter<"OrderDocument"> | number
     previewImageKey?: StringNullableFilter<"OrderDocument"> | string | null
     createdAt?: DateTimeFilter<"OrderDocument"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     specs?: XOR<DocumentPrintSpecNullableScalarRelationFilter, DocumentPrintSpecWhereInput> | null
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     printJobs?: PrintJobListRelationFilter
   }
 
@@ -18057,8 +18057,8 @@ export namespace Prisma {
     detectedPageCount?: SortOrder
     previewImageKey?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    order?: OrderOrderByWithRelationInput
     specs?: DocumentPrintSpecOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
     printJobs?: PrintJobOrderByRelationAggregateInput
     _relevance?: OrderDocumentOrderByRelevanceInput
   }
@@ -18077,8 +18077,8 @@ export namespace Prisma {
     detectedPageCount?: IntFilter<"OrderDocument"> | number
     previewImageKey?: StringNullableFilter<"OrderDocument"> | string | null
     createdAt?: DateTimeFilter<"OrderDocument"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     specs?: XOR<DocumentPrintSpecNullableScalarRelationFilter, DocumentPrintSpecWhereInput> | null
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     printJobs?: PrintJobListRelationFilter
   }, "id">
 
@@ -18249,8 +18249,8 @@ export namespace Prisma {
     lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
     createdAt?: DateTimeFilter<"PrintAgent"> | Date | string
     shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
-    printers?: PrinterListRelationFilter
     printJobs?: PrintJobListRelationFilter
+    printers?: PrinterListRelationFilter
   }
 
   export type PrintAgentOrderByWithRelationInput = {
@@ -18265,8 +18265,8 @@ export namespace Prisma {
     lastHeartbeatAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     shop?: ShopOrderByWithRelationInput
-    printers?: PrinterOrderByRelationAggregateInput
     printJobs?: PrintJobOrderByRelationAggregateInput
+    printers?: PrinterOrderByRelationAggregateInput
     _relevance?: PrintAgentOrderByRelevanceInput
   }
 
@@ -18285,8 +18285,8 @@ export namespace Prisma {
     lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
     createdAt?: DateTimeFilter<"PrintAgent"> | Date | string
     shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
-    printers?: PrinterListRelationFilter
     printJobs?: PrintJobListRelationFilter
+    printers?: PrinterListRelationFilter
   }, "id">
 
   export type PrintAgentOrderByWithAggregationInput = {
@@ -18342,9 +18342,9 @@ export namespace Prisma {
     currentQueueCount?: IntFilter<"Printer"> | number
     createdAt?: DateTimeFilter<"Printer"> | Date | string
     updatedAt?: DateTimeFilter<"Printer"> | Date | string
-    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
-    agent?: XOR<PrintAgentNullableScalarRelationFilter, PrintAgentWhereInput> | null
     printJobs?: PrintJobListRelationFilter
+    agent?: XOR<PrintAgentNullableScalarRelationFilter, PrintAgentWhereInput> | null
+    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
   }
 
   export type PrinterOrderByWithRelationInput = {
@@ -18365,9 +18365,9 @@ export namespace Prisma {
     currentQueueCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    shop?: ShopOrderByWithRelationInput
-    agent?: PrintAgentOrderByWithRelationInput
     printJobs?: PrintJobOrderByRelationAggregateInput
+    agent?: PrintAgentOrderByWithRelationInput
+    shop?: ShopOrderByWithRelationInput
     _relevance?: PrinterOrderByRelevanceInput
   }
 
@@ -18392,9 +18392,9 @@ export namespace Prisma {
     currentQueueCount?: IntFilter<"Printer"> | number
     createdAt?: DateTimeFilter<"Printer"> | Date | string
     updatedAt?: DateTimeFilter<"Printer"> | Date | string
-    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
-    agent?: XOR<PrintAgentNullableScalarRelationFilter, PrintAgentWhereInput> | null
     printJobs?: PrintJobListRelationFilter
+    agent?: XOR<PrintAgentNullableScalarRelationFilter, PrintAgentWhereInput> | null
+    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
   }, "id">
 
   export type PrinterOrderByWithAggregationInput = {
@@ -18460,10 +18460,10 @@ export namespace Prisma {
     dispatchedAt?: DateTimeNullableFilter<"PrintJob"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"PrintJob"> | Date | string | null
     createdAt?: DateTimeFilter<"PrintJob"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-    document?: XOR<OrderDocumentScalarRelationFilter, OrderDocumentWhereInput>
-    printer?: XOR<PrinterNullableScalarRelationFilter, PrinterWhereInput> | null
     agent?: XOR<PrintAgentNullableScalarRelationFilter, PrintAgentWhereInput> | null
+    document?: XOR<OrderDocumentScalarRelationFilter, OrderDocumentWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    printer?: XOR<PrinterNullableScalarRelationFilter, PrinterWhereInput> | null
   }
 
   export type PrintJobOrderByWithRelationInput = {
@@ -18478,10 +18478,10 @@ export namespace Prisma {
     dispatchedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    order?: OrderOrderByWithRelationInput
-    document?: OrderDocumentOrderByWithRelationInput
-    printer?: PrinterOrderByWithRelationInput
     agent?: PrintAgentOrderByWithRelationInput
+    document?: OrderDocumentOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
+    printer?: PrinterOrderByWithRelationInput
     _relevance?: PrintJobOrderByRelevanceInput
   }
 
@@ -18500,10 +18500,10 @@ export namespace Prisma {
     dispatchedAt?: DateTimeNullableFilter<"PrintJob"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"PrintJob"> | Date | string | null
     createdAt?: DateTimeFilter<"PrintJob"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-    document?: XOR<OrderDocumentScalarRelationFilter, OrderDocumentWhereInput>
-    printer?: XOR<PrinterNullableScalarRelationFilter, PrinterWhereInput> | null
     agent?: XOR<PrintAgentNullableScalarRelationFilter, PrintAgentWhereInput> | null
+    document?: XOR<OrderDocumentScalarRelationFilter, OrderDocumentWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    printer?: XOR<PrinterNullableScalarRelationFilter, PrinterWhereInput> | null
   }, "id">
 
   export type PrintJobOrderByWithAggregationInput = {
@@ -18707,8 +18707,8 @@ export namespace Prisma {
     currentPeriodStart?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     currentPeriodEnd?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     createdAt?: DateTimeFilter<"Subscription"> | Date | string
-    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
     plan?: XOR<SubscriptionPlanScalarRelationFilter, SubscriptionPlanWhereInput>
+    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
   }
 
   export type SubscriptionOrderByWithRelationInput = {
@@ -18721,8 +18721,8 @@ export namespace Prisma {
     currentPeriodStart?: SortOrderInput | SortOrder
     currentPeriodEnd?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    shop?: ShopOrderByWithRelationInput
     plan?: SubscriptionPlanOrderByWithRelationInput
+    shop?: ShopOrderByWithRelationInput
     _relevance?: SubscriptionOrderByRelevanceInput
   }
 
@@ -18739,8 +18739,8 @@ export namespace Prisma {
     currentPeriodStart?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     currentPeriodEnd?: DateTimeNullableFilter<"Subscription"> | Date | string | null
     createdAt?: DateTimeFilter<"Subscription"> | Date | string
-    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
     plan?: XOR<SubscriptionPlanScalarRelationFilter, SubscriptionPlanWhereInput>
+    shop?: XOR<ShopScalarRelationFilter, ShopWhereInput>
   }, "id" | "shopId">
 
   export type SubscriptionOrderByWithAggregationInput = {
@@ -18937,14 +18937,14 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
     customers?: CustomerCreateNestedManyWithoutShopInput
     orders?: OrderCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
     subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateInput = {
@@ -18962,14 +18962,14 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
     customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
     orders?: OrderUncheckedCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopUpdateInput = {
@@ -18987,14 +18987,14 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
     customers?: CustomerUpdateManyWithoutShopNestedInput
     orders?: OrderUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateInput = {
@@ -19012,14 +19012,14 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
     orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type ShopCreateManyInput = {
@@ -19083,8 +19083,8 @@ export namespace Prisma {
     isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    shop?: ShopCreateNestedOneWithoutUsersInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    shop?: ShopCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -19111,8 +19111,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneWithoutUsersNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    shop?: ShopUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -19250,9 +19250,9 @@ export namespace Prisma {
     rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutOrdersInput
-    customer: CustomerCreateNestedOneWithoutOrdersInput
     documents?: OrderDocumentCreateNestedManyWithoutOrderInput
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    shop: ShopCreateNestedOneWithoutOrdersInput
     printJobs?: PrintJobCreateNestedManyWithoutOrderInput
   }
 
@@ -19296,9 +19296,9 @@ export namespace Prisma {
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     documents?: OrderDocumentUpdateManyWithoutOrderNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
     printJobs?: PrintJobUpdateManyWithoutOrderNestedInput
   }
 
@@ -19396,8 +19396,8 @@ export namespace Prisma {
     detectedPageCount?: number
     previewImageKey?: string | null
     createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutDocumentsInput
     specs?: DocumentPrintSpecCreateNestedOneWithoutDocumentInput
+    order: OrderCreateNestedOneWithoutDocumentsInput
     printJobs?: PrintJobCreateNestedManyWithoutDocumentInput
   }
 
@@ -19426,8 +19426,8 @@ export namespace Prisma {
     detectedPageCount?: IntFieldUpdateOperationsInput | number
     previewImageKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutDocumentsNestedInput
     specs?: DocumentPrintSpecUpdateOneWithoutDocumentNestedInput
+    order?: OrderUpdateOneRequiredWithoutDocumentsNestedInput
     printJobs?: PrintJobUpdateManyWithoutDocumentNestedInput
   }
 
@@ -19634,8 +19634,8 @@ export namespace Prisma {
     lastHeartbeatAt?: Date | string | null
     createdAt?: Date | string
     shop: ShopCreateNestedOneWithoutPrintAgentsInput
-    printers?: PrinterCreateNestedManyWithoutAgentInput
     printJobs?: PrintJobCreateNestedManyWithoutAgentInput
+    printers?: PrinterCreateNestedManyWithoutAgentInput
   }
 
   export type PrintAgentUncheckedCreateInput = {
@@ -19649,8 +19649,8 @@ export namespace Prisma {
     isConnected?: boolean
     lastHeartbeatAt?: Date | string | null
     createdAt?: Date | string
-    printers?: PrinterUncheckedCreateNestedManyWithoutAgentInput
     printJobs?: PrintJobUncheckedCreateNestedManyWithoutAgentInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type PrintAgentUpdateInput = {
@@ -19664,8 +19664,8 @@ export namespace Prisma {
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     shop?: ShopUpdateOneRequiredWithoutPrintAgentsNestedInput
-    printers?: PrinterUpdateManyWithoutAgentNestedInput
     printJobs?: PrintJobUpdateManyWithoutAgentNestedInput
+    printers?: PrinterUpdateManyWithoutAgentNestedInput
   }
 
   export type PrintAgentUncheckedUpdateInput = {
@@ -19679,8 +19679,8 @@ export namespace Prisma {
     isConnected?: BoolFieldUpdateOperationsInput | boolean
     lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    printers?: PrinterUncheckedUpdateManyWithoutAgentNestedInput
     printJobs?: PrintJobUncheckedUpdateManyWithoutAgentNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutAgentNestedInput
   }
 
   export type PrintAgentCreateManyInput = {
@@ -19737,9 +19737,9 @@ export namespace Prisma {
     currentQueueCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutPrintersInput
-    agent?: PrintAgentCreateNestedOneWithoutPrintersInput
     printJobs?: PrintJobCreateNestedManyWithoutPrinterInput
+    agent?: PrintAgentCreateNestedOneWithoutPrintersInput
+    shop: ShopCreateNestedOneWithoutPrintersInput
   }
 
   export type PrinterUncheckedCreateInput = {
@@ -19779,9 +19779,9 @@ export namespace Prisma {
     currentQueueCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutPrintersNestedInput
-    agent?: PrintAgentUpdateOneWithoutPrintersNestedInput
     printJobs?: PrintJobUpdateManyWithoutPrinterNestedInput
+    agent?: PrintAgentUpdateOneWithoutPrintersNestedInput
+    shop?: ShopUpdateOneRequiredWithoutPrintersNestedInput
   }
 
   export type PrinterUncheckedUpdateInput = {
@@ -19871,10 +19871,10 @@ export namespace Prisma {
     dispatchedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutPrintJobsInput
-    document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
-    printer?: PrinterCreateNestedOneWithoutPrintJobsInput
     agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
+    document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
+    order: OrderCreateNestedOneWithoutPrintJobsInput
+    printer?: PrinterCreateNestedOneWithoutPrintJobsInput
   }
 
   export type PrintJobUncheckedCreateInput = {
@@ -19899,10 +19899,10 @@ export namespace Prisma {
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
-    document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
-    printer?: PrinterUpdateOneWithoutPrintJobsNestedInput
     agent?: PrintAgentUpdateOneWithoutPrintJobsNestedInput
+    document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
+    order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
+    printer?: PrinterUpdateOneWithoutPrintJobsNestedInput
   }
 
   export type PrintJobUncheckedUpdateInput = {
@@ -20129,8 +20129,8 @@ export namespace Prisma {
     currentPeriodStart?: Date | string | null
     currentPeriodEnd?: Date | string | null
     createdAt?: Date | string
-    shop: ShopCreateNestedOneWithoutSubscriptionInput
     plan: SubscriptionPlanCreateNestedOneWithoutSubscriptionsInput
+    shop: ShopCreateNestedOneWithoutSubscriptionInput
   }
 
   export type SubscriptionUncheckedCreateInput = {
@@ -20153,8 +20153,8 @@ export namespace Prisma {
     currentPeriodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutSubscriptionNestedInput
     plan?: SubscriptionPlanUpdateOneRequiredWithoutSubscriptionsNestedInput
+    shop?: ShopUpdateOneRequiredWithoutSubscriptionNestedInput
   }
 
   export type SubscriptionUncheckedUpdateInput = {
@@ -20408,10 +20408,10 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
+  export type AuditLogListRelationFilter = {
+    every?: AuditLogWhereInput
+    some?: AuditLogWhereInput
+    none?: AuditLogWhereInput
   }
 
   export type CustomerListRelationFilter = {
@@ -20432,16 +20432,16 @@ export namespace Prisma {
     none?: PricingRuleWhereInput
   }
 
-  export type PrinterListRelationFilter = {
-    every?: PrinterWhereInput
-    some?: PrinterWhereInput
-    none?: PrinterWhereInput
-  }
-
   export type PrintAgentListRelationFilter = {
     every?: PrintAgentWhereInput
     some?: PrintAgentWhereInput
     none?: PrintAgentWhereInput
+  }
+
+  export type PrinterListRelationFilter = {
+    every?: PrinterWhereInput
+    some?: PrinterWhereInput
+    none?: PrinterWhereInput
   }
 
   export type SubscriptionNullableScalarRelationFilter = {
@@ -20449,10 +20449,10 @@ export namespace Prisma {
     isNot?: SubscriptionWhereInput | null
   }
 
-  export type AuditLogListRelationFilter = {
-    every?: AuditLogWhereInput
-    some?: AuditLogWhereInput
-    none?: AuditLogWhereInput
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
   }
 
   export type SortOrderInput = {
@@ -20460,7 +20460,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type UserOrderByRelationAggregateInput = {
+  export type AuditLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20476,15 +20476,15 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type PrinterOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type PrintAgentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type AuditLogOrderByRelationAggregateInput = {
+  export type PrinterOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20735,15 +20735,15 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type CustomerScalarRelationFilter = {
-    is?: CustomerWhereInput
-    isNot?: CustomerWhereInput
-  }
-
   export type OrderDocumentListRelationFilter = {
     every?: OrderDocumentWhereInput
     some?: OrderDocumentWhereInput
     none?: OrderDocumentWhereInput
+  }
+
+  export type CustomerScalarRelationFilter = {
+    is?: CustomerWhereInput
+    isNot?: CustomerWhereInput
   }
 
   export type PrintJobListRelationFilter = {
@@ -20905,14 +20905,14 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type OrderScalarRelationFilter = {
-    is?: OrderWhereInput
-    isNot?: OrderWhereInput
-  }
-
   export type DocumentPrintSpecNullableScalarRelationFilter = {
     is?: DocumentPrintSpecWhereInput | null
     isNot?: DocumentPrintSpecWhereInput | null
+  }
+
+  export type OrderScalarRelationFilter = {
+    is?: OrderWhereInput
+    isNot?: OrderWhereInput
   }
 
   export type OrderDocumentOrderByRelevanceInput = {
@@ -21545,11 +21545,11 @@ export namespace Prisma {
     _max?: NestedBytesFilter<$PrismaModel>
   }
 
-  export type UserCreateNestedManyWithoutShopInput = {
-    create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
-    createMany?: UserCreateManyShopInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  export type AuditLogCreateNestedManyWithoutShopInput = {
+    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
+    createMany?: AuditLogCreateManyShopInputEnvelope
+    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
   export type CustomerCreateNestedManyWithoutShopInput = {
@@ -21573,18 +21573,18 @@ export namespace Prisma {
     connect?: PricingRuleWhereUniqueInput | PricingRuleWhereUniqueInput[]
   }
 
-  export type PrinterCreateNestedManyWithoutShopInput = {
-    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
-    createMany?: PrinterCreateManyShopInputEnvelope
-    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-  }
-
   export type PrintAgentCreateNestedManyWithoutShopInput = {
     create?: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput> | PrintAgentCreateWithoutShopInput[] | PrintAgentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PrintAgentCreateOrConnectWithoutShopInput | PrintAgentCreateOrConnectWithoutShopInput[]
     createMany?: PrintAgentCreateManyShopInputEnvelope
     connect?: PrintAgentWhereUniqueInput | PrintAgentWhereUniqueInput[]
+  }
+
+  export type PrinterCreateNestedManyWithoutShopInput = {
+    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
+    createMany?: PrinterCreateManyShopInputEnvelope
+    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
   }
 
   export type SubscriptionCreateNestedOneWithoutShopInput = {
@@ -21593,18 +21593,18 @@ export namespace Prisma {
     connect?: SubscriptionWhereUniqueInput
   }
 
-  export type AuditLogCreateNestedManyWithoutShopInput = {
-    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
-    createMany?: AuditLogCreateManyShopInputEnvelope
-    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-  }
-
-  export type UserUncheckedCreateNestedManyWithoutShopInput = {
+  export type UserCreateNestedManyWithoutShopInput = {
     create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
     connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
     createMany?: UserCreateManyShopInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type AuditLogUncheckedCreateNestedManyWithoutShopInput = {
+    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
+    createMany?: AuditLogCreateManyShopInputEnvelope
+    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
   export type CustomerUncheckedCreateNestedManyWithoutShopInput = {
@@ -21628,18 +21628,18 @@ export namespace Prisma {
     connect?: PricingRuleWhereUniqueInput | PricingRuleWhereUniqueInput[]
   }
 
-  export type PrinterUncheckedCreateNestedManyWithoutShopInput = {
-    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
-    createMany?: PrinterCreateManyShopInputEnvelope
-    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-  }
-
   export type PrintAgentUncheckedCreateNestedManyWithoutShopInput = {
     create?: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput> | PrintAgentCreateWithoutShopInput[] | PrintAgentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PrintAgentCreateOrConnectWithoutShopInput | PrintAgentCreateOrConnectWithoutShopInput[]
     createMany?: PrintAgentCreateManyShopInputEnvelope
     connect?: PrintAgentWhereUniqueInput | PrintAgentWhereUniqueInput[]
+  }
+
+  export type PrinterUncheckedCreateNestedManyWithoutShopInput = {
+    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
+    createMany?: PrinterCreateManyShopInputEnvelope
+    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
   }
 
   export type SubscriptionUncheckedCreateNestedOneWithoutShopInput = {
@@ -21648,11 +21648,11 @@ export namespace Prisma {
     connect?: SubscriptionWhereUniqueInput
   }
 
-  export type AuditLogUncheckedCreateNestedManyWithoutShopInput = {
-    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
-    createMany?: AuditLogCreateManyShopInputEnvelope
-    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  export type UserUncheckedCreateNestedManyWithoutShopInput = {
+    create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
+    createMany?: UserCreateManyShopInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -21671,18 +21671,18 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type UserUpdateManyWithoutShopNestedInput = {
-    create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutShopInput | UserUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: UserCreateManyShopInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutShopInput | UserUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutShopInput | UserUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  export type AuditLogUpdateManyWithoutShopNestedInput = {
+    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
+    upsert?: AuditLogUpsertWithWhereUniqueWithoutShopInput | AuditLogUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: AuditLogCreateManyShopInputEnvelope
+    set?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    disconnect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    delete?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    update?: AuditLogUpdateWithWhereUniqueWithoutShopInput | AuditLogUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: AuditLogUpdateManyWithWhereWithoutShopInput | AuditLogUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
   export type CustomerUpdateManyWithoutShopNestedInput = {
@@ -21727,20 +21727,6 @@ export namespace Prisma {
     deleteMany?: PricingRuleScalarWhereInput | PricingRuleScalarWhereInput[]
   }
 
-  export type PrinterUpdateManyWithoutShopNestedInput = {
-    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
-    upsert?: PrinterUpsertWithWhereUniqueWithoutShopInput | PrinterUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: PrinterCreateManyShopInputEnvelope
-    set?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    disconnect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    delete?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    update?: PrinterUpdateWithWhereUniqueWithoutShopInput | PrinterUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: PrinterUpdateManyWithWhereWithoutShopInput | PrinterUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: PrinterScalarWhereInput | PrinterScalarWhereInput[]
-  }
-
   export type PrintAgentUpdateManyWithoutShopNestedInput = {
     create?: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput> | PrintAgentCreateWithoutShopInput[] | PrintAgentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PrintAgentCreateOrConnectWithoutShopInput | PrintAgentCreateOrConnectWithoutShopInput[]
@@ -21755,6 +21741,20 @@ export namespace Prisma {
     deleteMany?: PrintAgentScalarWhereInput | PrintAgentScalarWhereInput[]
   }
 
+  export type PrinterUpdateManyWithoutShopNestedInput = {
+    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
+    upsert?: PrinterUpsertWithWhereUniqueWithoutShopInput | PrinterUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: PrinterCreateManyShopInputEnvelope
+    set?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    disconnect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    delete?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    update?: PrinterUpdateWithWhereUniqueWithoutShopInput | PrinterUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: PrinterUpdateManyWithWhereWithoutShopInput | PrinterUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: PrinterScalarWhereInput | PrinterScalarWhereInput[]
+  }
+
   export type SubscriptionUpdateOneWithoutShopNestedInput = {
     create?: XOR<SubscriptionCreateWithoutShopInput, SubscriptionUncheckedCreateWithoutShopInput>
     connectOrCreate?: SubscriptionCreateOrConnectWithoutShopInput
@@ -21765,21 +21765,7 @@ export namespace Prisma {
     update?: XOR<XOR<SubscriptionUpdateToOneWithWhereWithoutShopInput, SubscriptionUpdateWithoutShopInput>, SubscriptionUncheckedUpdateWithoutShopInput>
   }
 
-  export type AuditLogUpdateManyWithoutShopNestedInput = {
-    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
-    upsert?: AuditLogUpsertWithWhereUniqueWithoutShopInput | AuditLogUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: AuditLogCreateManyShopInputEnvelope
-    set?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    disconnect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    delete?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    update?: AuditLogUpdateWithWhereUniqueWithoutShopInput | AuditLogUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: AuditLogUpdateManyWithWhereWithoutShopInput | AuditLogUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-  }
-
-  export type UserUncheckedUpdateManyWithoutShopNestedInput = {
+  export type UserUpdateManyWithoutShopNestedInput = {
     create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
     connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
     upsert?: UserUpsertWithWhereUniqueWithoutShopInput | UserUpsertWithWhereUniqueWithoutShopInput[]
@@ -21791,6 +21777,20 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutShopInput | UserUpdateWithWhereUniqueWithoutShopInput[]
     updateMany?: UserUpdateManyWithWhereWithoutShopInput | UserUpdateManyWithWhereWithoutShopInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type AuditLogUncheckedUpdateManyWithoutShopNestedInput = {
+    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
+    upsert?: AuditLogUpsertWithWhereUniqueWithoutShopInput | AuditLogUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: AuditLogCreateManyShopInputEnvelope
+    set?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    disconnect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    delete?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+    update?: AuditLogUpdateWithWhereUniqueWithoutShopInput | AuditLogUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: AuditLogUpdateManyWithWhereWithoutShopInput | AuditLogUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
   export type CustomerUncheckedUpdateManyWithoutShopNestedInput = {
@@ -21835,20 +21835,6 @@ export namespace Prisma {
     deleteMany?: PricingRuleScalarWhereInput | PricingRuleScalarWhereInput[]
   }
 
-  export type PrinterUncheckedUpdateManyWithoutShopNestedInput = {
-    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
-    upsert?: PrinterUpsertWithWhereUniqueWithoutShopInput | PrinterUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: PrinterCreateManyShopInputEnvelope
-    set?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    disconnect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    delete?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    update?: PrinterUpdateWithWhereUniqueWithoutShopInput | PrinterUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: PrinterUpdateManyWithWhereWithoutShopInput | PrinterUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: PrinterScalarWhereInput | PrinterScalarWhereInput[]
-  }
-
   export type PrintAgentUncheckedUpdateManyWithoutShopNestedInput = {
     create?: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput> | PrintAgentCreateWithoutShopInput[] | PrintAgentUncheckedCreateWithoutShopInput[]
     connectOrCreate?: PrintAgentCreateOrConnectWithoutShopInput | PrintAgentCreateOrConnectWithoutShopInput[]
@@ -21863,6 +21849,20 @@ export namespace Prisma {
     deleteMany?: PrintAgentScalarWhereInput | PrintAgentScalarWhereInput[]
   }
 
+  export type PrinterUncheckedUpdateManyWithoutShopNestedInput = {
+    create?: XOR<PrinterCreateWithoutShopInput, PrinterUncheckedCreateWithoutShopInput> | PrinterCreateWithoutShopInput[] | PrinterUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: PrinterCreateOrConnectWithoutShopInput | PrinterCreateOrConnectWithoutShopInput[]
+    upsert?: PrinterUpsertWithWhereUniqueWithoutShopInput | PrinterUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: PrinterCreateManyShopInputEnvelope
+    set?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    disconnect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    delete?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    update?: PrinterUpdateWithWhereUniqueWithoutShopInput | PrinterUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: PrinterUpdateManyWithWhereWithoutShopInput | PrinterUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: PrinterScalarWhereInput | PrinterScalarWhereInput[]
+  }
+
   export type SubscriptionUncheckedUpdateOneWithoutShopNestedInput = {
     create?: XOR<SubscriptionCreateWithoutShopInput, SubscriptionUncheckedCreateWithoutShopInput>
     connectOrCreate?: SubscriptionCreateOrConnectWithoutShopInput
@@ -21873,24 +21873,18 @@ export namespace Prisma {
     update?: XOR<XOR<SubscriptionUpdateToOneWithWhereWithoutShopInput, SubscriptionUpdateWithoutShopInput>, SubscriptionUncheckedUpdateWithoutShopInput>
   }
 
-  export type AuditLogUncheckedUpdateManyWithoutShopNestedInput = {
-    create?: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput> | AuditLogCreateWithoutShopInput[] | AuditLogUncheckedCreateWithoutShopInput[]
-    connectOrCreate?: AuditLogCreateOrConnectWithoutShopInput | AuditLogCreateOrConnectWithoutShopInput[]
-    upsert?: AuditLogUpsertWithWhereUniqueWithoutShopInput | AuditLogUpsertWithWhereUniqueWithoutShopInput[]
-    createMany?: AuditLogCreateManyShopInputEnvelope
-    set?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    disconnect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    delete?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-    update?: AuditLogUpdateWithWhereUniqueWithoutShopInput | AuditLogUpdateWithWhereUniqueWithoutShopInput[]
-    updateMany?: AuditLogUpdateManyWithWhereWithoutShopInput | AuditLogUpdateManyWithWhereWithoutShopInput[]
-    deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-  }
-
-  export type ShopCreateNestedOneWithoutUsersInput = {
-    create?: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutUsersInput
-    connect?: ShopWhereUniqueInput
+  export type UserUncheckedUpdateManyWithoutShopNestedInput = {
+    create?: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput> | UserCreateWithoutShopInput[] | UserUncheckedCreateWithoutShopInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutShopInput | UserCreateOrConnectWithoutShopInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutShopInput | UserUpsertWithWhereUniqueWithoutShopInput[]
+    createMany?: UserCreateManyShopInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutShopInput | UserUpdateWithWhereUniqueWithoutShopInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutShopInput | UserUpdateManyWithWhereWithoutShopInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type AuditLogCreateNestedManyWithoutUserInput = {
@@ -21900,21 +21894,17 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
+  export type ShopCreateNestedOneWithoutUsersInput = {
+    create?: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutUsersInput
+    connect?: ShopWhereUniqueInput
+  }
+
   export type AuditLogUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput> | AuditLogCreateWithoutUserInput[] | AuditLogUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AuditLogCreateOrConnectWithoutUserInput | AuditLogCreateOrConnectWithoutUserInput[]
     createMany?: AuditLogCreateManyUserInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-  }
-
-  export type ShopUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutUsersInput
-    upsert?: ShopUpsertWithoutUsersInput
-    disconnect?: ShopWhereInput | boolean
-    delete?: ShopWhereInput | boolean
-    connect?: ShopWhereUniqueInput
-    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutUsersInput, ShopUpdateWithoutUsersInput>, ShopUncheckedUpdateWithoutUsersInput>
   }
 
   export type AuditLogUpdateManyWithoutUserNestedInput = {
@@ -21929,6 +21919,16 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutUserInput | AuditLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutUserInput | AuditLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+  }
+
+  export type ShopUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutUsersInput
+    upsert?: ShopUpsertWithoutUsersInput
+    disconnect?: ShopWhereInput | boolean
+    delete?: ShopWhereInput | boolean
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutUsersInput, ShopUpdateWithoutUsersInput>, ShopUncheckedUpdateWithoutUsersInput>
   }
 
   export type AuditLogUncheckedUpdateManyWithoutUserNestedInput = {
@@ -22001,10 +22001,11 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
-  export type ShopCreateNestedOneWithoutOrdersInput = {
-    create?: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutOrdersInput
-    connect?: ShopWhereUniqueInput
+  export type OrderDocumentCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderDocumentCreateWithoutOrderInput, OrderDocumentUncheckedCreateWithoutOrderInput> | OrderDocumentCreateWithoutOrderInput[] | OrderDocumentUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderDocumentCreateOrConnectWithoutOrderInput | OrderDocumentCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderDocumentCreateManyOrderInputEnvelope
+    connect?: OrderDocumentWhereUniqueInput | OrderDocumentWhereUniqueInput[]
   }
 
   export type CustomerCreateNestedOneWithoutOrdersInput = {
@@ -22013,11 +22014,10 @@ export namespace Prisma {
     connect?: CustomerWhereUniqueInput
   }
 
-  export type OrderDocumentCreateNestedManyWithoutOrderInput = {
-    create?: XOR<OrderDocumentCreateWithoutOrderInput, OrderDocumentUncheckedCreateWithoutOrderInput> | OrderDocumentCreateWithoutOrderInput[] | OrderDocumentUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: OrderDocumentCreateOrConnectWithoutOrderInput | OrderDocumentCreateOrConnectWithoutOrderInput[]
-    createMany?: OrderDocumentCreateManyOrderInputEnvelope
-    connect?: OrderDocumentWhereUniqueInput | OrderDocumentWhereUniqueInput[]
+  export type ShopCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutOrdersInput
+    connect?: ShopWhereUniqueInput
   }
 
   export type PrintJobCreateNestedManyWithoutOrderInput = {
@@ -22069,22 +22069,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type ShopUpdateOneRequiredWithoutOrdersNestedInput = {
-    create?: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutOrdersInput
-    upsert?: ShopUpsertWithoutOrdersInput
-    connect?: ShopWhereUniqueInput
-    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutOrdersInput, ShopUpdateWithoutOrdersInput>, ShopUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type CustomerUpdateOneRequiredWithoutOrdersNestedInput = {
-    create?: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutOrdersInput
-    upsert?: CustomerUpsertWithoutOrdersInput
-    connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOrdersInput, CustomerUpdateWithoutOrdersInput>, CustomerUncheckedUpdateWithoutOrdersInput>
-  }
-
   export type OrderDocumentUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderDocumentCreateWithoutOrderInput, OrderDocumentUncheckedCreateWithoutOrderInput> | OrderDocumentCreateWithoutOrderInput[] | OrderDocumentUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderDocumentCreateOrConnectWithoutOrderInput | OrderDocumentCreateOrConnectWithoutOrderInput[]
@@ -22097,6 +22081,22 @@ export namespace Prisma {
     update?: OrderDocumentUpdateWithWhereUniqueWithoutOrderInput | OrderDocumentUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderDocumentUpdateManyWithWhereWithoutOrderInput | OrderDocumentUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderDocumentScalarWhereInput | OrderDocumentScalarWhereInput[]
+  }
+
+  export type CustomerUpdateOneRequiredWithoutOrdersNestedInput = {
+    create?: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOrdersInput
+    upsert?: CustomerUpsertWithoutOrdersInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOrdersInput, CustomerUpdateWithoutOrdersInput>, CustomerUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ShopUpdateOneRequiredWithoutOrdersNestedInput = {
+    create?: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutOrdersInput
+    upsert?: ShopUpsertWithoutOrdersInput
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutOrdersInput, ShopUpdateWithoutOrdersInput>, ShopUncheckedUpdateWithoutOrdersInput>
   }
 
   export type PrintJobUpdateManyWithoutOrderNestedInput = {
@@ -22141,16 +22141,16 @@ export namespace Prisma {
     deleteMany?: PrintJobScalarWhereInput | PrintJobScalarWhereInput[]
   }
 
-  export type OrderCreateNestedOneWithoutDocumentsInput = {
-    create?: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutDocumentsInput
-    connect?: OrderWhereUniqueInput
-  }
-
   export type DocumentPrintSpecCreateNestedOneWithoutDocumentInput = {
     create?: XOR<DocumentPrintSpecCreateWithoutDocumentInput, DocumentPrintSpecUncheckedCreateWithoutDocumentInput>
     connectOrCreate?: DocumentPrintSpecCreateOrConnectWithoutDocumentInput
     connect?: DocumentPrintSpecWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutDocumentsInput
+    connect?: OrderWhereUniqueInput
   }
 
   export type PrintJobCreateNestedManyWithoutDocumentInput = {
@@ -22173,14 +22173,6 @@ export namespace Prisma {
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
   }
 
-  export type OrderUpdateOneRequiredWithoutDocumentsNestedInput = {
-    create?: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutDocumentsInput
-    upsert?: OrderUpsertWithoutDocumentsInput
-    connect?: OrderWhereUniqueInput
-    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutDocumentsInput, OrderUpdateWithoutDocumentsInput>, OrderUncheckedUpdateWithoutDocumentsInput>
-  }
-
   export type DocumentPrintSpecUpdateOneWithoutDocumentNestedInput = {
     create?: XOR<DocumentPrintSpecCreateWithoutDocumentInput, DocumentPrintSpecUncheckedCreateWithoutDocumentInput>
     connectOrCreate?: DocumentPrintSpecCreateOrConnectWithoutDocumentInput
@@ -22189,6 +22181,14 @@ export namespace Prisma {
     delete?: DocumentPrintSpecWhereInput | boolean
     connect?: DocumentPrintSpecWhereUniqueInput
     update?: XOR<XOR<DocumentPrintSpecUpdateToOneWithWhereWithoutDocumentInput, DocumentPrintSpecUpdateWithoutDocumentInput>, DocumentPrintSpecUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type OrderUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutDocumentsInput
+    upsert?: OrderUpsertWithoutDocumentsInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutDocumentsInput, OrderUpdateWithoutDocumentsInput>, OrderUncheckedUpdateWithoutDocumentsInput>
   }
 
   export type PrintJobUpdateManyWithoutDocumentNestedInput = {
@@ -22249,13 +22249,6 @@ export namespace Prisma {
     connect?: ShopWhereUniqueInput
   }
 
-  export type PrinterCreateNestedManyWithoutAgentInput = {
-    create?: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput> | PrinterCreateWithoutAgentInput[] | PrinterUncheckedCreateWithoutAgentInput[]
-    connectOrCreate?: PrinterCreateOrConnectWithoutAgentInput | PrinterCreateOrConnectWithoutAgentInput[]
-    createMany?: PrinterCreateManyAgentInputEnvelope
-    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-  }
-
   export type PrintJobCreateNestedManyWithoutAgentInput = {
     create?: XOR<PrintJobCreateWithoutAgentInput, PrintJobUncheckedCreateWithoutAgentInput> | PrintJobCreateWithoutAgentInput[] | PrintJobUncheckedCreateWithoutAgentInput[]
     connectOrCreate?: PrintJobCreateOrConnectWithoutAgentInput | PrintJobCreateOrConnectWithoutAgentInput[]
@@ -22263,7 +22256,7 @@ export namespace Prisma {
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
   }
 
-  export type PrinterUncheckedCreateNestedManyWithoutAgentInput = {
+  export type PrinterCreateNestedManyWithoutAgentInput = {
     create?: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput> | PrinterCreateWithoutAgentInput[] | PrinterUncheckedCreateWithoutAgentInput[]
     connectOrCreate?: PrinterCreateOrConnectWithoutAgentInput | PrinterCreateOrConnectWithoutAgentInput[]
     createMany?: PrinterCreateManyAgentInputEnvelope
@@ -22277,26 +22270,19 @@ export namespace Prisma {
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
   }
 
+  export type PrinterUncheckedCreateNestedManyWithoutAgentInput = {
+    create?: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput> | PrinterCreateWithoutAgentInput[] | PrinterUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: PrinterCreateOrConnectWithoutAgentInput | PrinterCreateOrConnectWithoutAgentInput[]
+    createMany?: PrinterCreateManyAgentInputEnvelope
+    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+  }
+
   export type ShopUpdateOneRequiredWithoutPrintAgentsNestedInput = {
     create?: XOR<ShopCreateWithoutPrintAgentsInput, ShopUncheckedCreateWithoutPrintAgentsInput>
     connectOrCreate?: ShopCreateOrConnectWithoutPrintAgentsInput
     upsert?: ShopUpsertWithoutPrintAgentsInput
     connect?: ShopWhereUniqueInput
     update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutPrintAgentsInput, ShopUpdateWithoutPrintAgentsInput>, ShopUncheckedUpdateWithoutPrintAgentsInput>
-  }
-
-  export type PrinterUpdateManyWithoutAgentNestedInput = {
-    create?: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput> | PrinterCreateWithoutAgentInput[] | PrinterUncheckedCreateWithoutAgentInput[]
-    connectOrCreate?: PrinterCreateOrConnectWithoutAgentInput | PrinterCreateOrConnectWithoutAgentInput[]
-    upsert?: PrinterUpsertWithWhereUniqueWithoutAgentInput | PrinterUpsertWithWhereUniqueWithoutAgentInput[]
-    createMany?: PrinterCreateManyAgentInputEnvelope
-    set?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    disconnect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    delete?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
-    update?: PrinterUpdateWithWhereUniqueWithoutAgentInput | PrinterUpdateWithWhereUniqueWithoutAgentInput[]
-    updateMany?: PrinterUpdateManyWithWhereWithoutAgentInput | PrinterUpdateManyWithWhereWithoutAgentInput[]
-    deleteMany?: PrinterScalarWhereInput | PrinterScalarWhereInput[]
   }
 
   export type PrintJobUpdateManyWithoutAgentNestedInput = {
@@ -22313,7 +22299,7 @@ export namespace Prisma {
     deleteMany?: PrintJobScalarWhereInput | PrintJobScalarWhereInput[]
   }
 
-  export type PrinterUncheckedUpdateManyWithoutAgentNestedInput = {
+  export type PrinterUpdateManyWithoutAgentNestedInput = {
     create?: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput> | PrinterCreateWithoutAgentInput[] | PrinterUncheckedCreateWithoutAgentInput[]
     connectOrCreate?: PrinterCreateOrConnectWithoutAgentInput | PrinterCreateOrConnectWithoutAgentInput[]
     upsert?: PrinterUpsertWithWhereUniqueWithoutAgentInput | PrinterUpsertWithWhereUniqueWithoutAgentInput[]
@@ -22341,16 +22327,18 @@ export namespace Prisma {
     deleteMany?: PrintJobScalarWhereInput | PrintJobScalarWhereInput[]
   }
 
-  export type ShopCreateNestedOneWithoutPrintersInput = {
-    create?: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutPrintersInput
-    connect?: ShopWhereUniqueInput
-  }
-
-  export type PrintAgentCreateNestedOneWithoutPrintersInput = {
-    create?: XOR<PrintAgentCreateWithoutPrintersInput, PrintAgentUncheckedCreateWithoutPrintersInput>
-    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintersInput
-    connect?: PrintAgentWhereUniqueInput
+  export type PrinterUncheckedUpdateManyWithoutAgentNestedInput = {
+    create?: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput> | PrinterCreateWithoutAgentInput[] | PrinterUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: PrinterCreateOrConnectWithoutAgentInput | PrinterCreateOrConnectWithoutAgentInput[]
+    upsert?: PrinterUpsertWithWhereUniqueWithoutAgentInput | PrinterUpsertWithWhereUniqueWithoutAgentInput[]
+    createMany?: PrinterCreateManyAgentInputEnvelope
+    set?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    disconnect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    delete?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    connect?: PrinterWhereUniqueInput | PrinterWhereUniqueInput[]
+    update?: PrinterUpdateWithWhereUniqueWithoutAgentInput | PrinterUpdateWithWhereUniqueWithoutAgentInput[]
+    updateMany?: PrinterUpdateManyWithWhereWithoutAgentInput | PrinterUpdateManyWithWhereWithoutAgentInput[]
+    deleteMany?: PrinterScalarWhereInput | PrinterScalarWhereInput[]
   }
 
   export type PrintJobCreateNestedManyWithoutPrinterInput = {
@@ -22360,29 +22348,23 @@ export namespace Prisma {
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
   }
 
+  export type PrintAgentCreateNestedOneWithoutPrintersInput = {
+    create?: XOR<PrintAgentCreateWithoutPrintersInput, PrintAgentUncheckedCreateWithoutPrintersInput>
+    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintersInput
+    connect?: PrintAgentWhereUniqueInput
+  }
+
+  export type ShopCreateNestedOneWithoutPrintersInput = {
+    create?: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutPrintersInput
+    connect?: ShopWhereUniqueInput
+  }
+
   export type PrintJobUncheckedCreateNestedManyWithoutPrinterInput = {
     create?: XOR<PrintJobCreateWithoutPrinterInput, PrintJobUncheckedCreateWithoutPrinterInput> | PrintJobCreateWithoutPrinterInput[] | PrintJobUncheckedCreateWithoutPrinterInput[]
     connectOrCreate?: PrintJobCreateOrConnectWithoutPrinterInput | PrintJobCreateOrConnectWithoutPrinterInput[]
     createMany?: PrintJobCreateManyPrinterInputEnvelope
     connect?: PrintJobWhereUniqueInput | PrintJobWhereUniqueInput[]
-  }
-
-  export type ShopUpdateOneRequiredWithoutPrintersNestedInput = {
-    create?: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutPrintersInput
-    upsert?: ShopUpsertWithoutPrintersInput
-    connect?: ShopWhereUniqueInput
-    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutPrintersInput, ShopUpdateWithoutPrintersInput>, ShopUncheckedUpdateWithoutPrintersInput>
-  }
-
-  export type PrintAgentUpdateOneWithoutPrintersNestedInput = {
-    create?: XOR<PrintAgentCreateWithoutPrintersInput, PrintAgentUncheckedCreateWithoutPrintersInput>
-    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintersInput
-    upsert?: PrintAgentUpsertWithoutPrintersInput
-    disconnect?: PrintAgentWhereInput | boolean
-    delete?: PrintAgentWhereInput | boolean
-    connect?: PrintAgentWhereUniqueInput
-    update?: XOR<XOR<PrintAgentUpdateToOneWithWhereWithoutPrintersInput, PrintAgentUpdateWithoutPrintersInput>, PrintAgentUncheckedUpdateWithoutPrintersInput>
   }
 
   export type PrintJobUpdateManyWithoutPrinterNestedInput = {
@@ -22399,6 +22381,24 @@ export namespace Prisma {
     deleteMany?: PrintJobScalarWhereInput | PrintJobScalarWhereInput[]
   }
 
+  export type PrintAgentUpdateOneWithoutPrintersNestedInput = {
+    create?: XOR<PrintAgentCreateWithoutPrintersInput, PrintAgentUncheckedCreateWithoutPrintersInput>
+    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintersInput
+    upsert?: PrintAgentUpsertWithoutPrintersInput
+    disconnect?: PrintAgentWhereInput | boolean
+    delete?: PrintAgentWhereInput | boolean
+    connect?: PrintAgentWhereUniqueInput
+    update?: XOR<XOR<PrintAgentUpdateToOneWithWhereWithoutPrintersInput, PrintAgentUpdateWithoutPrintersInput>, PrintAgentUncheckedUpdateWithoutPrintersInput>
+  }
+
+  export type ShopUpdateOneRequiredWithoutPrintersNestedInput = {
+    create?: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutPrintersInput
+    upsert?: ShopUpsertWithoutPrintersInput
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutPrintersInput, ShopUpdateWithoutPrintersInput>, ShopUncheckedUpdateWithoutPrintersInput>
+  }
+
   export type PrintJobUncheckedUpdateManyWithoutPrinterNestedInput = {
     create?: XOR<PrintJobCreateWithoutPrinterInput, PrintJobUncheckedCreateWithoutPrinterInput> | PrintJobCreateWithoutPrinterInput[] | PrintJobUncheckedCreateWithoutPrinterInput[]
     connectOrCreate?: PrintJobCreateOrConnectWithoutPrinterInput | PrintJobCreateOrConnectWithoutPrinterInput[]
@@ -22413,10 +22413,10 @@ export namespace Prisma {
     deleteMany?: PrintJobScalarWhereInput | PrintJobScalarWhereInput[]
   }
 
-  export type OrderCreateNestedOneWithoutPrintJobsInput = {
-    create?: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutPrintJobsInput
-    connect?: OrderWhereUniqueInput
+  export type PrintAgentCreateNestedOneWithoutPrintJobsInput = {
+    create?: XOR<PrintAgentCreateWithoutPrintJobsInput, PrintAgentUncheckedCreateWithoutPrintJobsInput>
+    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintJobsInput
+    connect?: PrintAgentWhereUniqueInput
   }
 
   export type OrderDocumentCreateNestedOneWithoutPrintJobsInput = {
@@ -22425,16 +22425,16 @@ export namespace Prisma {
     connect?: OrderDocumentWhereUniqueInput
   }
 
+  export type OrderCreateNestedOneWithoutPrintJobsInput = {
+    create?: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutPrintJobsInput
+    connect?: OrderWhereUniqueInput
+  }
+
   export type PrinterCreateNestedOneWithoutPrintJobsInput = {
     create?: XOR<PrinterCreateWithoutPrintJobsInput, PrinterUncheckedCreateWithoutPrintJobsInput>
     connectOrCreate?: PrinterCreateOrConnectWithoutPrintJobsInput
     connect?: PrinterWhereUniqueInput
-  }
-
-  export type PrintAgentCreateNestedOneWithoutPrintJobsInput = {
-    create?: XOR<PrintAgentCreateWithoutPrintJobsInput, PrintAgentUncheckedCreateWithoutPrintJobsInput>
-    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintJobsInput
-    connect?: PrintAgentWhereUniqueInput
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -22445,12 +22445,14 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type OrderUpdateOneRequiredWithoutPrintJobsNestedInput = {
-    create?: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutPrintJobsInput
-    upsert?: OrderUpsertWithoutPrintJobsInput
-    connect?: OrderWhereUniqueInput
-    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutPrintJobsInput, OrderUpdateWithoutPrintJobsInput>, OrderUncheckedUpdateWithoutPrintJobsInput>
+  export type PrintAgentUpdateOneWithoutPrintJobsNestedInput = {
+    create?: XOR<PrintAgentCreateWithoutPrintJobsInput, PrintAgentUncheckedCreateWithoutPrintJobsInput>
+    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintJobsInput
+    upsert?: PrintAgentUpsertWithoutPrintJobsInput
+    disconnect?: PrintAgentWhereInput | boolean
+    delete?: PrintAgentWhereInput | boolean
+    connect?: PrintAgentWhereUniqueInput
+    update?: XOR<XOR<PrintAgentUpdateToOneWithWhereWithoutPrintJobsInput, PrintAgentUpdateWithoutPrintJobsInput>, PrintAgentUncheckedUpdateWithoutPrintJobsInput>
   }
 
   export type OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput = {
@@ -22461,6 +22463,14 @@ export namespace Prisma {
     update?: XOR<XOR<OrderDocumentUpdateToOneWithWhereWithoutPrintJobsInput, OrderDocumentUpdateWithoutPrintJobsInput>, OrderDocumentUncheckedUpdateWithoutPrintJobsInput>
   }
 
+  export type OrderUpdateOneRequiredWithoutPrintJobsNestedInput = {
+    create?: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutPrintJobsInput
+    upsert?: OrderUpsertWithoutPrintJobsInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutPrintJobsInput, OrderUpdateWithoutPrintJobsInput>, OrderUncheckedUpdateWithoutPrintJobsInput>
+  }
+
   export type PrinterUpdateOneWithoutPrintJobsNestedInput = {
     create?: XOR<PrinterCreateWithoutPrintJobsInput, PrinterUncheckedCreateWithoutPrintJobsInput>
     connectOrCreate?: PrinterCreateOrConnectWithoutPrintJobsInput
@@ -22469,16 +22479,6 @@ export namespace Prisma {
     delete?: PrinterWhereInput | boolean
     connect?: PrinterWhereUniqueInput
     update?: XOR<XOR<PrinterUpdateToOneWithWhereWithoutPrintJobsInput, PrinterUpdateWithoutPrintJobsInput>, PrinterUncheckedUpdateWithoutPrintJobsInput>
-  }
-
-  export type PrintAgentUpdateOneWithoutPrintJobsNestedInput = {
-    create?: XOR<PrintAgentCreateWithoutPrintJobsInput, PrintAgentUncheckedCreateWithoutPrintJobsInput>
-    connectOrCreate?: PrintAgentCreateOrConnectWithoutPrintJobsInput
-    upsert?: PrintAgentUpsertWithoutPrintJobsInput
-    disconnect?: PrintAgentWhereInput | boolean
-    delete?: PrintAgentWhereInput | boolean
-    connect?: PrintAgentWhereUniqueInput
-    update?: XOR<XOR<PrintAgentUpdateToOneWithWhereWithoutPrintJobsInput, PrintAgentUpdateWithoutPrintJobsInput>, PrintAgentUncheckedUpdateWithoutPrintJobsInput>
   }
 
   export type ShopCreateNestedOneWithoutPricingRulesInput = {
@@ -22537,24 +22537,16 @@ export namespace Prisma {
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
   }
 
-  export type ShopCreateNestedOneWithoutSubscriptionInput = {
-    create?: XOR<ShopCreateWithoutSubscriptionInput, ShopUncheckedCreateWithoutSubscriptionInput>
-    connectOrCreate?: ShopCreateOrConnectWithoutSubscriptionInput
-    connect?: ShopWhereUniqueInput
-  }
-
   export type SubscriptionPlanCreateNestedOneWithoutSubscriptionsInput = {
     create?: XOR<SubscriptionPlanCreateWithoutSubscriptionsInput, SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput>
     connectOrCreate?: SubscriptionPlanCreateOrConnectWithoutSubscriptionsInput
     connect?: SubscriptionPlanWhereUniqueInput
   }
 
-  export type ShopUpdateOneRequiredWithoutSubscriptionNestedInput = {
+  export type ShopCreateNestedOneWithoutSubscriptionInput = {
     create?: XOR<ShopCreateWithoutSubscriptionInput, ShopUncheckedCreateWithoutSubscriptionInput>
     connectOrCreate?: ShopCreateOrConnectWithoutSubscriptionInput
-    upsert?: ShopUpsertWithoutSubscriptionInput
     connect?: ShopWhereUniqueInput
-    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutSubscriptionInput, ShopUpdateWithoutSubscriptionInput>, ShopUncheckedUpdateWithoutSubscriptionInput>
   }
 
   export type SubscriptionPlanUpdateOneRequiredWithoutSubscriptionsNestedInput = {
@@ -22563,6 +22555,14 @@ export namespace Prisma {
     upsert?: SubscriptionPlanUpsertWithoutSubscriptionsInput
     connect?: SubscriptionPlanWhereUniqueInput
     update?: XOR<XOR<SubscriptionPlanUpdateToOneWithWhereWithoutSubscriptionsInput, SubscriptionPlanUpdateWithoutSubscriptionsInput>, SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput>
+  }
+
+  export type ShopUpdateOneRequiredWithoutSubscriptionNestedInput = {
+    create?: XOR<ShopCreateWithoutSubscriptionInput, ShopUncheckedCreateWithoutSubscriptionInput>
+    connectOrCreate?: ShopCreateOrConnectWithoutSubscriptionInput
+    upsert?: ShopUpsertWithoutSubscriptionInput
+    connect?: ShopWhereUniqueInput
+    update?: XOR<XOR<ShopUpdateToOneWithWhereWithoutSubscriptionInput, ShopUpdateWithoutSubscriptionInput>, ShopUncheckedUpdateWithoutSubscriptionInput>
   }
 
   export type ShopCreateNestedOneWithoutAuditLogsInput = {
@@ -22855,39 +22855,35 @@ export namespace Prisma {
     _max?: NestedBytesFilter<$PrismaModel>
   }
 
-  export type UserCreateWithoutShopInput = {
+  export type AuditLogCreateWithoutShopInput = {
     id?: string
-    email: string
-    passwordHash: string
-    fullName: string
-    phone?: string | null
-    role?: string
-    isVerified?: boolean
+    action: string
+    entityType: string
+    entityId: string
+    details?: string | null
+    ipAddress?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    user?: UserCreateNestedOneWithoutAuditLogsInput
   }
 
-  export type UserUncheckedCreateWithoutShopInput = {
+  export type AuditLogUncheckedCreateWithoutShopInput = {
     id?: string
-    email: string
-    passwordHash: string
-    fullName: string
-    phone?: string | null
-    role?: string
-    isVerified?: boolean
+    userId?: string | null
+    action: string
+    entityType: string
+    entityId: string
+    details?: string | null
+    ipAddress?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutShopInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput>
+  export type AuditLogCreateOrConnectWithoutShopInput = {
+    where: AuditLogWhereUniqueInput
+    create: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput>
   }
 
-  export type UserCreateManyShopInputEnvelope = {
-    data: UserCreateManyShopInput | UserCreateManyShopInput[]
+  export type AuditLogCreateManyShopInputEnvelope = {
+    data: AuditLogCreateManyShopInput | AuditLogCreateManyShopInput[]
     skipDuplicates?: boolean
   }
 
@@ -22936,8 +22932,8 @@ export namespace Prisma {
     rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutOrdersInput
     documents?: OrderDocumentCreateNestedManyWithoutOrderInput
+    customer: CustomerCreateNestedOneWithoutOrdersInput
     printJobs?: PrintJobCreateNestedManyWithoutOrderInput
   }
 
@@ -23005,6 +23001,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PrintAgentCreateWithoutShopInput = {
+    id?: string
+    agentName: string
+    machineHostname?: string | null
+    osVersion?: string | null
+    ipAddress?: string | null
+    authTokenHash: string
+    isConnected?: boolean
+    lastHeartbeatAt?: Date | string | null
+    createdAt?: Date | string
+    printJobs?: PrintJobCreateNestedManyWithoutAgentInput
+    printers?: PrinterCreateNestedManyWithoutAgentInput
+  }
+
+  export type PrintAgentUncheckedCreateWithoutShopInput = {
+    id?: string
+    agentName: string
+    machineHostname?: string | null
+    osVersion?: string | null
+    ipAddress?: string | null
+    authTokenHash: string
+    isConnected?: boolean
+    lastHeartbeatAt?: Date | string | null
+    createdAt?: Date | string
+    printJobs?: PrintJobUncheckedCreateNestedManyWithoutAgentInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutAgentInput
+  }
+
+  export type PrintAgentCreateOrConnectWithoutShopInput = {
+    where: PrintAgentWhereUniqueInput
+    create: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput>
+  }
+
+  export type PrintAgentCreateManyShopInputEnvelope = {
+    data: PrintAgentCreateManyShopInput | PrintAgentCreateManyShopInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PrinterCreateWithoutShopInput = {
     id?: string
     windowsPrinterName: string
@@ -23021,8 +23055,8 @@ export namespace Prisma {
     currentQueueCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    agent?: PrintAgentCreateNestedOneWithoutPrintersInput
     printJobs?: PrintJobCreateNestedManyWithoutPrinterInput
+    agent?: PrintAgentCreateNestedOneWithoutPrintersInput
   }
 
   export type PrinterUncheckedCreateWithoutShopInput = {
@@ -23055,44 +23089,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PrintAgentCreateWithoutShopInput = {
-    id?: string
-    agentName: string
-    machineHostname?: string | null
-    osVersion?: string | null
-    ipAddress?: string | null
-    authTokenHash: string
-    isConnected?: boolean
-    lastHeartbeatAt?: Date | string | null
-    createdAt?: Date | string
-    printers?: PrinterCreateNestedManyWithoutAgentInput
-    printJobs?: PrintJobCreateNestedManyWithoutAgentInput
-  }
-
-  export type PrintAgentUncheckedCreateWithoutShopInput = {
-    id?: string
-    agentName: string
-    machineHostname?: string | null
-    osVersion?: string | null
-    ipAddress?: string | null
-    authTokenHash: string
-    isConnected?: boolean
-    lastHeartbeatAt?: Date | string | null
-    createdAt?: Date | string
-    printers?: PrinterUncheckedCreateNestedManyWithoutAgentInput
-    printJobs?: PrintJobUncheckedCreateNestedManyWithoutAgentInput
-  }
-
-  export type PrintAgentCreateOrConnectWithoutShopInput = {
-    where: PrintAgentWhereUniqueInput
-    create: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput>
-  }
-
-  export type PrintAgentCreateManyShopInputEnvelope = {
-    data: PrintAgentCreateManyShopInput | PrintAgentCreateManyShopInput[]
-    skipDuplicates?: boolean
-  }
-
   export type SubscriptionCreateWithoutShopInput = {
     id?: string
     status?: string
@@ -23120,68 +23116,71 @@ export namespace Prisma {
     create: XOR<SubscriptionCreateWithoutShopInput, SubscriptionUncheckedCreateWithoutShopInput>
   }
 
-  export type AuditLogCreateWithoutShopInput = {
+  export type UserCreateWithoutShopInput = {
     id?: string
-    action: string
-    entityType: string
-    entityId: string
-    details?: string | null
-    ipAddress?: string | null
+    email: string
+    passwordHash: string
+    fullName: string
+    phone?: string | null
+    role?: string
+    isVerified?: boolean
     createdAt?: Date | string
-    user?: UserCreateNestedOneWithoutAuditLogsInput
+    updatedAt?: Date | string
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
   }
 
-  export type AuditLogUncheckedCreateWithoutShopInput = {
+  export type UserUncheckedCreateWithoutShopInput = {
     id?: string
-    userId?: string | null
-    action: string
-    entityType: string
-    entityId: string
-    details?: string | null
-    ipAddress?: string | null
+    email: string
+    passwordHash: string
+    fullName: string
+    phone?: string | null
+    role?: string
+    isVerified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type AuditLogCreateOrConnectWithoutShopInput = {
-    where: AuditLogWhereUniqueInput
-    create: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput>
-  }
-
-  export type AuditLogCreateManyShopInputEnvelope = {
-    data: AuditLogCreateManyShopInput | AuditLogCreateManyShopInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithWhereUniqueWithoutShopInput = {
+  export type UserCreateOrConnectWithoutShopInput = {
     where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutShopInput, UserUncheckedUpdateWithoutShopInput>
     create: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput>
   }
 
-  export type UserUpdateWithWhereUniqueWithoutShopInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutShopInput, UserUncheckedUpdateWithoutShopInput>
+  export type UserCreateManyShopInputEnvelope = {
+    data: UserCreateManyShopInput | UserCreateManyShopInput[]
+    skipDuplicates?: boolean
   }
 
-  export type UserUpdateManyWithWhereWithoutShopInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutShopInput>
+  export type AuditLogUpsertWithWhereUniqueWithoutShopInput = {
+    where: AuditLogWhereUniqueInput
+    update: XOR<AuditLogUpdateWithoutShopInput, AuditLogUncheckedUpdateWithoutShopInput>
+    create: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput>
   }
 
-  export type UserScalarWhereInput = {
-    AND?: UserScalarWhereInput | UserScalarWhereInput[]
-    OR?: UserScalarWhereInput[]
-    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: StringFilter<"User"> | string
-    shopId?: StringNullableFilter<"User"> | string | null
-    email?: StringFilter<"User"> | string
-    passwordHash?: StringFilter<"User"> | string
-    fullName?: StringFilter<"User"> | string
-    phone?: StringNullableFilter<"User"> | string | null
-    role?: StringFilter<"User"> | string
-    isVerified?: BoolFilter<"User"> | boolean
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    updatedAt?: DateTimeFilter<"User"> | Date | string
+  export type AuditLogUpdateWithWhereUniqueWithoutShopInput = {
+    where: AuditLogWhereUniqueInput
+    data: XOR<AuditLogUpdateWithoutShopInput, AuditLogUncheckedUpdateWithoutShopInput>
+  }
+
+  export type AuditLogUpdateManyWithWhereWithoutShopInput = {
+    where: AuditLogScalarWhereInput
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutShopInput>
+  }
+
+  export type AuditLogScalarWhereInput = {
+    AND?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+    OR?: AuditLogScalarWhereInput[]
+    NOT?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+    id?: StringFilter<"AuditLog"> | string
+    shopId?: StringNullableFilter<"AuditLog"> | string | null
+    userId?: StringNullableFilter<"AuditLog"> | string | null
+    action?: StringFilter<"AuditLog"> | string
+    entityType?: StringFilter<"AuditLog"> | string
+    entityId?: StringFilter<"AuditLog"> | string
+    details?: StringNullableFilter<"AuditLog"> | string | null
+    ipAddress?: StringNullableFilter<"AuditLog"> | string | null
+    createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
   export type CustomerUpsertWithWhereUniqueWithoutShopInput = {
@@ -23283,6 +23282,38 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"PricingRule"> | Date | string
   }
 
+  export type PrintAgentUpsertWithWhereUniqueWithoutShopInput = {
+    where: PrintAgentWhereUniqueInput
+    update: XOR<PrintAgentUpdateWithoutShopInput, PrintAgentUncheckedUpdateWithoutShopInput>
+    create: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput>
+  }
+
+  export type PrintAgentUpdateWithWhereUniqueWithoutShopInput = {
+    where: PrintAgentWhereUniqueInput
+    data: XOR<PrintAgentUpdateWithoutShopInput, PrintAgentUncheckedUpdateWithoutShopInput>
+  }
+
+  export type PrintAgentUpdateManyWithWhereWithoutShopInput = {
+    where: PrintAgentScalarWhereInput
+    data: XOR<PrintAgentUpdateManyMutationInput, PrintAgentUncheckedUpdateManyWithoutShopInput>
+  }
+
+  export type PrintAgentScalarWhereInput = {
+    AND?: PrintAgentScalarWhereInput | PrintAgentScalarWhereInput[]
+    OR?: PrintAgentScalarWhereInput[]
+    NOT?: PrintAgentScalarWhereInput | PrintAgentScalarWhereInput[]
+    id?: StringFilter<"PrintAgent"> | string
+    shopId?: StringFilter<"PrintAgent"> | string
+    agentName?: StringFilter<"PrintAgent"> | string
+    machineHostname?: StringNullableFilter<"PrintAgent"> | string | null
+    osVersion?: StringNullableFilter<"PrintAgent"> | string | null
+    ipAddress?: StringNullableFilter<"PrintAgent"> | string | null
+    authTokenHash?: StringFilter<"PrintAgent"> | string
+    isConnected?: BoolFilter<"PrintAgent"> | boolean
+    lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
+    createdAt?: DateTimeFilter<"PrintAgent"> | Date | string
+  }
+
   export type PrinterUpsertWithWhereUniqueWithoutShopInput = {
     where: PrinterWhereUniqueInput
     update: XOR<PrinterUpdateWithoutShopInput, PrinterUncheckedUpdateWithoutShopInput>
@@ -23322,38 +23353,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Printer"> | Date | string
   }
 
-  export type PrintAgentUpsertWithWhereUniqueWithoutShopInput = {
-    where: PrintAgentWhereUniqueInput
-    update: XOR<PrintAgentUpdateWithoutShopInput, PrintAgentUncheckedUpdateWithoutShopInput>
-    create: XOR<PrintAgentCreateWithoutShopInput, PrintAgentUncheckedCreateWithoutShopInput>
-  }
-
-  export type PrintAgentUpdateWithWhereUniqueWithoutShopInput = {
-    where: PrintAgentWhereUniqueInput
-    data: XOR<PrintAgentUpdateWithoutShopInput, PrintAgentUncheckedUpdateWithoutShopInput>
-  }
-
-  export type PrintAgentUpdateManyWithWhereWithoutShopInput = {
-    where: PrintAgentScalarWhereInput
-    data: XOR<PrintAgentUpdateManyMutationInput, PrintAgentUncheckedUpdateManyWithoutShopInput>
-  }
-
-  export type PrintAgentScalarWhereInput = {
-    AND?: PrintAgentScalarWhereInput | PrintAgentScalarWhereInput[]
-    OR?: PrintAgentScalarWhereInput[]
-    NOT?: PrintAgentScalarWhereInput | PrintAgentScalarWhereInput[]
-    id?: StringFilter<"PrintAgent"> | string
-    shopId?: StringFilter<"PrintAgent"> | string
-    agentName?: StringFilter<"PrintAgent"> | string
-    machineHostname?: StringNullableFilter<"PrintAgent"> | string | null
-    osVersion?: StringNullableFilter<"PrintAgent"> | string | null
-    ipAddress?: StringNullableFilter<"PrintAgent"> | string | null
-    authTokenHash?: StringFilter<"PrintAgent"> | string
-    isConnected?: BoolFilter<"PrintAgent"> | boolean
-    lastHeartbeatAt?: DateTimeNullableFilter<"PrintAgent"> | Date | string | null
-    createdAt?: DateTimeFilter<"PrintAgent"> | Date | string
-  }
-
   export type SubscriptionUpsertWithoutShopInput = {
     update: XOR<SubscriptionUpdateWithoutShopInput, SubscriptionUncheckedUpdateWithoutShopInput>
     create: XOR<SubscriptionCreateWithoutShopInput, SubscriptionUncheckedCreateWithoutShopInput>
@@ -23387,88 +23386,36 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AuditLogUpsertWithWhereUniqueWithoutShopInput = {
-    where: AuditLogWhereUniqueInput
-    update: XOR<AuditLogUpdateWithoutShopInput, AuditLogUncheckedUpdateWithoutShopInput>
-    create: XOR<AuditLogCreateWithoutShopInput, AuditLogUncheckedCreateWithoutShopInput>
+  export type UserUpsertWithWhereUniqueWithoutShopInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutShopInput, UserUncheckedUpdateWithoutShopInput>
+    create: XOR<UserCreateWithoutShopInput, UserUncheckedCreateWithoutShopInput>
   }
 
-  export type AuditLogUpdateWithWhereUniqueWithoutShopInput = {
-    where: AuditLogWhereUniqueInput
-    data: XOR<AuditLogUpdateWithoutShopInput, AuditLogUncheckedUpdateWithoutShopInput>
+  export type UserUpdateWithWhereUniqueWithoutShopInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutShopInput, UserUncheckedUpdateWithoutShopInput>
   }
 
-  export type AuditLogUpdateManyWithWhereWithoutShopInput = {
-    where: AuditLogScalarWhereInput
-    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutShopInput>
+  export type UserUpdateManyWithWhereWithoutShopInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutShopInput>
   }
 
-  export type AuditLogScalarWhereInput = {
-    AND?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-    OR?: AuditLogScalarWhereInput[]
-    NOT?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-    id?: StringFilter<"AuditLog"> | string
-    shopId?: StringNullableFilter<"AuditLog"> | string | null
-    userId?: StringNullableFilter<"AuditLog"> | string | null
-    action?: StringFilter<"AuditLog"> | string
-    entityType?: StringFilter<"AuditLog"> | string
-    entityId?: StringFilter<"AuditLog"> | string
-    details?: StringNullableFilter<"AuditLog"> | string | null
-    ipAddress?: StringNullableFilter<"AuditLog"> | string | null
-    createdAt?: DateTimeFilter<"AuditLog"> | Date | string
-  }
-
-  export type ShopCreateWithoutUsersInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    customers?: CustomerCreateNestedManyWithoutShopInput
-    orders?: OrderCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
-    subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
-  }
-
-  export type ShopUncheckedCreateWithoutUsersInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
-    orders?: OrderUncheckedCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
-    subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
-  }
-
-  export type ShopCreateOrConnectWithoutUsersInput = {
-    where: ShopWhereUniqueInput
-    create: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    shopId?: StringNullableFilter<"User"> | string | null
+    email?: StringFilter<"User"> | string
+    passwordHash?: StringFilter<"User"> | string
+    fullName?: StringFilter<"User"> | string
+    phone?: StringNullableFilter<"User"> | string | null
+    role?: StringFilter<"User"> | string
+    isVerified?: BoolFilter<"User"> | boolean
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
   export type AuditLogCreateWithoutUserInput = {
@@ -23503,6 +23450,75 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ShopCreateWithoutUsersInput = {
+    id?: string
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    orders?: OrderCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
+    subscription?: SubscriptionCreateNestedOneWithoutShopInput
+  }
+
+  export type ShopUncheckedCreateWithoutUsersInput = {
+    id?: string
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    orders?: OrderUncheckedCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
+  }
+
+  export type ShopCreateOrConnectWithoutUsersInput = {
+    where: ShopWhereUniqueInput
+    create: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
+  }
+
+  export type AuditLogUpsertWithWhereUniqueWithoutUserInput = {
+    where: AuditLogWhereUniqueInput
+    update: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
+    create: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type AuditLogUpdateWithWhereUniqueWithoutUserInput = {
+    where: AuditLogWhereUniqueInput
+    data: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AuditLogUpdateManyWithWhereWithoutUserInput = {
+    where: AuditLogScalarWhereInput
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type ShopUpsertWithoutUsersInput = {
     update: XOR<ShopUpdateWithoutUsersInput, ShopUncheckedUpdateWithoutUsersInput>
     create: XOR<ShopCreateWithoutUsersInput, ShopUncheckedCreateWithoutUsersInput>
@@ -23529,13 +23545,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
     customers?: CustomerUpdateManyWithoutShopNestedInput
     orders?: OrderUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutUsersInput = {
@@ -23553,29 +23569,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
     orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
-  }
-
-  export type AuditLogUpsertWithWhereUniqueWithoutUserInput = {
-    where: AuditLogWhereUniqueInput
-    update: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
-    create: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput>
-  }
-
-  export type AuditLogUpdateWithWhereUniqueWithoutUserInput = {
-    where: AuditLogWhereUniqueInput
-    data: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
-  }
-
-  export type AuditLogUpdateManyWithWhereWithoutUserInput = {
-    where: AuditLogScalarWhereInput
-    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutUserInput>
   }
 
   export type ShopCreateWithoutCustomersInput = {
@@ -23593,13 +23593,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
     orders?: OrderCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
     subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutCustomersInput = {
@@ -23617,13 +23617,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
     orders?: OrderUncheckedCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutCustomersInput = {
@@ -23648,8 +23648,8 @@ export namespace Prisma {
     rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutOrdersInput
     documents?: OrderDocumentCreateNestedManyWithoutOrderInput
+    shop: ShopCreateNestedOneWithoutOrdersInput
     printJobs?: PrintJobCreateNestedManyWithoutOrderInput
   }
 
@@ -23711,13 +23711,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
     orders?: OrderUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutCustomersInput = {
@@ -23735,13 +23735,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
     orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -23758,82 +23758,6 @@ export namespace Prisma {
   export type OrderUpdateManyWithWhereWithoutCustomerInput = {
     where: OrderScalarWhereInput
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutCustomerInput>
-  }
-
-  export type ShopCreateWithoutOrdersInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
-    customers?: CustomerCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
-    subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
-  }
-
-  export type ShopUncheckedCreateWithoutOrdersInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
-    subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
-  }
-
-  export type ShopCreateOrConnectWithoutOrdersInput = {
-    where: ShopWhereUniqueInput
-    create: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
-  }
-
-  export type CustomerCreateWithoutOrdersInput = {
-    id?: string
-    phone: string
-    fullName: string
-    email?: string | null
-    createdAt?: Date | string
-    shop: ShopCreateNestedOneWithoutCustomersInput
-  }
-
-  export type CustomerUncheckedCreateWithoutOrdersInput = {
-    id?: string
-    shopId: string
-    phone: string
-    fullName: string
-    email?: string | null
-    createdAt?: Date | string
-  }
-
-  export type CustomerCreateOrConnectWithoutOrdersInput = {
-    where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
   }
 
   export type OrderDocumentCreateWithoutOrderInput = {
@@ -23874,6 +23798,82 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerCreateWithoutOrdersInput = {
+    id?: string
+    phone: string
+    fullName: string
+    email?: string | null
+    createdAt?: Date | string
+    shop: ShopCreateNestedOneWithoutCustomersInput
+  }
+
+  export type CustomerUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    shopId: string
+    phone: string
+    fullName: string
+    email?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CustomerCreateOrConnectWithoutOrdersInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type ShopCreateWithoutOrdersInput = {
+    id?: string
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
+    subscription?: SubscriptionCreateNestedOneWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopCreateOrConnectWithoutOrdersInput = {
+    where: ShopWhereUniqueInput
+    create: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
+  }
+
   export type PrintJobCreateWithoutOrderInput = {
     id?: string
     status?: string
@@ -23882,9 +23882,9 @@ export namespace Prisma {
     dispatchedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
+    agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
     document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
     printer?: PrinterCreateNestedOneWithoutPrintJobsInput
-    agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
   }
 
   export type PrintJobUncheckedCreateWithoutOrderInput = {
@@ -23908,94 +23908,6 @@ export namespace Prisma {
   export type PrintJobCreateManyOrderInputEnvelope = {
     data: PrintJobCreateManyOrderInput | PrintJobCreateManyOrderInput[]
     skipDuplicates?: boolean
-  }
-
-  export type ShopUpsertWithoutOrdersInput = {
-    update: XOR<ShopUpdateWithoutOrdersInput, ShopUncheckedUpdateWithoutOrdersInput>
-    create: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
-    where?: ShopWhereInput
-  }
-
-  export type ShopUpdateToOneWithWhereWithoutOrdersInput = {
-    where?: ShopWhereInput
-    data: XOR<ShopUpdateWithoutOrdersInput, ShopUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type ShopUpdateWithoutOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
-    customers?: CustomerUpdateManyWithoutShopNestedInput
-    pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
-    printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
-    subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
-  }
-
-  export type ShopUncheckedUpdateWithoutOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
-    pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
-    printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
-    subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
-  }
-
-  export type CustomerUpsertWithoutOrdersInput = {
-    update: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
-    create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
-    where?: CustomerWhereInput
-  }
-
-  export type CustomerUpdateToOneWithWhereWithoutOrdersInput = {
-    where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type CustomerUpdateWithoutOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutCustomersNestedInput
-  }
-
-  export type CustomerUncheckedUpdateWithoutOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    shopId?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderDocumentUpsertWithWhereUniqueWithoutOrderInput = {
@@ -24030,6 +23942,94 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OrderDocument"> | Date | string
   }
 
+  export type CustomerUpsertWithoutOrdersInput = {
+    update: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
+    create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type CustomerUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shop?: ShopUpdateOneRequiredWithoutCustomersNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShopUpsertWithoutOrdersInput = {
+    update: XOR<ShopUpdateWithoutOrdersInput, ShopUncheckedUpdateWithoutOrdersInput>
+    create: XOR<ShopCreateWithoutOrdersInput, ShopUncheckedCreateWithoutOrdersInput>
+    where?: ShopWhereInput
+  }
+
+  export type ShopUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: ShopWhereInput
+    data: XOR<ShopUpdateWithoutOrdersInput, ShopUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ShopUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
+    printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
+    subscription?: SubscriptionUpdateOneWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
+  }
+
+  export type ShopUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
+    printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+  }
+
   export type PrintJobUpsertWithWhereUniqueWithoutOrderInput = {
     where: PrintJobWhereUniqueInput
     update: XOR<PrintJobUpdateWithoutOrderInput, PrintJobUncheckedUpdateWithoutOrderInput>
@@ -24061,55 +24061,6 @@ export namespace Prisma {
     dispatchedAt?: DateTimeNullableFilter<"PrintJob"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"PrintJob"> | Date | string | null
     createdAt?: DateTimeFilter<"PrintJob"> | Date | string
-  }
-
-  export type OrderCreateWithoutDocumentsInput = {
-    id?: string
-    orderNumber: string
-    customerPhone?: string | null
-    status?: string
-    paymentStatus?: string
-    paymentMethod?: string | null
-    paymentReference?: string | null
-    paidAt?: Date | string | null
-    totalDocuments?: number
-    totalPages?: number
-    estimatedAmount?: number
-    finalAmount?: number | null
-    customerNotes?: string | null
-    rejectionReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutOrdersInput
-    customer: CustomerCreateNestedOneWithoutOrdersInput
-    printJobs?: PrintJobCreateNestedManyWithoutOrderInput
-  }
-
-  export type OrderUncheckedCreateWithoutDocumentsInput = {
-    id?: string
-    orderNumber: string
-    shopId: string
-    customerId: string
-    customerPhone?: string | null
-    status?: string
-    paymentStatus?: string
-    paymentMethod?: string | null
-    paymentReference?: string | null
-    paidAt?: Date | string | null
-    totalDocuments?: number
-    totalPages?: number
-    estimatedAmount?: number
-    finalAmount?: number | null
-    customerNotes?: string | null
-    rejectionReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    printJobs?: PrintJobUncheckedCreateNestedManyWithoutOrderInput
-  }
-
-  export type OrderCreateOrConnectWithoutDocumentsInput = {
-    where: OrderWhereUniqueInput
-    create: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
   }
 
   export type DocumentPrintSpecCreateWithoutDocumentInput = {
@@ -24155,6 +24106,55 @@ export namespace Prisma {
     create: XOR<DocumentPrintSpecCreateWithoutDocumentInput, DocumentPrintSpecUncheckedCreateWithoutDocumentInput>
   }
 
+  export type OrderCreateWithoutDocumentsInput = {
+    id?: string
+    orderNumber: string
+    customerPhone?: string | null
+    status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
+    totalDocuments?: number
+    totalPages?: number
+    estimatedAmount?: number
+    finalAmount?: number | null
+    customerNotes?: string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    shop: ShopCreateNestedOneWithoutOrdersInput
+    printJobs?: PrintJobCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    orderNumber: string
+    shopId: string
+    customerId: string
+    customerPhone?: string | null
+    status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
+    totalDocuments?: number
+    totalPages?: number
+    estimatedAmount?: number
+    finalAmount?: number | null
+    customerNotes?: string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    printJobs?: PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutDocumentsInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
+  }
+
   export type PrintJobCreateWithoutDocumentInput = {
     id?: string
     status?: string
@@ -24163,9 +24163,9 @@ export namespace Prisma {
     dispatchedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
+    agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
     order: OrderCreateNestedOneWithoutPrintJobsInput
     printer?: PrinterCreateNestedOneWithoutPrintJobsInput
-    agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
   }
 
   export type PrintJobUncheckedCreateWithoutDocumentInput = {
@@ -24189,61 +24189,6 @@ export namespace Prisma {
   export type PrintJobCreateManyDocumentInputEnvelope = {
     data: PrintJobCreateManyDocumentInput | PrintJobCreateManyDocumentInput[]
     skipDuplicates?: boolean
-  }
-
-  export type OrderUpsertWithoutDocumentsInput = {
-    update: XOR<OrderUpdateWithoutDocumentsInput, OrderUncheckedUpdateWithoutDocumentsInput>
-    create: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
-    where?: OrderWhereInput
-  }
-
-  export type OrderUpdateToOneWithWhereWithoutDocumentsInput = {
-    where?: OrderWhereInput
-    data: XOR<OrderUpdateWithoutDocumentsInput, OrderUncheckedUpdateWithoutDocumentsInput>
-  }
-
-  export type OrderUpdateWithoutDocumentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderNumber?: StringFieldUpdateOperationsInput | string
-    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    paymentStatus?: StringFieldUpdateOperationsInput | string
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    totalDocuments?: IntFieldUpdateOperationsInput | number
-    totalPages?: IntFieldUpdateOperationsInput | number
-    estimatedAmount?: FloatFieldUpdateOperationsInput | number
-    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
-    printJobs?: PrintJobUpdateManyWithoutOrderNestedInput
-  }
-
-  export type OrderUncheckedUpdateWithoutDocumentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderNumber?: StringFieldUpdateOperationsInput | string
-    shopId?: StringFieldUpdateOperationsInput | string
-    customerId?: StringFieldUpdateOperationsInput | string
-    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    paymentStatus?: StringFieldUpdateOperationsInput | string
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    totalDocuments?: IntFieldUpdateOperationsInput | number
-    totalPages?: IntFieldUpdateOperationsInput | number
-    estimatedAmount?: FloatFieldUpdateOperationsInput | number
-    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    printJobs?: PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type DocumentPrintSpecUpsertWithoutDocumentInput = {
@@ -24293,6 +24238,61 @@ export namespace Prisma {
     priceDetails?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderUpsertWithoutDocumentsInput = {
+    update: XOR<OrderUpdateWithoutDocumentsInput, OrderUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<OrderCreateWithoutDocumentsInput, OrderUncheckedCreateWithoutDocumentsInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutDocumentsInput, OrderUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type OrderUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalDocuments?: IntFieldUpdateOperationsInput | number
+    totalPages?: IntFieldUpdateOperationsInput | number
+    estimatedAmount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
+    printJobs?: PrintJobUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalDocuments?: IntFieldUpdateOperationsInput | number
+    totalPages?: IntFieldUpdateOperationsInput | number
+    estimatedAmount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    printJobs?: PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type PrintJobUpsertWithWhereUniqueWithoutDocumentInput = {
@@ -24398,13 +24398,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
     customers?: CustomerCreateNestedManyWithoutShopInput
     orders?: OrderCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
     printers?: PrinterCreateNestedManyWithoutShopInput
     subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutPrintAgentsInput = {
@@ -24422,18 +24422,54 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
     customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
     orders?: OrderUncheckedCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
     printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutPrintAgentsInput = {
     where: ShopWhereUniqueInput
     create: XOR<ShopCreateWithoutPrintAgentsInput, ShopUncheckedCreateWithoutPrintAgentsInput>
+  }
+
+  export type PrintJobCreateWithoutAgentInput = {
+    id?: string
+    status?: string
+    spoolerJobId?: number | null
+    errorMessage?: string | null
+    dispatchedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
+    order: OrderCreateNestedOneWithoutPrintJobsInput
+    printer?: PrinterCreateNestedOneWithoutPrintJobsInput
+  }
+
+  export type PrintJobUncheckedCreateWithoutAgentInput = {
+    id?: string
+    orderId: string
+    documentId: string
+    printerId?: string | null
+    status?: string
+    spoolerJobId?: number | null
+    errorMessage?: string | null
+    dispatchedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type PrintJobCreateOrConnectWithoutAgentInput = {
+    where: PrintJobWhereUniqueInput
+    create: XOR<PrintJobCreateWithoutAgentInput, PrintJobUncheckedCreateWithoutAgentInput>
+  }
+
+  export type PrintJobCreateManyAgentInputEnvelope = {
+    data: PrintJobCreateManyAgentInput | PrintJobCreateManyAgentInput[]
+    skipDuplicates?: boolean
   }
 
   export type PrinterCreateWithoutAgentInput = {
@@ -24452,8 +24488,8 @@ export namespace Prisma {
     currentQueueCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutPrintersInput
     printJobs?: PrintJobCreateNestedManyWithoutPrinterInput
+    shop: ShopCreateNestedOneWithoutPrintersInput
   }
 
   export type PrinterUncheckedCreateWithoutAgentInput = {
@@ -24486,42 +24522,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PrintJobCreateWithoutAgentInput = {
-    id?: string
-    status?: string
-    spoolerJobId?: number | null
-    errorMessage?: string | null
-    dispatchedAt?: Date | string | null
-    completedAt?: Date | string | null
-    createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutPrintJobsInput
-    document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
-    printer?: PrinterCreateNestedOneWithoutPrintJobsInput
-  }
-
-  export type PrintJobUncheckedCreateWithoutAgentInput = {
-    id?: string
-    orderId: string
-    documentId: string
-    printerId?: string | null
-    status?: string
-    spoolerJobId?: number | null
-    errorMessage?: string | null
-    dispatchedAt?: Date | string | null
-    completedAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type PrintJobCreateOrConnectWithoutAgentInput = {
-    where: PrintJobWhereUniqueInput
-    create: XOR<PrintJobCreateWithoutAgentInput, PrintJobUncheckedCreateWithoutAgentInput>
-  }
-
-  export type PrintJobCreateManyAgentInputEnvelope = {
-    data: PrintJobCreateManyAgentInput | PrintJobCreateManyAgentInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ShopUpsertWithoutPrintAgentsInput = {
     update: XOR<ShopUpdateWithoutPrintAgentsInput, ShopUncheckedUpdateWithoutPrintAgentsInput>
     create: XOR<ShopCreateWithoutPrintAgentsInput, ShopUncheckedCreateWithoutPrintAgentsInput>
@@ -24548,13 +24548,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
     customers?: CustomerUpdateManyWithoutShopNestedInput
     orders?: OrderUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
     printers?: PrinterUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutPrintAgentsInput = {
@@ -24572,29 +24572,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
     orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
     printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
-  }
-
-  export type PrinterUpsertWithWhereUniqueWithoutAgentInput = {
-    where: PrinterWhereUniqueInput
-    update: XOR<PrinterUpdateWithoutAgentInput, PrinterUncheckedUpdateWithoutAgentInput>
-    create: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput>
-  }
-
-  export type PrinterUpdateWithWhereUniqueWithoutAgentInput = {
-    where: PrinterWhereUniqueInput
-    data: XOR<PrinterUpdateWithoutAgentInput, PrinterUncheckedUpdateWithoutAgentInput>
-  }
-
-  export type PrinterUpdateManyWithWhereWithoutAgentInput = {
-    where: PrinterScalarWhereInput
-    data: XOR<PrinterUpdateManyMutationInput, PrinterUncheckedUpdateManyWithoutAgentInput>
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type PrintJobUpsertWithWhereUniqueWithoutAgentInput = {
@@ -24613,57 +24597,56 @@ export namespace Prisma {
     data: XOR<PrintJobUpdateManyMutationInput, PrintJobUncheckedUpdateManyWithoutAgentInput>
   }
 
-  export type ShopCreateWithoutPrintersInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
-    customers?: CustomerCreateNestedManyWithoutShopInput
-    orders?: OrderCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
-    subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+  export type PrinterUpsertWithWhereUniqueWithoutAgentInput = {
+    where: PrinterWhereUniqueInput
+    update: XOR<PrinterUpdateWithoutAgentInput, PrinterUncheckedUpdateWithoutAgentInput>
+    create: XOR<PrinterCreateWithoutAgentInput, PrinterUncheckedCreateWithoutAgentInput>
   }
 
-  export type ShopUncheckedCreateWithoutPrintersInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
-    orders?: OrderUncheckedCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
-    subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+  export type PrinterUpdateWithWhereUniqueWithoutAgentInput = {
+    where: PrinterWhereUniqueInput
+    data: XOR<PrinterUpdateWithoutAgentInput, PrinterUncheckedUpdateWithoutAgentInput>
   }
 
-  export type ShopCreateOrConnectWithoutPrintersInput = {
-    where: ShopWhereUniqueInput
-    create: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
+  export type PrinterUpdateManyWithWhereWithoutAgentInput = {
+    where: PrinterScalarWhereInput
+    data: XOR<PrinterUpdateManyMutationInput, PrinterUncheckedUpdateManyWithoutAgentInput>
+  }
+
+  export type PrintJobCreateWithoutPrinterInput = {
+    id?: string
+    status?: string
+    spoolerJobId?: number | null
+    errorMessage?: string | null
+    dispatchedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
+    document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
+    order: OrderCreateNestedOneWithoutPrintJobsInput
+  }
+
+  export type PrintJobUncheckedCreateWithoutPrinterInput = {
+    id?: string
+    orderId: string
+    documentId: string
+    agentId?: string | null
+    status?: string
+    spoolerJobId?: number | null
+    errorMessage?: string | null
+    dispatchedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type PrintJobCreateOrConnectWithoutPrinterInput = {
+    where: PrintJobWhereUniqueInput
+    create: XOR<PrintJobCreateWithoutPrinterInput, PrintJobUncheckedCreateWithoutPrinterInput>
+  }
+
+  export type PrintJobCreateManyPrinterInputEnvelope = {
+    data: PrintJobCreateManyPrinterInput | PrintJobCreateManyPrinterInput[]
+    skipDuplicates?: boolean
   }
 
   export type PrintAgentCreateWithoutPrintersInput = {
@@ -24699,99 +24682,73 @@ export namespace Prisma {
     create: XOR<PrintAgentCreateWithoutPrintersInput, PrintAgentUncheckedCreateWithoutPrintersInput>
   }
 
-  export type PrintJobCreateWithoutPrinterInput = {
+  export type ShopCreateWithoutPrintersInput = {
     id?: string
-    status?: string
-    spoolerJobId?: number | null
-    errorMessage?: string | null
-    dispatchedAt?: Date | string | null
-    completedAt?: Date | string | null
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
     createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutPrintJobsInput
-    document: OrderDocumentCreateNestedOneWithoutPrintJobsInput
-    agent?: PrintAgentCreateNestedOneWithoutPrintJobsInput
+    updatedAt?: Date | string
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    orders?: OrderCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    subscription?: SubscriptionCreateNestedOneWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
   }
 
-  export type PrintJobUncheckedCreateWithoutPrinterInput = {
+  export type ShopUncheckedCreateWithoutPrintersInput = {
     id?: string
-    orderId: string
-    documentId: string
-    agentId?: string | null
-    status?: string
-    spoolerJobId?: number | null
-    errorMessage?: string | null
-    dispatchedAt?: Date | string | null
-    completedAt?: Date | string | null
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    orders?: OrderUncheckedCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
   }
 
-  export type PrintJobCreateOrConnectWithoutPrinterInput = {
+  export type ShopCreateOrConnectWithoutPrintersInput = {
+    where: ShopWhereUniqueInput
+    create: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
+  }
+
+  export type PrintJobUpsertWithWhereUniqueWithoutPrinterInput = {
     where: PrintJobWhereUniqueInput
+    update: XOR<PrintJobUpdateWithoutPrinterInput, PrintJobUncheckedUpdateWithoutPrinterInput>
     create: XOR<PrintJobCreateWithoutPrinterInput, PrintJobUncheckedCreateWithoutPrinterInput>
   }
 
-  export type PrintJobCreateManyPrinterInputEnvelope = {
-    data: PrintJobCreateManyPrinterInput | PrintJobCreateManyPrinterInput[]
-    skipDuplicates?: boolean
+  export type PrintJobUpdateWithWhereUniqueWithoutPrinterInput = {
+    where: PrintJobWhereUniqueInput
+    data: XOR<PrintJobUpdateWithoutPrinterInput, PrintJobUncheckedUpdateWithoutPrinterInput>
   }
 
-  export type ShopUpsertWithoutPrintersInput = {
-    update: XOR<ShopUpdateWithoutPrintersInput, ShopUncheckedUpdateWithoutPrintersInput>
-    create: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
-    where?: ShopWhereInput
-  }
-
-  export type ShopUpdateToOneWithWhereWithoutPrintersInput = {
-    where?: ShopWhereInput
-    data: XOR<ShopUpdateWithoutPrintersInput, ShopUncheckedUpdateWithoutPrintersInput>
-  }
-
-  export type ShopUpdateWithoutPrintersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
-    customers?: CustomerUpdateManyWithoutShopNestedInput
-    orders?: OrderUpdateManyWithoutShopNestedInput
-    pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
-    subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
-  }
-
-  export type ShopUncheckedUpdateWithoutPrintersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
-    orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
-    pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
-    subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+  export type PrintJobUpdateManyWithWhereWithoutPrinterInput = {
+    where: PrintJobScalarWhereInput
+    data: XOR<PrintJobUpdateManyMutationInput, PrintJobUncheckedUpdateManyWithoutPrinterInput>
   }
 
   export type PrintAgentUpsertWithoutPrintersInput = {
@@ -24833,147 +24790,63 @@ export namespace Prisma {
     printJobs?: PrintJobUncheckedUpdateManyWithoutAgentNestedInput
   }
 
-  export type PrintJobUpsertWithWhereUniqueWithoutPrinterInput = {
-    where: PrintJobWhereUniqueInput
-    update: XOR<PrintJobUpdateWithoutPrinterInput, PrintJobUncheckedUpdateWithoutPrinterInput>
-    create: XOR<PrintJobCreateWithoutPrinterInput, PrintJobUncheckedCreateWithoutPrinterInput>
+  export type ShopUpsertWithoutPrintersInput = {
+    update: XOR<ShopUpdateWithoutPrintersInput, ShopUncheckedUpdateWithoutPrintersInput>
+    create: XOR<ShopCreateWithoutPrintersInput, ShopUncheckedCreateWithoutPrintersInput>
+    where?: ShopWhereInput
   }
 
-  export type PrintJobUpdateWithWhereUniqueWithoutPrinterInput = {
-    where: PrintJobWhereUniqueInput
-    data: XOR<PrintJobUpdateWithoutPrinterInput, PrintJobUncheckedUpdateWithoutPrinterInput>
+  export type ShopUpdateToOneWithWhereWithoutPrintersInput = {
+    where?: ShopWhereInput
+    data: XOR<ShopUpdateWithoutPrintersInput, ShopUncheckedUpdateWithoutPrintersInput>
   }
 
-  export type PrintJobUpdateManyWithWhereWithoutPrinterInput = {
-    where: PrintJobScalarWhereInput
-    data: XOR<PrintJobUpdateManyMutationInput, PrintJobUncheckedUpdateManyWithoutPrinterInput>
+  export type ShopUpdateWithoutPrintersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    orders?: OrderUpdateManyWithoutShopNestedInput
+    pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
+    printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    subscription?: SubscriptionUpdateOneWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
   }
 
-  export type OrderCreateWithoutPrintJobsInput = {
-    id?: string
-    orderNumber: string
-    customerPhone?: string | null
-    status?: string
-    paymentStatus?: string
-    paymentMethod?: string | null
-    paymentReference?: string | null
-    paidAt?: Date | string | null
-    totalDocuments?: number
-    totalPages?: number
-    estimatedAmount?: number
-    finalAmount?: number | null
-    customerNotes?: string | null
-    rejectionReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutOrdersInput
-    customer: CustomerCreateNestedOneWithoutOrdersInput
-    documents?: OrderDocumentCreateNestedManyWithoutOrderInput
-  }
-
-  export type OrderUncheckedCreateWithoutPrintJobsInput = {
-    id?: string
-    orderNumber: string
-    shopId: string
-    customerId: string
-    customerPhone?: string | null
-    status?: string
-    paymentStatus?: string
-    paymentMethod?: string | null
-    paymentReference?: string | null
-    paidAt?: Date | string | null
-    totalDocuments?: number
-    totalPages?: number
-    estimatedAmount?: number
-    finalAmount?: number | null
-    customerNotes?: string | null
-    rejectionReason?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    documents?: OrderDocumentUncheckedCreateNestedManyWithoutOrderInput
-  }
-
-  export type OrderCreateOrConnectWithoutPrintJobsInput = {
-    where: OrderWhereUniqueInput
-    create: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
-  }
-
-  export type OrderDocumentCreateWithoutPrintJobsInput = {
-    id?: string
-    originalFilename: string
-    storageKey: string
-    fileSizeBytes: number
-    mimeType: string
-    sha256Checksum: string
-    detectedPageCount?: number
-    previewImageKey?: string | null
-    createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutDocumentsInput
-    specs?: DocumentPrintSpecCreateNestedOneWithoutDocumentInput
-  }
-
-  export type OrderDocumentUncheckedCreateWithoutPrintJobsInput = {
-    id?: string
-    orderId: string
-    originalFilename: string
-    storageKey: string
-    fileSizeBytes: number
-    mimeType: string
-    sha256Checksum: string
-    detectedPageCount?: number
-    previewImageKey?: string | null
-    createdAt?: Date | string
-    specs?: DocumentPrintSpecUncheckedCreateNestedOneWithoutDocumentInput
-  }
-
-  export type OrderDocumentCreateOrConnectWithoutPrintJobsInput = {
-    where: OrderDocumentWhereUniqueInput
-    create: XOR<OrderDocumentCreateWithoutPrintJobsInput, OrderDocumentUncheckedCreateWithoutPrintJobsInput>
-  }
-
-  export type PrinterCreateWithoutPrintJobsInput = {
-    id?: string
-    windowsPrinterName: string
-    displayName: string
-    manufacturer?: string | null
-    model?: string | null
-    connectionType?: string
-    ipAddress?: string | null
-    supportsColor?: boolean
-    supportsDuplex?: boolean
-    supportedPaperSizes?: string
-    status?: string
-    isActive?: boolean
-    currentQueueCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    shop: ShopCreateNestedOneWithoutPrintersInput
-    agent?: PrintAgentCreateNestedOneWithoutPrintersInput
-  }
-
-  export type PrinterUncheckedCreateWithoutPrintJobsInput = {
-    id?: string
-    shopId: string
-    agentId?: string | null
-    windowsPrinterName: string
-    displayName: string
-    manufacturer?: string | null
-    model?: string | null
-    connectionType?: string
-    ipAddress?: string | null
-    supportsColor?: boolean
-    supportsDuplex?: boolean
-    supportedPaperSizes?: string
-    status?: string
-    isActive?: boolean
-    currentQueueCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PrinterCreateOrConnectWithoutPrintJobsInput = {
-    where: PrinterWhereUniqueInput
-    create: XOR<PrinterCreateWithoutPrintJobsInput, PrinterUncheckedCreateWithoutPrintJobsInput>
+  export type ShopUncheckedUpdateWithoutPrintersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
+    pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
+    printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type PrintAgentCreateWithoutPrintJobsInput = {
@@ -25009,149 +24882,131 @@ export namespace Prisma {
     create: XOR<PrintAgentCreateWithoutPrintJobsInput, PrintAgentUncheckedCreateWithoutPrintJobsInput>
   }
 
-  export type OrderUpsertWithoutPrintJobsInput = {
-    update: XOR<OrderUpdateWithoutPrintJobsInput, OrderUncheckedUpdateWithoutPrintJobsInput>
-    create: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
-    where?: OrderWhereInput
+  export type OrderDocumentCreateWithoutPrintJobsInput = {
+    id?: string
+    originalFilename: string
+    storageKey: string
+    fileSizeBytes: number
+    mimeType: string
+    sha256Checksum: string
+    detectedPageCount?: number
+    previewImageKey?: string | null
+    createdAt?: Date | string
+    specs?: DocumentPrintSpecCreateNestedOneWithoutDocumentInput
+    order: OrderCreateNestedOneWithoutDocumentsInput
   }
 
-  export type OrderUpdateToOneWithWhereWithoutPrintJobsInput = {
-    where?: OrderWhereInput
-    data: XOR<OrderUpdateWithoutPrintJobsInput, OrderUncheckedUpdateWithoutPrintJobsInput>
+  export type OrderDocumentUncheckedCreateWithoutPrintJobsInput = {
+    id?: string
+    orderId: string
+    originalFilename: string
+    storageKey: string
+    fileSizeBytes: number
+    mimeType: string
+    sha256Checksum: string
+    detectedPageCount?: number
+    previewImageKey?: string | null
+    createdAt?: Date | string
+    specs?: DocumentPrintSpecUncheckedCreateNestedOneWithoutDocumentInput
   }
 
-  export type OrderUpdateWithoutPrintJobsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderNumber?: StringFieldUpdateOperationsInput | string
-    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    paymentStatus?: StringFieldUpdateOperationsInput | string
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    totalDocuments?: IntFieldUpdateOperationsInput | number
-    totalPages?: IntFieldUpdateOperationsInput | number
-    estimatedAmount?: FloatFieldUpdateOperationsInput | number
-    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
-    documents?: OrderDocumentUpdateManyWithoutOrderNestedInput
-  }
-
-  export type OrderUncheckedUpdateWithoutPrintJobsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderNumber?: StringFieldUpdateOperationsInput | string
-    shopId?: StringFieldUpdateOperationsInput | string
-    customerId?: StringFieldUpdateOperationsInput | string
-    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    paymentStatus?: StringFieldUpdateOperationsInput | string
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    totalDocuments?: IntFieldUpdateOperationsInput | number
-    totalPages?: IntFieldUpdateOperationsInput | number
-    estimatedAmount?: FloatFieldUpdateOperationsInput | number
-    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    documents?: OrderDocumentUncheckedUpdateManyWithoutOrderNestedInput
-  }
-
-  export type OrderDocumentUpsertWithoutPrintJobsInput = {
-    update: XOR<OrderDocumentUpdateWithoutPrintJobsInput, OrderDocumentUncheckedUpdateWithoutPrintJobsInput>
+  export type OrderDocumentCreateOrConnectWithoutPrintJobsInput = {
+    where: OrderDocumentWhereUniqueInput
     create: XOR<OrderDocumentCreateWithoutPrintJobsInput, OrderDocumentUncheckedCreateWithoutPrintJobsInput>
-    where?: OrderDocumentWhereInput
   }
 
-  export type OrderDocumentUpdateToOneWithWhereWithoutPrintJobsInput = {
-    where?: OrderDocumentWhereInput
-    data: XOR<OrderDocumentUpdateWithoutPrintJobsInput, OrderDocumentUncheckedUpdateWithoutPrintJobsInput>
+  export type OrderCreateWithoutPrintJobsInput = {
+    id?: string
+    orderNumber: string
+    customerPhone?: string | null
+    status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
+    totalDocuments?: number
+    totalPages?: number
+    estimatedAmount?: number
+    finalAmount?: number | null
+    customerNotes?: string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: OrderDocumentCreateNestedManyWithoutOrderInput
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    shop: ShopCreateNestedOneWithoutOrdersInput
   }
 
-  export type OrderDocumentUpdateWithoutPrintJobsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    originalFilename?: StringFieldUpdateOperationsInput | string
-    storageKey?: StringFieldUpdateOperationsInput | string
-    fileSizeBytes?: IntFieldUpdateOperationsInput | number
-    mimeType?: StringFieldUpdateOperationsInput | string
-    sha256Checksum?: StringFieldUpdateOperationsInput | string
-    detectedPageCount?: IntFieldUpdateOperationsInput | number
-    previewImageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutDocumentsNestedInput
-    specs?: DocumentPrintSpecUpdateOneWithoutDocumentNestedInput
+  export type OrderUncheckedCreateWithoutPrintJobsInput = {
+    id?: string
+    orderNumber: string
+    shopId: string
+    customerId: string
+    customerPhone?: string | null
+    status?: string
+    paymentStatus?: string
+    paymentMethod?: string | null
+    paymentReference?: string | null
+    paidAt?: Date | string | null
+    totalDocuments?: number
+    totalPages?: number
+    estimatedAmount?: number
+    finalAmount?: number | null
+    customerNotes?: string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: OrderDocumentUncheckedCreateNestedManyWithoutOrderInput
   }
 
-  export type OrderDocumentUncheckedUpdateWithoutPrintJobsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    originalFilename?: StringFieldUpdateOperationsInput | string
-    storageKey?: StringFieldUpdateOperationsInput | string
-    fileSizeBytes?: IntFieldUpdateOperationsInput | number
-    mimeType?: StringFieldUpdateOperationsInput | string
-    sha256Checksum?: StringFieldUpdateOperationsInput | string
-    detectedPageCount?: IntFieldUpdateOperationsInput | number
-    previewImageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    specs?: DocumentPrintSpecUncheckedUpdateOneWithoutDocumentNestedInput
+  export type OrderCreateOrConnectWithoutPrintJobsInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
   }
 
-  export type PrinterUpsertWithoutPrintJobsInput = {
-    update: XOR<PrinterUpdateWithoutPrintJobsInput, PrinterUncheckedUpdateWithoutPrintJobsInput>
+  export type PrinterCreateWithoutPrintJobsInput = {
+    id?: string
+    windowsPrinterName: string
+    displayName: string
+    manufacturer?: string | null
+    model?: string | null
+    connectionType?: string
+    ipAddress?: string | null
+    supportsColor?: boolean
+    supportsDuplex?: boolean
+    supportedPaperSizes?: string
+    status?: string
+    isActive?: boolean
+    currentQueueCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: PrintAgentCreateNestedOneWithoutPrintersInput
+    shop: ShopCreateNestedOneWithoutPrintersInput
+  }
+
+  export type PrinterUncheckedCreateWithoutPrintJobsInput = {
+    id?: string
+    shopId: string
+    agentId?: string | null
+    windowsPrinterName: string
+    displayName: string
+    manufacturer?: string | null
+    model?: string | null
+    connectionType?: string
+    ipAddress?: string | null
+    supportsColor?: boolean
+    supportsDuplex?: boolean
+    supportedPaperSizes?: string
+    status?: string
+    isActive?: boolean
+    currentQueueCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrinterCreateOrConnectWithoutPrintJobsInput = {
+    where: PrinterWhereUniqueInput
     create: XOR<PrinterCreateWithoutPrintJobsInput, PrinterUncheckedCreateWithoutPrintJobsInput>
-    where?: PrinterWhereInput
-  }
-
-  export type PrinterUpdateToOneWithWhereWithoutPrintJobsInput = {
-    where?: PrinterWhereInput
-    data: XOR<PrinterUpdateWithoutPrintJobsInput, PrinterUncheckedUpdateWithoutPrintJobsInput>
-  }
-
-  export type PrinterUpdateWithoutPrintJobsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    windowsPrinterName?: StringFieldUpdateOperationsInput | string
-    displayName?: StringFieldUpdateOperationsInput | string
-    manufacturer?: NullableStringFieldUpdateOperationsInput | string | null
-    model?: NullableStringFieldUpdateOperationsInput | string | null
-    connectionType?: StringFieldUpdateOperationsInput | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    supportsColor?: BoolFieldUpdateOperationsInput | boolean
-    supportsDuplex?: BoolFieldUpdateOperationsInput | boolean
-    supportedPaperSizes?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    currentQueueCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutPrintersNestedInput
-    agent?: PrintAgentUpdateOneWithoutPrintersNestedInput
-  }
-
-  export type PrinterUncheckedUpdateWithoutPrintJobsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    shopId?: StringFieldUpdateOperationsInput | string
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
-    windowsPrinterName?: StringFieldUpdateOperationsInput | string
-    displayName?: StringFieldUpdateOperationsInput | string
-    manufacturer?: NullableStringFieldUpdateOperationsInput | string | null
-    model?: NullableStringFieldUpdateOperationsInput | string | null
-    connectionType?: StringFieldUpdateOperationsInput | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    supportsColor?: BoolFieldUpdateOperationsInput | boolean
-    supportsDuplex?: BoolFieldUpdateOperationsInput | boolean
-    supportedPaperSizes?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    currentQueueCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PrintAgentUpsertWithoutPrintJobsInput = {
@@ -25193,6 +25048,151 @@ export namespace Prisma {
     printers?: PrinterUncheckedUpdateManyWithoutAgentNestedInput
   }
 
+  export type OrderDocumentUpsertWithoutPrintJobsInput = {
+    update: XOR<OrderDocumentUpdateWithoutPrintJobsInput, OrderDocumentUncheckedUpdateWithoutPrintJobsInput>
+    create: XOR<OrderDocumentCreateWithoutPrintJobsInput, OrderDocumentUncheckedCreateWithoutPrintJobsInput>
+    where?: OrderDocumentWhereInput
+  }
+
+  export type OrderDocumentUpdateToOneWithWhereWithoutPrintJobsInput = {
+    where?: OrderDocumentWhereInput
+    data: XOR<OrderDocumentUpdateWithoutPrintJobsInput, OrderDocumentUncheckedUpdateWithoutPrintJobsInput>
+  }
+
+  export type OrderDocumentUpdateWithoutPrintJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    fileSizeBytes?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    sha256Checksum?: StringFieldUpdateOperationsInput | string
+    detectedPageCount?: IntFieldUpdateOperationsInput | number
+    previewImageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    specs?: DocumentPrintSpecUpdateOneWithoutDocumentNestedInput
+    order?: OrderUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type OrderDocumentUncheckedUpdateWithoutPrintJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    fileSizeBytes?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    sha256Checksum?: StringFieldUpdateOperationsInput | string
+    detectedPageCount?: IntFieldUpdateOperationsInput | number
+    previewImageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    specs?: DocumentPrintSpecUncheckedUpdateOneWithoutDocumentNestedInput
+  }
+
+  export type OrderUpsertWithoutPrintJobsInput = {
+    update: XOR<OrderUpdateWithoutPrintJobsInput, OrderUncheckedUpdateWithoutPrintJobsInput>
+    create: XOR<OrderCreateWithoutPrintJobsInput, OrderUncheckedCreateWithoutPrintJobsInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutPrintJobsInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutPrintJobsInput, OrderUncheckedUpdateWithoutPrintJobsInput>
+  }
+
+  export type OrderUpdateWithoutPrintJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalDocuments?: IntFieldUpdateOperationsInput | number
+    totalPages?: IntFieldUpdateOperationsInput | number
+    estimatedAmount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: OrderDocumentUpdateManyWithoutOrderNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutPrintJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentReference?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalDocuments?: IntFieldUpdateOperationsInput | number
+    totalPages?: IntFieldUpdateOperationsInput | number
+    estimatedAmount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: OrderDocumentUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type PrinterUpsertWithoutPrintJobsInput = {
+    update: XOR<PrinterUpdateWithoutPrintJobsInput, PrinterUncheckedUpdateWithoutPrintJobsInput>
+    create: XOR<PrinterCreateWithoutPrintJobsInput, PrinterUncheckedCreateWithoutPrintJobsInput>
+    where?: PrinterWhereInput
+  }
+
+  export type PrinterUpdateToOneWithWhereWithoutPrintJobsInput = {
+    where?: PrinterWhereInput
+    data: XOR<PrinterUpdateWithoutPrintJobsInput, PrinterUncheckedUpdateWithoutPrintJobsInput>
+  }
+
+  export type PrinterUpdateWithoutPrintJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    windowsPrinterName?: StringFieldUpdateOperationsInput | string
+    displayName?: StringFieldUpdateOperationsInput | string
+    manufacturer?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionType?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    supportsColor?: BoolFieldUpdateOperationsInput | boolean
+    supportsDuplex?: BoolFieldUpdateOperationsInput | boolean
+    supportedPaperSizes?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    currentQueueCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: PrintAgentUpdateOneWithoutPrintersNestedInput
+    shop?: ShopUpdateOneRequiredWithoutPrintersNestedInput
+  }
+
+  export type PrinterUncheckedUpdateWithoutPrintJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shopId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    windowsPrinterName?: StringFieldUpdateOperationsInput | string
+    displayName?: StringFieldUpdateOperationsInput | string
+    manufacturer?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionType?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    supportsColor?: BoolFieldUpdateOperationsInput | boolean
+    supportsDuplex?: BoolFieldUpdateOperationsInput | boolean
+    supportedPaperSizes?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    currentQueueCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ShopCreateWithoutPricingRulesInput = {
     id?: string
     slug: string
@@ -25208,13 +25208,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
     customers?: CustomerCreateNestedManyWithoutShopInput
     orders?: OrderCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
     subscription?: SubscriptionCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutPricingRulesInput = {
@@ -25232,13 +25232,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
     customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
     orders?: OrderUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutPricingRulesInput = {
@@ -25272,13 +25272,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
     customers?: CustomerUpdateManyWithoutShopNestedInput
     orders?: OrderUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutPricingRulesInput = {
@@ -25296,13 +25296,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
     orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type SubscriptionCreateWithoutPlanInput = {
@@ -25368,59 +25368,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Subscription"> | Date | string
   }
 
-  export type ShopCreateWithoutSubscriptionInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
-    customers?: CustomerCreateNestedManyWithoutShopInput
-    orders?: OrderCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
-    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
-  }
-
-  export type ShopUncheckedCreateWithoutSubscriptionInput = {
-    id?: string
-    slug: string
-    name: string
-    phone: string
-    email: string
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    pincode?: string | null
-    gstNumber?: string | null
-    qrCodeUrl?: string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
-    orders?: OrderUncheckedCreateNestedManyWithoutShopInput
-    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
-    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
-  }
-
-  export type ShopCreateOrConnectWithoutSubscriptionInput = {
-    where: ShopWhereUniqueInput
-    create: XOR<ShopCreateWithoutSubscriptionInput, ShopUncheckedCreateWithoutSubscriptionInput>
-  }
-
   export type SubscriptionPlanCreateWithoutSubscriptionsInput = {
     id: string
     name: string
@@ -25448,63 +25395,57 @@ export namespace Prisma {
     create: XOR<SubscriptionPlanCreateWithoutSubscriptionsInput, SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput>
   }
 
-  export type ShopUpsertWithoutSubscriptionInput = {
-    update: XOR<ShopUpdateWithoutSubscriptionInput, ShopUncheckedUpdateWithoutSubscriptionInput>
+  export type ShopCreateWithoutSubscriptionInput = {
+    id?: string
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogCreateNestedManyWithoutShopInput
+    customers?: CustomerCreateNestedManyWithoutShopInput
+    orders?: OrderCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopUncheckedCreateWithoutSubscriptionInput = {
+    id?: string
+    slug: string
+    name: string
+    phone: string
+    email: string
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    pincode?: string | null
+    gstNumber?: string | null
+    qrCodeUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutShopInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
+    orders?: OrderUncheckedCreateNestedManyWithoutShopInput
+    pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
+    printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
+  }
+
+  export type ShopCreateOrConnectWithoutSubscriptionInput = {
+    where: ShopWhereUniqueInput
     create: XOR<ShopCreateWithoutSubscriptionInput, ShopUncheckedCreateWithoutSubscriptionInput>
-    where?: ShopWhereInput
-  }
-
-  export type ShopUpdateToOneWithWhereWithoutSubscriptionInput = {
-    where?: ShopWhereInput
-    data: XOR<ShopUpdateWithoutSubscriptionInput, ShopUncheckedUpdateWithoutSubscriptionInput>
-  }
-
-  export type ShopUpdateWithoutSubscriptionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
-    customers?: CustomerUpdateManyWithoutShopNestedInput
-    orders?: OrderUpdateManyWithoutShopNestedInput
-    pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
-    printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
-  }
-
-  export type ShopUncheckedUpdateWithoutSubscriptionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
-    orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
-    pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
-    printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type SubscriptionPlanUpsertWithoutSubscriptionsInput = {
@@ -25540,6 +25481,65 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ShopUpsertWithoutSubscriptionInput = {
+    update: XOR<ShopUpdateWithoutSubscriptionInput, ShopUncheckedUpdateWithoutSubscriptionInput>
+    create: XOR<ShopCreateWithoutSubscriptionInput, ShopUncheckedCreateWithoutSubscriptionInput>
+    where?: ShopWhereInput
+  }
+
+  export type ShopUpdateToOneWithWhereWithoutSubscriptionInput = {
+    where?: ShopWhereInput
+    data: XOR<ShopUpdateWithoutSubscriptionInput, ShopUncheckedUpdateWithoutSubscriptionInput>
+  }
+
+  export type ShopUpdateWithoutSubscriptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUpdateManyWithoutShopNestedInput
+    customers?: CustomerUpdateManyWithoutShopNestedInput
+    orders?: OrderUpdateManyWithoutShopNestedInput
+    pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
+    printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
+  }
+
+  export type ShopUncheckedUpdateWithoutSubscriptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    qrCodeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutShopNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
+    pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
+    printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
+  }
+
   export type ShopCreateWithoutAuditLogsInput = {
     id?: string
     slug: string
@@ -25555,13 +25555,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutShopInput
     customers?: CustomerCreateNestedManyWithoutShopInput
     orders?: OrderCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleCreateNestedManyWithoutShopInput
-    printers?: PrinterCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentCreateNestedManyWithoutShopInput
+    printers?: PrinterCreateNestedManyWithoutShopInput
     subscription?: SubscriptionCreateNestedOneWithoutShopInput
+    users?: UserCreateNestedManyWithoutShopInput
   }
 
   export type ShopUncheckedCreateWithoutAuditLogsInput = {
@@ -25579,13 +25579,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutShopInput
     customers?: CustomerUncheckedCreateNestedManyWithoutShopInput
     orders?: OrderUncheckedCreateNestedManyWithoutShopInput
     pricingRules?: PricingRuleUncheckedCreateNestedManyWithoutShopInput
-    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     printAgents?: PrintAgentUncheckedCreateNestedManyWithoutShopInput
+    printers?: PrinterUncheckedCreateNestedManyWithoutShopInput
     subscription?: SubscriptionUncheckedCreateNestedOneWithoutShopInput
+    users?: UserUncheckedCreateNestedManyWithoutShopInput
   }
 
   export type ShopCreateOrConnectWithoutAuditLogsInput = {
@@ -25650,13 +25650,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutShopNestedInput
     customers?: CustomerUpdateManyWithoutShopNestedInput
     orders?: OrderUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUpdateManyWithoutShopNestedInput
-    printers?: PrinterUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUpdateManyWithoutShopNestedInput
+    printers?: PrinterUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUpdateOneWithoutShopNestedInput
+    users?: UserUpdateManyWithoutShopNestedInput
   }
 
   export type ShopUncheckedUpdateWithoutAuditLogsInput = {
@@ -25674,13 +25674,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutShopNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutShopNestedInput
     orders?: OrderUncheckedUpdateManyWithoutShopNestedInput
     pricingRules?: PricingRuleUncheckedUpdateManyWithoutShopNestedInput
-    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     printAgents?: PrintAgentUncheckedUpdateManyWithoutShopNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutShopNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutShopNestedInput
+    users?: UserUncheckedUpdateManyWithoutShopNestedInput
   }
 
   export type UserUpsertWithoutAuditLogsInput = {
@@ -25720,16 +25720,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserCreateManyShopInput = {
+  export type AuditLogCreateManyShopInput = {
     id?: string
-    email: string
-    passwordHash: string
-    fullName: string
-    phone?: string | null
-    role?: string
-    isVerified?: boolean
+    userId?: string | null
+    action: string
+    entityType: string
+    entityId: string
+    details?: string | null
+    ipAddress?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type CustomerCreateManyShopInput = {
@@ -25771,6 +25770,18 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type PrintAgentCreateManyShopInput = {
+    id?: string
+    agentName: string
+    machineHostname?: string | null
+    osVersion?: string | null
+    ipAddress?: string | null
+    authTokenHash: string
+    isConnected?: boolean
+    lastHeartbeatAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type PrinterCreateManyShopInput = {
     id?: string
     agentId?: string | null
@@ -25790,65 +25801,49 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type PrintAgentCreateManyShopInput = {
+  export type UserCreateManyShopInput = {
     id?: string
-    agentName: string
-    machineHostname?: string | null
-    osVersion?: string | null
-    ipAddress?: string | null
-    authTokenHash: string
-    isConnected?: boolean
-    lastHeartbeatAt?: Date | string | null
+    email: string
+    passwordHash: string
+    fullName: string
+    phone?: string | null
+    role?: string
+    isVerified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type AuditLogCreateManyShopInput = {
-    id?: string
-    userId?: string | null
-    action: string
-    entityType: string
-    entityId: string
-    details?: string | null
-    ipAddress?: string | null
-    createdAt?: Date | string
-  }
-
-  export type UserUpdateWithoutShopInput = {
+  export type AuditLogUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    action?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    user?: UserUpdateOneWithoutAuditLogsNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutShopInput = {
+  export type AuditLogUncheckedUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateManyWithoutShopInput = {
+  export type AuditLogUncheckedUpdateManyWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CustomerUpdateWithoutShopInput = {
@@ -25894,8 +25889,8 @@ export namespace Prisma {
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     documents?: OrderDocumentUpdateManyWithoutOrderNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     printJobs?: PrintJobUpdateManyWithoutOrderNestedInput
   }
 
@@ -25974,6 +25969,46 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PrintAgentUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentName?: StringFieldUpdateOperationsInput | string
+    machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
+    osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    authTokenHash?: StringFieldUpdateOperationsInput | string
+    isConnected?: BoolFieldUpdateOperationsInput | boolean
+    lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    printJobs?: PrintJobUpdateManyWithoutAgentNestedInput
+    printers?: PrinterUpdateManyWithoutAgentNestedInput
+  }
+
+  export type PrintAgentUncheckedUpdateWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentName?: StringFieldUpdateOperationsInput | string
+    machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
+    osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    authTokenHash?: StringFieldUpdateOperationsInput | string
+    isConnected?: BoolFieldUpdateOperationsInput | boolean
+    lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    printJobs?: PrintJobUncheckedUpdateManyWithoutAgentNestedInput
+    printers?: PrinterUncheckedUpdateManyWithoutAgentNestedInput
+  }
+
+  export type PrintAgentUncheckedUpdateManyWithoutShopInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentName?: StringFieldUpdateOperationsInput | string
+    machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
+    osVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    authTokenHash?: StringFieldUpdateOperationsInput | string
+    isConnected?: BoolFieldUpdateOperationsInput | boolean
+    lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PrinterUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
     windowsPrinterName?: StringFieldUpdateOperationsInput | string
@@ -25990,8 +26025,8 @@ export namespace Prisma {
     currentQueueCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    agent?: PrintAgentUpdateOneWithoutPrintersNestedInput
     printJobs?: PrintJobUpdateManyWithoutPrinterNestedInput
+    agent?: PrintAgentUpdateOneWithoutPrintersNestedInput
   }
 
   export type PrinterUncheckedUpdateWithoutShopInput = {
@@ -26033,77 +26068,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PrintAgentUpdateWithoutShopInput = {
+  export type UserUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
-    agentName?: StringFieldUpdateOperationsInput | string
-    machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
-    osVersion?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    authTokenHash?: StringFieldUpdateOperationsInput | string
-    isConnected?: BoolFieldUpdateOperationsInput | boolean
-    lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    printers?: PrinterUpdateManyWithoutAgentNestedInput
-    printJobs?: PrintJobUpdateManyWithoutAgentNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
   }
 
-  export type PrintAgentUncheckedUpdateWithoutShopInput = {
+  export type UserUncheckedUpdateWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
-    agentName?: StringFieldUpdateOperationsInput | string
-    machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
-    osVersion?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    authTokenHash?: StringFieldUpdateOperationsInput | string
-    isConnected?: BoolFieldUpdateOperationsInput | boolean
-    lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    printers?: PrinterUncheckedUpdateManyWithoutAgentNestedInput
-    printJobs?: PrintJobUncheckedUpdateManyWithoutAgentNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type PrintAgentUncheckedUpdateManyWithoutShopInput = {
+  export type UserUncheckedUpdateManyWithoutShopInput = {
     id?: StringFieldUpdateOperationsInput | string
-    agentName?: StringFieldUpdateOperationsInput | string
-    machineHostname?: NullableStringFieldUpdateOperationsInput | string | null
-    osVersion?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    authTokenHash?: StringFieldUpdateOperationsInput | string
-    isConnected?: BoolFieldUpdateOperationsInput | boolean
-    lastHeartbeatAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AuditLogUpdateWithoutShopInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    entityType?: StringFieldUpdateOperationsInput | string
-    entityId?: StringFieldUpdateOperationsInput | string
-    details?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneWithoutAuditLogsNestedInput
-  }
-
-  export type AuditLogUncheckedUpdateWithoutShopInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    action?: StringFieldUpdateOperationsInput | string
-    entityType?: StringFieldUpdateOperationsInput | string
-    entityId?: StringFieldUpdateOperationsInput | string
-    details?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AuditLogUncheckedUpdateManyWithoutShopInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    action?: StringFieldUpdateOperationsInput | string
-    entityType?: StringFieldUpdateOperationsInput | string
-    entityId?: StringFieldUpdateOperationsInput | string
-    details?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AuditLogCreateManyUserInput = {
@@ -26187,8 +26187,8 @@ export namespace Prisma {
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
     documents?: OrderDocumentUpdateManyWithoutOrderNestedInput
+    shop?: ShopUpdateOneRequiredWithoutOrdersNestedInput
     printJobs?: PrintJobUpdateManyWithoutOrderNestedInput
   }
 
@@ -26307,9 +26307,9 @@ export namespace Prisma {
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: PrintAgentUpdateOneWithoutPrintJobsNestedInput
     document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
     printer?: PrinterUpdateOneWithoutPrintJobsNestedInput
-    agent?: PrintAgentUpdateOneWithoutPrintJobsNestedInput
   }
 
   export type PrintJobUncheckedUpdateWithoutOrderInput = {
@@ -26359,9 +26359,9 @@ export namespace Prisma {
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: PrintAgentUpdateOneWithoutPrintJobsNestedInput
     order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
     printer?: PrinterUpdateOneWithoutPrintJobsNestedInput
-    agent?: PrintAgentUpdateOneWithoutPrintJobsNestedInput
   }
 
   export type PrintJobUncheckedUpdateWithoutDocumentInput = {
@@ -26390,6 +26390,19 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PrintJobCreateManyAgentInput = {
+    id?: string
+    orderId: string
+    documentId: string
+    printerId?: string | null
+    status?: string
+    spoolerJobId?: number | null
+    errorMessage?: string | null
+    dispatchedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type PrinterCreateManyAgentInput = {
     id?: string
     shopId: string
@@ -26409,17 +26422,43 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type PrintJobCreateManyAgentInput = {
-    id?: string
-    orderId: string
-    documentId: string
-    printerId?: string | null
-    status?: string
-    spoolerJobId?: number | null
-    errorMessage?: string | null
-    dispatchedAt?: Date | string | null
-    completedAt?: Date | string | null
-    createdAt?: Date | string
+  export type PrintJobUpdateWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    spoolerJobId?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
+    order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
+    printer?: PrinterUpdateOneWithoutPrintJobsNestedInput
+  }
+
+  export type PrintJobUncheckedUpdateWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    printerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    spoolerJobId?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrintJobUncheckedUpdateManyWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    printerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    spoolerJobId?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PrinterUpdateWithoutAgentInput = {
@@ -26438,8 +26477,8 @@ export namespace Prisma {
     currentQueueCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    shop?: ShopUpdateOneRequiredWithoutPrintersNestedInput
     printJobs?: PrintJobUpdateManyWithoutPrinterNestedInput
+    shop?: ShopUpdateOneRequiredWithoutPrintersNestedInput
   }
 
   export type PrinterUncheckedUpdateWithoutAgentInput = {
@@ -26481,45 +26520,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PrintJobUpdateWithoutAgentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    spoolerJobId?: NullableIntFieldUpdateOperationsInput | number | null
-    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
-    document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
-    printer?: PrinterUpdateOneWithoutPrintJobsNestedInput
-  }
-
-  export type PrintJobUncheckedUpdateWithoutAgentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    documentId?: StringFieldUpdateOperationsInput | string
-    printerId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    spoolerJobId?: NullableIntFieldUpdateOperationsInput | number | null
-    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PrintJobUncheckedUpdateManyWithoutAgentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    documentId?: StringFieldUpdateOperationsInput | string
-    printerId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    spoolerJobId?: NullableIntFieldUpdateOperationsInput | number | null
-    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type PrintJobCreateManyPrinterInput = {
     id?: string
     orderId: string
@@ -26541,9 +26541,9 @@ export namespace Prisma {
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
-    document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
     agent?: PrintAgentUpdateOneWithoutPrintJobsNestedInput
+    document?: OrderDocumentUpdateOneRequiredWithoutPrintJobsNestedInput
+    order?: OrderUpdateOneRequiredWithoutPrintJobsNestedInput
   }
 
   export type PrintJobUncheckedUpdateWithoutPrinterInput = {

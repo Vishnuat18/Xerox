@@ -1,17 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { 
   Check, 
   AlertCircle, 
-  Sparkles, 
-  CreditCard, 
-  ArrowUpRight, 
-  ShieldCheck, 
-  Clock,
-  Calendar
+  Store, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Building2, 
+  Map, 
+  LayoutGrid, 
+  FileText, 
+  Lock
 } from 'lucide-react';
+import { RateCardClient } from '../pricing/rate-card-client';
 
 interface ShopProfile {
   id: string;
@@ -26,34 +29,23 @@ interface ShopProfile {
   gstNumber?: string;
 }
 
-interface SubscriptionData {
-  planId: string;
-  planName: string;
-  monthlyPrice: number;
-  status: 'TRIALING' | 'ACTIVE' | 'EXPIRED';
-  daysRemaining: number;
-  daysElapsed: number;
-  isExpired: boolean;
-  features: string[];
-}
-
 export default function ShopSettingsPage() {
+  const [activeTab, setActiveTab] = useState<'SHOP' | 'RATE_CARD'>('SHOP');
   const [profile, setProfile] = useState<ShopProfile | null>(null);
-  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/v1/shops/profile').then((res) => res.json()),
-      fetch('/api/v1/shops/subscription').then((res) => res.json()),
-    ])
-      .then(([profJson, subJson]) => {
-        if (profJson.success) setProfile(profJson.data.shop);
-        if (subJson.success && subJson.data?.subscription) setSubscription(subJson.data.subscription);
+    fetch('/api/v1/shops/profile')
+      .then((res) => res.json())
+      .then((profJson) => {
+        if (profJson.success && profJson.data?.shop) {
+          setProfile(profJson.data.shop);
+        }
       })
+      .catch((err) => setErrorMessage((err as Error).message))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -65,8 +57,8 @@ export default function ShopSettingsPage() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!profile) return;
 
     setIsSaving(true);
@@ -106,200 +98,235 @@ export default function ShopSettingsPage() {
   if (!profile) {
     return (
       <div className="py-20 text-center text-xs text-zinc-500">
-        Failed to load profile.
+        Failed to load profile details.
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl space-y-8">
-      {/* Header */}
-      <div className="pb-4 border-b border-zinc-200/70 flex items-center justify-between">
+    <div className="space-y-6 w-full">
+      {/* Top Header & Save Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-lg font-bold text-zinc-900 tracking-tight">
-            Shop Profile & Membership
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
+            Shop Profile
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Manage your store details, billing cycle, and subscription status.
+          <p className="text-xs sm:text-sm text-zinc-500 mt-1">
+            Manage your shop details, billing cycle and subscription status.
           </p>
         </div>
 
-        {saved && (
-          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-            <Check className="h-3.5 w-3.5" /> Saved
-          </span>
-        )}
-      </div>
+        <div className="flex items-center gap-3">
+          {saved && (
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+              <Check className="h-3.5 w-3.5" /> Saved
+            </span>
+          )}
 
-      {/* Subscription Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 text-white p-6 shadow-md border border-zinc-700/80">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
-                <Sparkles className="h-3 w-3" />
-                Smart Print Hub Pro
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                {subscription?.status === 'ACTIVE' ? 'Active Member' : '30-Day Free Trial'}
-              </span>
-            </div>
-
-            <h2 className="text-xl font-bold text-white tracking-tight">
-              {subscription?.planName || 'Business Pro Hub'}
-            </h2>
-
-            <p className="text-xs text-zinc-300 max-w-md leading-relaxed">
-              Automatic daily renewal runs every day at <strong className="text-white">12:00 AM Midnight</strong>. All zero-download spooling and live counter queue features are fully enabled.
-            </p>
-
-            <div className="flex items-center gap-4 text-xs text-zinc-400 pt-1">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5 text-amber-300" />
-                <span>
-                  {subscription?.isExpired ? 'Trial Expired' : `${subscription?.daysRemaining ?? 28} Days Remaining`}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-emerald-400" />
-                <span>Renews Daily 12:00 AM</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="shrink-0 flex flex-col gap-2">
-            <Link
-              href="/dashboard/pricing"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-semibold text-xs transition-all shadow-sm"
+          {activeTab === 'SHOP' && (
+            <button
+              type="button"
+              onClick={() => handleSubmit()}
+              disabled={isSaving}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white font-medium text-xs sm:text-sm transition-all shadow-sm disabled:opacity-50"
             >
-              <CreditCard className="h-4 w-4" />
-              Manage Subscription
-              <ArrowUpRight className="h-3.5 w-3.5 text-zinc-400" />
-            </Link>
-          </div>
+              <Lock className="h-4 w-4 text-zinc-300" />
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+          )}
         </div>
       </div>
 
+      {/* Navigation Pills */}
+      <div className="inline-flex items-center gap-1 p-1 bg-zinc-100 rounded-2xl border border-zinc-200/80">
+        <button
+          type="button"
+          onClick={() => setActiveTab('SHOP')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+            activeTab === 'SHOP'
+              ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/60'
+              : 'text-zinc-600 hover:text-zinc-900 font-medium'
+          }`}
+        >
+          Shop Profile
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('RATE_CARD')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+            activeTab === 'RATE_CARD'
+              ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/60'
+              : 'text-zinc-600 hover:text-zinc-900 font-medium'
+          }`}
+        >
+          Print Rate Card
+        </button>
+      </div>
+
       {errorMessage && (
-        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-          <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600" />
+        <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
           <span>{errorMessage}</span>
         </div>
       )}
 
-      {/* Profile Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-2xs">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
-          Shop Identification Details
-        </h3>
-
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-zinc-700">Shop Name</label>
-          <input
-            type="text"
-            name="name"
-            required
-            value={profile.name}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-700">Phone</label>
-            <input
-              type="text"
-              name="phone"
-              required
-              value={profile.phone}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+      {/* TAB CONTENT: SHOP PROFILE */}
+      {activeTab === 'SHOP' && (
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          {/* Left Xerox Printer Photo Card */}
+          <div className="lg:col-span-4 relative rounded-3xl border border-zinc-200/80 overflow-hidden shadow-xs min-h-[320px] lg:min-h-[460px] bg-zinc-100 flex flex-col">
+            <img
+              src="https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=800"
+              alt="Xerox Multi-Print Hub Printer"
+              className="absolute inset-0 w-full h-full object-cover object-center"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 pointer-events-none" />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              required
-              value={profile.email}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-            />
+          {/* Right Form Container Card */}
+          <div className="lg:col-span-8 bg-white rounded-3xl border border-zinc-200/80 p-6 sm:p-7 shadow-xs space-y-5">
+            {/* Shop Name */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-500">Shop Name</label>
+              <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                <Store className="h-4 w-4 text-zinc-800 shrink-0" />
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  value={profile.name}
+                  onChange={handleChange}
+                  placeholder="Metro Xerox & Multi-Print Hub"
+                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                />
+              </div>
+            </div>
+
+            {/* Phone & Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-500">Phone</label>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                  <Phone className="h-4 w-4 text-zinc-800 shrink-0" />
+                  <input
+                    type="text"
+                    name="phone"
+                    required
+                    value={profile.phone}
+                    onChange={handleChange}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-500">Email</label>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                  <Mail className="h-4 w-4 text-zinc-800 shrink-0" />
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={profile.email}
+                    onChange={handleChange}
+                    placeholder="contact@metroxerox.com"
+                    className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-500">Address</label>
+              <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                <MapPin className="h-4 w-4 text-zinc-800 shrink-0" />
+                <input
+                  type="text"
+                  name="address"
+                  value={profile.address || ''}
+                  onChange={handleChange}
+                  placeholder="Shop #4, College Cross Road, Tech Junction"
+                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                />
+              </div>
+            </div>
+
+            {/* City, State, PIN Code */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-500">City</label>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                  <Building2 className="h-4 w-4 text-zinc-800 shrink-0" />
+                  <input
+                    type="text"
+                    name="city"
+                    value={profile.city || ''}
+                    onChange={handleChange}
+                    placeholder="Bangalore"
+                    className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-500">State</label>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                  <Map className="h-4 w-4 text-zinc-800 shrink-0" />
+                  <input
+                    type="text"
+                    name="state"
+                    value={profile.state || ''}
+                    onChange={handleChange}
+                    placeholder="Karnataka"
+                    className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-500">PIN Code</label>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                  <LayoutGrid className="h-4 w-4 text-zinc-800 shrink-0" />
+                  <input
+                    type="text"
+                    name="pincode"
+                    value={profile.pincode || ''}
+                    onChange={handleChange}
+                    placeholder="560001"
+                    className="w-full bg-transparent text-xs sm:text-sm font-medium text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* GSTIN / Tax ID */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-500">GSTIN / Tax ID</label>
+              <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-zinc-200/90 bg-white focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
+                <FileText className="h-4 w-4 text-zinc-800 shrink-0" />
+                <input
+                  type="text"
+                  name="gstNumber"
+                  value={profile.gstNumber || ''}
+                  onChange={handleChange}
+                  placeholder="29ABCDE1234F1Z5"
+                  className="w-full bg-transparent text-xs sm:text-sm font-medium font-mono uppercase text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                />
+              </div>
+            </div>
           </div>
+        </form>
+      )}
+
+      {/* TAB CONTENT: RATE CARD */}
+      {activeTab === 'RATE_CARD' && (
+        <div className="bg-white rounded-3xl border border-zinc-200/80 p-6 sm:p-7 shadow-xs">
+          <RateCardClient />
         </div>
-
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-zinc-700">Address</label>
-          <input
-            type="text"
-            name="address"
-            value={profile.address || ''}
-            onChange={handleChange}
-            placeholder="Street address"
-            className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-          />
-        </div>
-
-        <div className="grid grid-cols-3 gap-3">
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-700">City</label>
-            <input
-              type="text"
-              name="city"
-              value={profile.city || ''}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-700">State</label>
-            <input
-              type="text"
-              name="state"
-              value={profile.state || ''}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-700">PIN Code</label>
-            <input
-              type="text"
-              name="pincode"
-              value={profile.pincode || ''}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-zinc-700">GSTIN / Tax ID</label>
-          <input
-            type="text"
-            name="gstNumber"
-            value={profile.gstNumber || ''}
-            onChange={handleChange}
-            placeholder="Optional"
-            className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-mono text-zinc-900 uppercase focus:outline-none focus:ring-1 focus:ring-zinc-900"
-          />
-        </div>
-
-        <div className="pt-3 flex justify-end">
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white transition-all disabled:opacity-50 shadow-xs"
-          >
-            {isSaving ? 'Saving...' : 'Save Profile Changes'}
-          </button>
-        </div>
-      </form>
+      )}
     </div>
   );
 }
+

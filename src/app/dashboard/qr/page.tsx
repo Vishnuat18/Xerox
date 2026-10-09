@@ -6,7 +6,10 @@ import {
   Printer, 
   Copy, 
   Check, 
-  Smartphone 
+  ExternalLink,
+  QrCode,
+  FileText,
+  Smartphone
 } from 'lucide-react';
 
 interface QRData {
@@ -61,8 +64,9 @@ export default function QRManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="py-20 flex items-center justify-center">
-        <div className="animate-spin h-5 w-5 border-2 border-zinc-900 border-t-transparent rounded-full" />
+      <div className="py-24 flex flex-col items-center justify-center space-y-3">
+        <div className="animate-spin h-7 w-7 border-2 border-zinc-900 border-t-transparent rounded-full" />
+        <p className="text-xs font-medium text-zinc-500">Loading Counter QR...</p>
       </div>
     );
   }
@@ -78,102 +82,164 @@ export default function QRManagementPage() {
   return (
     <div className="space-y-6">
       
-      {/* Header Controls (Hidden during printing) */}
-      <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-200/70">
+      {/* Header Controls Bar (Hidden during window.print()) */}
+      <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-base font-semibold text-zinc-900 tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
             Counter QR Standee
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-sm text-zinc-500 mt-1">
             Print and display on your counter for customer self-service uploads.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Top Right Action Buttons */}
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={handleCopyLink}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 transition-all shadow-2xs"
           >
-            {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 text-zinc-400" />}
-            {copied ? 'Copied' : 'Copy Link'}
+            {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <ExternalLink className="h-4 w-4 text-zinc-500" />}
+            <span>{copied ? 'Copied!' : 'Copy Link'}</span>
           </button>
 
           <button
             onClick={handleDownloadPNG}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 transition-all shadow-2xs"
           >
-            <Download className="h-3.5 w-3.5 text-zinc-400" />
-            PNG
+            <Download className="h-4 w-4 text-zinc-500" />
+            <span>Download PNG</span>
           </button>
 
           <button
             onClick={handlePrintStandee}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-white transition-all shadow-2xs"
+            className="inline-flex items-center gap-2 px-4.5 py-2 rounded-xl text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-white transition-all shadow-sm"
           >
-            <Printer className="h-3.5 w-3.5" />
-            Print A4 Standee
+            <Printer className="h-4 w-4" />
+            <span>Print A4 Standee</span>
           </button>
         </div>
       </div>
 
-      {/* Standee Preview / Printable Canvas */}
-      <div className="flex justify-center">
-        <div className="bg-white rounded-2xl border border-zinc-200/80 p-8 sm:p-10 shadow-sm max-w-md w-full text-center space-y-6 print:border-none print:shadow-none print:p-0 print:max-w-none">
+      {/* Main Dual Card Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        
+        {/* ======================================================== */}
+        {/* LEFT CARD: Counter QR Preview Standee Box               */}
+        {/* ======================================================== */}
+        <div className="lg:col-span-7 bg-white border border-zinc-200/90 rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col items-center justify-center text-center print:border-none print:shadow-none print:p-0 print:w-full">
           
-          <div className="space-y-1">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-400 block">
-              Self-Service Print Counter
-            </span>
-            <h2 className="text-xl font-bold tracking-tight text-zinc-900 uppercase">
-              {data.shop.name}
-            </h2>
+          {/* Subheader Title */}
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 block font-sans">
+            SELF-SERVICE PRINT COUNTER
+          </span>
+          
+          {/* Shop Title */}
+          <h2 className="text-lg sm:text-xl font-black tracking-tight text-zinc-900 uppercase text-center mt-1 max-w-lg leading-tight">
+            {data.shop.name}
+          </h2>
+
+          {/* QR Code Centerpiece */}
+          <div className="my-4 p-3 bg-white border border-zinc-200 rounded-2xl inline-block shadow-2xs">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={data.qr.pngDataUrl}
+              alt={`${data.shop.name} QR Code`}
+              className="h-48 w-48 sm:h-56 sm:w-56 object-contain"
+            />
           </div>
 
-          {/* QR Centerpiece */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="p-3 bg-white rounded-xl border border-zinc-200 inline-block shadow-2xs">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={data.qr.pngDataUrl}
-                alt={`${data.shop.name} QR Code`}
-                className="h-52 w-52 object-contain"
-              />
+          {/* Scan Phone Camera Banner */}
+          <div className="flex flex-col items-center space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-900">
+              <FileText className="h-3.5 w-3.5 text-zinc-700" />
+              <span>Scan with Phone Camera</span>
             </div>
 
-            <div className="mt-4 space-y-1">
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-900">
-                <Smartphone className="h-3.5 w-3.5 text-emerald-600" />
-                Scan with Phone Camera
-              </div>
-              <p className="text-[11px] font-mono text-zinc-400">
-                {data.customerUrl}
-              </p>
+            {/* URL Copy Pill Container */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-100/80 border border-zinc-200/80 text-[11px] font-mono text-zinc-600 max-w-full">
+              <span className="truncate">{data.customerUrl}</span>
+              <button
+                onClick={handleCopyLink}
+                className="text-zinc-400 hover:text-zinc-900 transition-colors shrink-0"
+                title="Copy customer link"
+              >
+                {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+              </button>
             </div>
-          </div>
-
-          {/* 3 Step Instruction Strip */}
-          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-zinc-100 text-[11px] text-zinc-500">
-            <div className="p-2 rounded-lg bg-zinc-50 border border-zinc-100">
-              <span className="font-semibold text-zinc-900 block mb-0.5">1. Scan</span>
-              Point camera
-            </div>
-            <div className="p-2 rounded-lg bg-zinc-50 border border-zinc-100">
-              <span className="font-semibold text-zinc-900 block mb-0.5">2. Upload</span>
-              Choose files & specs
-            </div>
-            <div className="p-2 rounded-lg bg-zinc-50 border border-zinc-100">
-              <span className="font-semibold text-zinc-900 block mb-0.5">3. Collect</span>
-              Pick up at counter
-            </div>
-          </div>
-
-          <div className="text-[10px] text-zinc-400 pt-2 font-mono">
-            Smart Print Hub • No App Required
           </div>
 
         </div>
+
+        {/* ======================================================== */}
+        {/* RIGHT CARD: How It Works Step-by-Step Guidance           */}
+        {/* ======================================================== */}
+        <div className="lg:col-span-5 bg-white border border-zinc-200/90 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between print:hidden">
+          <h3 className="text-base font-bold text-zinc-900 mb-4 tracking-tight">
+            How it works?
+          </h3>
+
+          <div className="space-y-0 my-auto">
+            {/* Step 1 */}
+            <div className="flex items-start gap-3.5">
+              <div className="flex flex-col items-center">
+                <div className="h-10 w-10 rounded-xl bg-zinc-100/90 border border-zinc-200/60 flex items-center justify-center text-zinc-800 shrink-0">
+                  <QrCode className="h-4.5 w-4.5" />
+                </div>
+                <div className="w-0.5 bg-zinc-200 h-8 my-0.5" />
+              </div>
+              <div className="pt-1">
+                <h4 className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <span className="text-emerald-500">•</span> Scan
+                </h4>
+                <p className="text-[11px] text-zinc-500 mt-0.5">
+                  Point camera at QR code
+                </p>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex items-start gap-3.5">
+              <div className="flex flex-col items-center">
+                <div className="h-10 w-10 rounded-xl bg-zinc-100/90 border border-zinc-200/60 flex items-center justify-center text-zinc-800 shrink-0">
+                  <FileText className="h-4.5 w-4.5" />
+                </div>
+                <div className="w-0.5 bg-zinc-200 h-8 my-0.5" />
+              </div>
+              <div className="pt-1">
+                <h4 className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <span className="text-emerald-500">•</span> Upload
+                </h4>
+                <p className="text-[11px] text-zinc-500 mt-0.5">
+                  Choose files & set print options
+                </p>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex items-start gap-3.5">
+              <div className="flex flex-col items-center">
+                <div className="h-10 w-10 rounded-xl bg-zinc-100/90 border border-zinc-200/60 flex items-center justify-center text-zinc-800 shrink-0">
+                  <Printer className="h-4.5 w-4.5" />
+                </div>
+              </div>
+              <div className="pt-1">
+                <h4 className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                  <span className="text-emerald-500">•</span> Collect
+                </h4>
+                <p className="text-[11px] text-zinc-500 mt-0.5">
+                  Pick up at counter
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
   );
 }
+
