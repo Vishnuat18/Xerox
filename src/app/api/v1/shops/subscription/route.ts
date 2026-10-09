@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
     const { planId, billingCycle = 'monthly', paymentMethod = 'UPI' } = body;
 
     const normalizedPlanId = (planId || 'BUSINESS').toUpperCase();
-    if (!['STARTER', 'BUSINESS', 'ENTERPRISE'].includes(normalizedPlanId)) {
-      throw new Error('Invalid plan selected. Supported: STARTER, BUSINESS, ENTERPRISE');
+    if (!['STARTER', 'BUSINESS', 'ENTERPRISE', 'FRANCHISE'].includes(normalizedPlanId)) {
+      throw new Error('Invalid plan selected. Supported: STARTER, BUSINESS, ENTERPRISE, FRANCHISE');
     }
 
     const periodEnd = new Date();

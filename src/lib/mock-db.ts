@@ -501,11 +501,11 @@ class MockDatabase {
         ...sub,
         plan: {
           id: sub.planId,
-          name: sub.planId === 'STARTER' ? 'Starter Hub' : sub.planId === 'ENTERPRISE' ? 'Enterprise Hub' : 'Business Pro',
-          monthlyPrice: sub.planId === 'STARTER' ? 100 : sub.planId === 'ENTERPRISE' ? 499 : 249,
-          yearlyPrice: sub.planId === 'STARTER' ? 85 : sub.planId === 'ENTERPRISE' ? 399 : 199,
-          maxPrinters: sub.planId === 'STARTER' ? 1 : sub.planId === 'ENTERPRISE' ? 999 : 4,
-          maxMonthlyOrders: sub.planId === 'STARTER' ? 500 : sub.planId === 'ENTERPRISE' ? 99999 : 5000,
+          name: sub.planId === 'STARTER' ? 'Starter Hub' : sub.planId === 'ENTERPRISE' ? 'Enterprise Hub' : sub.planId === 'FRANCHISE' ? 'Franchise Hub' : 'Business Pro',
+          monthlyPrice: sub.planId === 'STARTER' ? 100 : sub.planId === 'ENTERPRISE' ? 499 : sub.planId === 'FRANCHISE' ? 999 : 249,
+          yearlyPrice: sub.planId === 'STARTER' ? 80 : sub.planId === 'ENTERPRISE' ? 399 : sub.planId === 'FRANCHISE' ? 799 : 199,
+          maxPrinters: sub.planId === 'STARTER' ? 1 : sub.planId === 'ENTERPRISE' ? 999 : sub.planId === 'FRANCHISE' ? 9999 : 4,
+          maxMonthlyOrders: sub.planId === 'STARTER' ? 1500 : sub.planId === 'ENTERPRISE' ? 99999 : sub.planId === 'FRANCHISE' ? 999999 : 15000,
         },
       };
     }

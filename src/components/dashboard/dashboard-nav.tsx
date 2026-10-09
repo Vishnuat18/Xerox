@@ -15,7 +15,8 @@ import {
   Lock,
   ChevronRight,
   Menu,
-  X
+  X,
+  Wallet
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -79,10 +80,10 @@ export function DashboardNav({ shop, user }: DashboardNavProps) {
       locked: isExpired,
     },
     {
-      title: 'Shop Settings',
-      href: '/dashboard/settings',
-      icon: Sliders,
-      active: pathname === '/dashboard/settings',
+      title: 'Finance & Accounts',
+      href: '/dashboard/finance',
+      icon: Wallet,
+      active: pathname === '/dashboard/finance',
       locked: isExpired,
     },
     {
@@ -97,6 +98,13 @@ export function DashboardNav({ shop, user }: DashboardNavProps) {
       href: '/dashboard/qr',
       icon: QrCode,
       active: pathname === '/dashboard/qr',
+      locked: isExpired,
+    },
+    {
+      title: 'Shop Settings',
+      href: '/dashboard/settings',
+      icon: Sliders,
+      active: pathname === '/dashboard/settings',
       locked: isExpired,
     },
     {

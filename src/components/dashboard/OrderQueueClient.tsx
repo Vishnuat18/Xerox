@@ -576,14 +576,14 @@ export function OrderQueueClient({
       ) : (
         <div className="rounded-xl border border-zinc-200/80 bg-white overflow-hidden">
           {/* Table Header */}
-          <div className="hidden md:grid grid-cols-[50px_1fr_1.2fr_1.5fr_0.8fr_0.6fr_1fr_0.7fr] gap-0 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-            <span>#</span>
-            <span>Order</span>
+          <div className="hidden md:grid grid-cols-[45px_1fr_1.1fr_1.6fr_1.1fr_1fr_0.8fr_0.9fr] gap-2 px-4 py-2.5 border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider items-center">
+            <span>S.No</span>
+            <span>Order ID</span>
+            <span>Customer</span>
             <span>Documents</span>
-            <span>Details</span>
-            <span>Printer</span>
-            <span>Amount</span>
+            <span>Printer Assigned</span>
             <span>Status</span>
+            <span>Amount</span>
             <span className="text-right">Actions</span>
           </div>
 
@@ -600,14 +600,14 @@ export function OrderQueueClient({
               return (
                 <div 
                   key={order.id} 
-                  className="grid grid-cols-1 md:grid-cols-[50px_1fr_1.2fr_1.5fr_0.8fr_0.6fr_1fr_0.7fr] gap-0 px-4 py-3 hover:bg-zinc-50/50 transition-colors items-center group"
+                  className="grid grid-cols-1 md:grid-cols-[45px_1fr_1.1fr_1.6fr_1.1fr_1fr_0.8fr_0.9fr] gap-2 px-4 py-3 hover:bg-zinc-50/50 transition-colors items-center group"
                 >
-                  {/* # */}
+                  {/* S.No */}
                   <span className="hidden md:block text-[13px] font-mono text-zinc-400">
                     {String(index + 1).padStart(3, '0')}
                   </span>
 
-                  {/* Order Number / Date */}
+                  {/* Order ID / Date */}
                   <div className="min-w-0">
                     <button
                       onClick={() => handleOpenInspector(order)}
@@ -621,79 +621,106 @@ export function OrderQueueClient({
                     </p>
                   </div>
 
-                  {/* Documents */}
-                  <div className="min-w-0 py-1">
-                    {order.documents.slice(0, 2).map((doc, dIdx) => {
-                      const DocIcon = getDocumentIcon(doc.originalFilename);
-                      return (
-                        <div key={doc.id || dIdx} className="flex items-center gap-1.5 truncate">
-                          <DocIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                          <span className="text-[12px] text-zinc-700 truncate">{doc.originalFilename}</span>
-                        </div>
-                      );
-                    })}
-                    {order.documents.length > 2 && (
-                      <span className="text-[11px] text-zinc-400 pl-5">+{order.documents.length - 2} more</span>
-                    )}
+                  {/* Customer */}
+                  <div className="min-w-0 pr-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-6 w-6 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold text-[10px] flex items-center justify-center shrink-0">
+                        {order.customer?.fullName ? order.customer.fullName.charAt(0).toUpperCase() : 'C'}
+                      </div>
+                      <span className="text-[12px] font-bold text-zinc-900 truncate">
+                        {order.customer?.fullName || 'Walk-in'}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-zinc-400 font-mono truncate pl-7.5">
+                      {order.customer?.phone ? `+91 ${order.customer.phone.replace(/[^0-9]/g, '').slice(-10)}` : 'No phone'}
+                    </p>
                   </div>
 
-                  {/* Details - Print Specs */}
-                  <div className="flex flex-wrap items-center gap-1 py-1">
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
-                      <MultiplePagesIcon className="h-3 w-3 text-zinc-500 shrink-0" />
-                      {order.totalPages} Pgs
-                    </span>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
-                      {specs?.copies || 1} Copies
-                    </span>
-                    {isColor ? (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                        <ColorPrintingIcon className="h-3 w-3 shrink-0" />
-                        Color
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
-                        <BlackWhiteIcon className="h-3 w-3 text-zinc-600 shrink-0" />
-                        B&amp;W
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
-                      {isDuplex ? (
-                        <>
-                          <TwoSidedIcon className="h-3 w-3 text-zinc-600 shrink-0" />
-                          2-Sided
-                        </>
-                      ) : (
-                        <>
-                          <OneSidedIcon className="h-3 w-3 text-zinc-600 shrink-0" />
-                          1-Sided
-                        </>
+                  {/* Documents & Specs */}
+                  <div className="min-w-0 py-1 space-y-1">
+                    <div className="space-y-0.5">
+                      {order.documents.slice(0, 2).map((doc, dIdx) => {
+                        const DocIcon = getDocumentIcon(doc.originalFilename);
+                        return (
+                          <div key={doc.id || dIdx} className="flex items-center gap-1.5 truncate">
+                            <DocIcon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                            <span className="text-[12px] text-zinc-700 truncate">{doc.originalFilename}</span>
+                          </div>
+                        );
+                      })}
+                      {order.documents.length > 2 && (
+                        <span className="text-[10px] text-zinc-400 pl-5">+{order.documents.length - 2} more</span>
                       )}
-                    </span>
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
-                      <A4SizeIcon className="h-3 w-3 text-zinc-600 shrink-0" />
-                      {specs?.paperSize || 'A4'}
-                    </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                        <MultiplePagesIcon className="h-3 w-3 text-zinc-500 shrink-0" />
+                        {order.totalPages} Pgs
+                      </span>
+                      {isColor ? (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                          <ColorPrintingIcon className="h-3 w-3 shrink-0" />
+                          Color
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                          <BlackWhiteIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                          B&amp;W
+                        </span>
+                      )}
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                        {isDuplex ? (
+                          <>
+                            <TwoSidedIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                            2-Sided
+                          </>
+                        ) : (
+                          <>
+                            <OneSidedIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                            1-Sided
+                          </>
+                        )}
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                        <A4SizeIcon className="h-3 w-3 text-zinc-600 shrink-0" />
+                        {specs?.paperSize || 'A4'}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Printer */}
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <PrinterIconComp className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                    <span className="text-[12px] text-zinc-600 truncate">
-                      {printers[0]?.displayName || 'Unassigned'}
-                    </span>
-                  </div>
-
-                  {/* Amount */}
-                  <div>
-                    <span className="text-[13px] font-bold text-zinc-900">
-                      ₹{(order.finalAmount ?? order.estimatedAmount).toFixed(0)}
-                    </span>
+                  {/* Printer Assigned */}
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="h-7 w-7 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center shrink-0 text-zinc-800">
+                      <PrinterIconComp className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[12px] font-semibold text-zinc-800 truncate block">
+                        {printers[0]?.displayName || 'Main Machine'}
+                      </span>
+                      <span className="text-[10px] text-zinc-400 block font-mono">
+                        Assigned
+                      </span>
+                    </div>
                   </div>
 
                   {/* Status */}
                   <div>
                     {getStatusBadge(order.status, index + 1)}
+                  </div>
+
+                  {/* Amount */}
+                  <div>
+                    <span className="text-[13px] font-bold text-zinc-900 block">
+                      ₹{(order.finalAmount ?? order.estimatedAmount).toFixed(0)}
+                    </span>
+                    <span className={`inline-block text-[9px] font-semibold px-1.5 py-0.2 rounded-full border ${
+                      order.paymentStatus === 'PAID'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
+                        : 'bg-amber-50 text-amber-700 border-amber-200/60'
+                    }`}>
+                      {order.paymentStatus === 'PAID' ? 'Paid' : 'Unpaid'}
+                    </span>
                   </div>
 
                   {/* Actions */}

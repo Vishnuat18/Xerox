@@ -2,9 +2,10 @@
 // Daily renewal at 12:00 AM, 30-day trial calculation & plan upgrades
 
 export interface ShopSubscriptionDetails {
-  planId: 'STARTER' | 'BUSINESS' | 'ENTERPRISE' | 'TRIAL';
+  planId: 'STARTER' | 'BUSINESS' | 'ENTERPRISE' | 'FRANCHISE' | 'TRIAL';
   planName: string;
   monthlyPrice: number;
+  yearlyPrice: number;
   status: 'TRIALING' | 'ACTIVE' | 'PAST_DUE' | 'EXPIRED';
   trialStartAt: Date;
   trialEndAt: Date;
@@ -43,22 +44,61 @@ export function calculateSubscriptionDetails(subscription?: {
 
   let planName = 'Starter Hub (₹100/mo)';
   let monthlyPrice = 100;
-  let features = ['1 Connected Printer', 'Standard Queue', 'Basic Support'];
+  let yearlyPrice = 80;
+  let features = [
+    '1 Connected Windows Printer',
+    'Up to 1,500 monthly jobs',
+    'Standard QR document upload',
+    'Automatic PDF page counting & ISO preview',
+    'Manual print dialog trigger',
+    'Standard Cash & UPI rate collection'
+  ];
 
   if (planIdRaw === 'BUSINESS' || rawStatus === 'TRIALING') {
     planName = rawStatus === 'TRIALING' ? 'Professional Hub (30-Day Free Access)' : 'Business Pro (₹249/mo)';
     monthlyPrice = 249;
-    features = ['Up to 4 Connected Printers', 'Zero-Download Live Spooling', 'WhatsApp Ready', 'Custom Rates & Finishing'];
+    yearlyPrice = 199;
+    features = [
+      'Up to 4 Connected Printers',
+      'Up to 15,000 monthly jobs',
+      'Zero-download native silent spooling',
+      'WhatsApp order pickup notifications',
+      'Custom finishing rules (Spiral, Lamination, Hardcover)',
+      'Automated bulk quantity discount tiers',
+      'Daily sales & page count summary'
+    ];
   } else if (planIdRaw === 'ENTERPRISE') {
     planName = 'Enterprise Pro (₹499/mo)';
     monthlyPrice = 499;
-    features = ['Unlimited Printers', 'Multi-Counter Logins', 'Custom Domain', 'VIP 24/7 Setup'];
+    yearlyPrice = 399;
+    features = [
+      'Unlimited printers & background spoolers',
+      'Unlimited monthly customer orders',
+      'Multi-counter logins & staff operator PINs',
+      'Full Finance & Cashflow Management ledger',
+      'Customer Khata / Credit book with reminders',
+      'Custom shop logo & branding on counter QR & receipts',
+      'Split queue routing (B&W machine vs Color laser)'
+    ];
+  } else if (planIdRaw === 'FRANCHISE') {
+    planName = 'Franchise Hub (₹999/mo)';
+    monthlyPrice = 999;
+    yearlyPrice = 799;
+    features = [
+      'Multi-branch centralized owner dashboard',
+      'Inter-branch order routing & load balancing',
+      'Centralized rate card & master price sync',
+      'Consolidated multi-counter GST & audit reports',
+      'REST API & Webhook access for ERP/POS sync',
+      'Dedicated 24/7 priority SLA & custom domain'
+    ];
   }
 
   return {
     planId: (planIdRaw as any) || 'BUSINESS',
     planName,
     monthlyPrice,
+    yearlyPrice,
     status: isPaidActive ? 'ACTIVE' : isExpired ? 'EXPIRED' : 'TRIALING',
     trialStartAt: trialStart,
     trialEndAt: trialEnd,
