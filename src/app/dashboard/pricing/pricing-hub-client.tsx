@@ -32,19 +32,20 @@ interface SubscriptionData {
 const SUBSCRIPTION_PLANS: PricingTier[] = [
   {
     id: 'starter',
-    name: 'Starter Hub',
+    name: 'Starter',
     price: {
       monthly: 100,
       yearly: 80,
     },
-    description: 'Essential digital counter toolkit for small Xerox shops & stationery stalls',
+    description: 'Essential toolkit for single-counter Xerox shops & stationery desks',
     features: [
       '1 Connected Windows Printer',
-      'Up to 1,500 monthly customer orders',
-      'Counter QR document upload',
-      'Automatic PDF page counting & preview',
-      'Standard Cash & UPI rate collection',
-      'Community & email support',
+      'Up to 1,000 monthly orders',
+      '25MB file upload limit per order',
+      'Standard counter QR standee',
+      'Standard B&W & Color rate card',
+      'Browser print dialog trigger',
+      'Community guides & basic support',
     ],
     cta: 'Select Starter',
   },
@@ -55,55 +56,58 @@ const SUBSCRIPTION_PLANS: PricingTier[] = [
       monthly: 249,
       yearly: 199,
     },
-    description: 'High-speed automation for busy xerox centers, college hubs & cyber cafes',
+    description: 'High performance for busy Xerox shops & campus copy centers',
     features: [
-      'Up to 4 Connected Printers & MFPs',
-      'Up to 15,000 monthly customer orders',
+      'Up to 4 Connected Printers simultaneously',
+      'Up to 10,000 monthly orders',
+      '75MB file upload limit per order',
       'Zero-download native silent spooling',
-      'WhatsApp order pickup notifications',
-      'Custom finishing rules (Spiral, Hardcover)',
-      'Automated bulk quantity discount tiers',
-      'Daily sales & page volume reports',
+      'WhatsApp order ready pickup notifications',
+      'Custom finishing rules (Spiral, Lamination)',
+      'Automated bulk volume discounts',
+      'Up to 2 Staff Operator PIN logins',
+      'Priority WhatsApp & remote setup support',
     ],
     cta: 'Active Plan',
     popular: true,
   },
   {
     id: 'enterprise',
-    name: 'Enterprise Hub',
+    name: 'Enterprise Pro',
     price: {
       monthly: 499,
       yearly: 399,
     },
-    description: 'Complete operating system for high-volume, multi-counter print establishments',
+    description: 'Powerhouse for high-volume 24x7 print hubs & commercial presses',
     features: [
-      'Unlimited printers & background spoolers',
+      'Unlimited printers & background spool agents',
       'Unlimited monthly customer orders',
-      'Multi-counter logins & staff operator PINs',
-      'Full Finance & Cashflow Management ledger',
-      'Customer Khata / Credit book with reminders',
-      'Cost-Per-Page (CPP) & margin simulator',
-      'Custom shop logo & branding on QR/receipts',
-      'Split queue routing (B&W machine vs Color)',
+      '250MB high-res file upload limit',
+      'Multi-counter split queue (B&W vs Color router)',
+      'Unlimited Staff & Operator PIN logins with audit',
+      'Custom shop branding & custom logo on receipts',
+      'Custom domain & subdomain mapping',
+      'REST API & Spooler Webhooks',
+      'Dedicated VIP Manager & 1-hour SLA',
     ],
     cta: 'Select Enterprise',
   },
   {
     id: 'franchise',
-    name: 'Franchise Chain',
+    name: 'Franchise Hub',
     price: {
       monthly: 999,
       yearly: 799,
     },
-    description: 'Enterprise command center for multi-branch xerox networks & campus franchises',
+    description: 'Centralized multi-branch network for printing franchises & chains',
     features: [
-      'Multi-branch centralized owner dashboard',
+      'Centralized multi-branch owner console',
       'Inter-branch order routing & load balancing',
-      'Centralized rate card & master price sync',
-      'Consolidated multi-store GST & cash audits',
-      'REST API & Webhooks for ERP/POS sync',
-      'Corporate accounts & monthly billing ledger',
-      'Dedicated 24/7 phone SLA & setup manager',
+      'Master rate card sync across all branches',
+      'Printer fleet toner & drum telemetry alerts',
+      'Consolidated multi-counter audit reports',
+      'Dedicated Android Kiosk mode',
+      '24/7 Phone SLA & on-site setup concierge',
     ],
     cta: 'Select Franchise',
   },
@@ -257,10 +261,10 @@ export function PricingHubClient() {
         </button>
       </div>
 
-      {/* TAB 1: 4 Subscription Plan Cards Grid & Feature Escalation Matrix */}
+      {/* TAB 1: 4 Subscription Plan Cards Grid + Feature Escalation Matrix */}
       {activeTab === 'PLANS' && (
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-1 items-stretch">
+        <div className="space-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4.5 pt-1 items-stretch">
             {SUBSCRIPTION_PLANS.map((plan) => {
               const currentPlanName = subData?.planName?.toLowerCase() || 'business';
               const isCurrent = currentPlanName.includes(plan.id) || (plan.id === 'business' && !subData?.planId);
@@ -271,14 +275,22 @@ export function PricingHubClient() {
                   key={plan.id}
                   className={`rounded-2xl p-5 flex flex-col justify-between transition-all relative ${
                     isCurrent
-                      ? 'bg-white border-2 border-zinc-900 shadow-sm'
+                      ? 'bg-white border-2 border-zinc-900 shadow-sm ring-1 ring-zinc-900/10'
+                      : plan.popular
+                      ? 'bg-white border-2 border-emerald-600/80 shadow-2xs hover:border-emerald-600'
                       : 'bg-white border border-zinc-200/90 shadow-2xs hover:border-zinc-300'
                   }`}
                 >
-                  {/* Floating "Current Plan" Badge */}
+                  {/* Floating Badges */}
                   {isCurrent && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-wider shadow-2xs whitespace-nowrap">
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-full bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-wider shadow-2xs whitespace-nowrap z-10">
                       Current Plan
+                    </div>
+                  )}
+                  {!isCurrent && plan.popular && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-2xs flex items-center gap-1 whitespace-nowrap z-10">
+                      <Sparkles className="h-3 w-3 fill-white" />
+                      <span>Most Popular</span>
                     </div>
                   )}
 
@@ -289,9 +301,9 @@ export function PricingHubClient() {
                         <h2 className="text-base font-bold text-zinc-900">
                           {plan.name}
                         </h2>
-                        {plan.popular && !isCurrent && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                            Popular
+                        {plan.id === 'franchise' && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-100 text-purple-800">
+                            Enterprise
                           </span>
                         )}
                       </div>
@@ -302,11 +314,11 @@ export function PricingHubClient() {
 
                     {/* Price */}
                     <div className="my-3 flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-zinc-900 tracking-tight font-sans">
+                      <span className="text-2xl sm:text-3xl font-black text-zinc-900 tracking-tight font-sans">
                         ₹{price}
                       </span>
                       <span className="text-xs font-medium text-zinc-500">
-                        / month
+                        / {billingCycle === 'yearly' ? 'mo (billed yrly)' : 'month'}
                       </span>
                     </div>
 
@@ -314,10 +326,16 @@ export function PricingHubClient() {
                     <ul className="space-y-2 pt-1 text-xs">
                       {plan.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <div className="h-3.5 w-3.5 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+                          <div className={`h-4 w-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                            plan.popular 
+                              ? 'bg-emerald-100 text-emerald-800' 
+                              : plan.id === 'franchise'
+                              ? 'bg-purple-100 text-purple-800'
+                              : 'bg-zinc-900 text-white'
+                          }`}>
                             <Check className="h-2.5 w-2.5 stroke-[3]" />
                           </div>
-                          <span className="text-zinc-700 leading-tight text-[11.5px]">
+                          <span className="text-zinc-700 leading-tight">
                             {feature}
                           </span>
                         </li>
@@ -334,6 +352,8 @@ export function PricingHubClient() {
                       className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-all ${
                         isCurrent
                           ? 'bg-zinc-900 text-white shadow-2xs cursor-default'
+                          : plan.popular
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs'
                           : 'bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-200'
                       }`}
                     >
@@ -345,163 +365,168 @@ export function PricingHubClient() {
             })}
           </div>
 
-          {/* Feature Comparison Matrix */}
+          {/* Feature Escalation Comparison Matrix */}
           <div className="rounded-2xl border border-zinc-200/90 bg-white overflow-hidden shadow-2xs">
-            <div className="p-4 sm:p-5 border-b border-zinc-100 bg-zinc-50/70">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-emerald-600" />
-                <h3 className="text-sm font-bold text-zinc-900">
-                  Feature Comparison Matrix — Tier Progression by Price
+            <div className="p-5 border-b border-zinc-200 bg-zinc-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+                  <Sliders className="h-4 w-4 text-zinc-700" />
+                  Full Feature Escalation Matrix
                 </h3>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  See how hardware, queues, limits, and team seats expand with each plan tier.
+                </p>
               </div>
-              <p className="text-xs text-zinc-500 mt-0.5">
-                Each plan progressively unlocks more hardware capacity, automation, accounting tools, and franchise multi-store scaling.
-              </p>
+              <div className="text-[11px] font-semibold text-zinc-600 bg-white px-3 py-1.5 rounded-lg border border-zinc-200 shadow-2xs">
+                All plans include 30-Day Free Trial
+              </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-zinc-200 bg-zinc-50/90 text-zinc-600 font-semibold uppercase text-[11px] tracking-wider">
-                    <th className="py-3 px-4 w-1/3">Feature Category & Capability</th>
-                    <th className="py-3 px-3 text-center">Starter (₹100)</th>
-                    <th className="py-3 px-3 text-center bg-zinc-100/70 font-bold text-zinc-900">Business Pro (₹249)</th>
-                    <th className="py-3 px-3 text-center">Enterprise (₹499)</th>
-                    <th className="py-3 px-3 text-center">Franchise (₹999)</th>
+                  <tr className="border-b border-zinc-200 bg-zinc-100/60 font-semibold text-zinc-700">
+                    <th className="py-3 px-4 w-1/4">Feature Capability</th>
+                    <th className="py-3 px-3 text-center w-[18%]">Starter (₹100)</th>
+                    <th className="py-3 px-3 text-center w-[18%] bg-emerald-50/40 text-emerald-950">
+                      Business Pro (₹249)
+                    </th>
+                    <th className="py-3 px-3 text-center w-[18%]">Enterprise (₹499)</th>
+                    <th className="py-3 px-3 text-center w-[21%]">Franchise (₹999)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100 text-zinc-700">
-                  {/* Category: Hardware & Print Engine */}
-                  <tr className="bg-zinc-100/40 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
-                    <td colSpan={5} className="py-2 px-4">
-                      1. Hardware & Print Automation
+                <tbody className="divide-y divide-zinc-100 text-zinc-600">
+                  {/* Category 1: Hardware & Spooler */}
+                  <tr className="bg-zinc-100/50 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
+                    <td colSpan={5} className="py-2.5 px-4">
+                      1. Hardware & Spooler Architecture
                     </td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
                     <td className="py-2.5 px-4 font-medium text-zinc-800">Connected Windows Printers</td>
                     <td className="py-2.5 px-3 text-center">1 Printer</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-zinc-900">Up to 4 Printers</td>
-                    <td className="py-2.5 px-3 text-center font-bold text-emerald-700">Unlimited</td>
-                    <td className="py-2.5 px-3 text-center font-bold text-emerald-700">Multi-Branch Unlimited</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">Up to 4 Printers</td>
+                    <td className="py-2.5 px-3 text-center font-bold text-zinc-900">Unlimited Printers</td>
+                    <td className="py-2.5 px-3 text-center font-bold text-purple-700">Multi-Branch Fleet</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Monthly Print Job Volume</td>
-                    <td className="py-2.5 px-3 text-center">1,500 orders</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-zinc-900">15,000 orders</td>
-                    <td className="py-2.5 px-3 text-center font-bold text-emerald-700">Unlimited</td>
-                    <td className="py-2.5 px-3 text-center font-bold text-emerald-700">Unlimited</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Print Spooler Mode</td>
+                    <td className="py-2.5 px-3 text-center">Browser Dialog (Ctrl+P)</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">Zero-Download Silent Spool</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Multi-PC Spooler Agents</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Central Spooler Cluster</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Native Windows Silent Spooler (sph-agent)</td>
-                    <td className="py-2.5 px-3 text-center text-zinc-400">Manual Print Dialog</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-emerald-700">Zero-Click Auto-Spool</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Zero-Click Auto-Spool</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Multi-Agent Load Balance</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Monthly Order Volume Limit</td>
+                    <td className="py-2.5 px-3 text-center">1,000 Jobs / mo</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">10,000 Jobs / mo</td>
+                    <td className="py-2.5 px-3 text-center font-bold text-zinc-900">Unlimited Volume</td>
+                    <td className="py-2.5 px-3 text-center font-bold text-purple-700">Unlimited High-Speed</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Split Queue Routing (B&W vs Color MFP)</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Max File Size per Order</td>
+                    <td className="py-2.5 px-3 text-center">25 MB</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">75 MB</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">250 MB</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">500 MB (CAD/Blueprints)</td>
+                  </tr>
+                  <tr className="hover:bg-zinc-50/60">
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Automatic Paper Tray Selection</td>
                     <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Automated Split</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Inter-Branch Split</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">Auto A4/Legal Tray</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Multi-Tray Routing</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Full Fleet Tray Sync</td>
                   </tr>
 
-                  {/* Category: Customer Experience */}
-                  <tr className="bg-zinc-100/40 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
-                    <td colSpan={5} className="py-2 px-4">
+                  {/* Category 2: Customer Counter & Upload */}
+                  <tr className="bg-zinc-100/50 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
+                    <td colSpan={5} className="py-2.5 px-4">
                       2. Customer Counter & Upload Experience
                     </td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Counter QR & Mobile Upload Portal</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Standard QR</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-emerald-700">Branded QR</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Custom Logo QR</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Multi-Counter Branch QR</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Counter QR & Standee Web App</td>
+                    <td className="py-2.5 px-3 text-center font-medium">Standard QR</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">Branded Shop Standee</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">White-label Logo QR</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Multi-Branch QR Router</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">WhatsApp Order Ready Notifications</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">WhatsApp Pickup Notifications</td>
                     <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-emerald-700">Ready Pickup Alerts</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Automated Webhooks</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">WhatsApp Business API + OTP</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">1-Click Pickup Alerts</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Automated Webhooks</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">WhatsApp Business API + OTP</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Finishing Rules (Spiral, Hardcover, Lamination)</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Custom Finishing Rules (Spiral, Lamination)</td>
                     <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-emerald-700">Custom Finishing</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Custom Finishing</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Master Finishing Library</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">Custom Finishing</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Unlimited Rules</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Master Finishing Library</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Automated Bulk Quantity Discounts</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Dynamic Bulk Volume Discounts</td>
                     <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-emerald-700">3 Volume Tiers</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Unlimited Tiers</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Contract Client Pricing</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">3 Quantity Tiers</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Unlimited Tiers</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Institutional Contract Rates</td>
                   </tr>
 
-                  {/* Category: Finance & Cashflow */}
-                  <tr className="bg-zinc-100/40 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
-                    <td colSpan={5} className="py-2 px-4">
-                      3. Finance & Cashflow Management
+                  {/* Category 3: Store Operations & Team */}
+                  <tr className="bg-zinc-100/50 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
+                    <td colSpan={5} className="py-2.5 px-4">
+                      3. Store Operations & Multi-Counter Team
                     </td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Cash vs UPI Revenue Tracking</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Basic Total</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-emerald-700">Daily Cash vs UPI</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Full Till Ledger</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Multi-Store Consolidated</td>
-                  </tr>
-                  <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Customer Khata / Credit Book</td>
-                    <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Unlimited + WhatsApp Reminders</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Corporate Credit Ledgers</td>
-                  </tr>
-                  <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Cost-Per-Page (CPP) & Margin Simulator</td>
-                    <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Interactive Simulator</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Consolidated Yield Audits</td>
-                  </tr>
-                  <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Day-End Cash Drawer Z-Report</td>
-                    <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-zinc-800">Basic Summary</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Full Discrepancy & Print</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Audit-Ready Tax Report</td>
-                  </tr>
-
-                  {/* Category: Store Operations & Franchise */}
-                  <tr className="bg-zinc-100/40 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
-                    <td colSpan={5} className="py-2 px-4">
-                      4. Store Operations & Franchise Architecture
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Staff / Operator PIN Logins</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Operator & Staff PIN Logins</td>
                     <td className="py-2.5 px-3 text-center">1 Owner Seat</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-semibold text-zinc-800">2 Operator PINs</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Unlimited Staff PINs</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Franchise Role-Based Access</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">2 Operator PINs</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Unlimited Staff PINs</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Role-Based Access Matrix</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Inter-Branch Order Routing</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Live Split Queue (B&W vs Color Router)</td>
                     <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Automated Load Routing</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 text-zinc-400">—</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-800">Auto Split Router</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Cross-Branch Auto Routing</td>
                   </tr>
                   <tr className="hover:bg-zinc-50/60">
-                    <td className="py-2.5 px-4 font-medium text-zinc-800">Support & SLA</td>
-                    <td className="py-2.5 px-3 text-center text-zinc-500">Community</td>
-                    <td className="py-2.5 px-3 text-center bg-zinc-50/60 font-medium text-zinc-800">Priority WhatsApp</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">Dedicated VIP Manager</td>
-                    <td className="py-2.5 px-3 text-center font-bold text-emerald-700">24/7 Phone SLA + Onsite Setup</td>
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Custom Shop Branding & Domain</td>
+                    <td className="py-2.5 px-3 text-center text-zinc-400">—</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 text-zinc-400">—</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Custom Domain Mapping</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Multi-Domain White-label</td>
+                  </tr>
+                  <tr className="hover:bg-zinc-50/60">
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Confidential File Auto-Purge</td>
+                    <td className="py-2.5 px-3 text-center">48 Hours</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">24 Hours</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Instant Post-Print Shred</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-purple-700">Custom Retention Policy</td>
+                  </tr>
+
+                  {/* Category 4: Support & SLA */}
+                  <tr className="bg-zinc-100/50 font-bold text-zinc-900 text-[11px] uppercase tracking-wider">
+                    <td colSpan={5} className="py-2.5 px-4">
+                      4. Support & Service Level Agreement
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-zinc-50/60">
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Support Channels</td>
+                    <td className="py-2.5 px-3 text-center text-zinc-500">Community Guides</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-medium text-emerald-800">Priority WhatsApp</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">Dedicated VIP Manager</td>
+                    <td className="py-2.5 px-3 text-center font-bold text-purple-700">24/7 Phone + Onsite Setup</td>
+                  </tr>
+                  <tr className="hover:bg-zinc-50/60">
+                    <td className="py-2.5 px-4 font-medium text-zinc-800">Guaranteed Response SLA</td>
+                    <td className="py-2.5 px-3 text-center text-zinc-400">Best Effort</td>
+                    <td className="py-2.5 px-3 text-center bg-emerald-50/20 font-semibold text-emerald-800">&lt; 4 Hours</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-zinc-900">&lt; 1 Hour</td>
+                    <td className="py-2.5 px-3 text-center font-bold text-purple-700">15 Minutes Guaranteed</td>
                   </tr>
                 </tbody>
               </table>

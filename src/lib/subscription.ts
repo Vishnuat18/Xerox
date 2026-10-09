@@ -47,11 +47,12 @@ export function calculateSubscriptionDetails(subscription?: {
   let yearlyPrice = 80;
   let features = [
     '1 Connected Windows Printer',
-    'Up to 1,500 monthly jobs',
-    'Standard QR document upload',
-    'Automatic PDF page counting & ISO preview',
-    'Manual print dialog trigger',
-    'Standard Cash & UPI rate collection'
+    'Up to 1,000 monthly customer orders',
+    '25MB file upload limit per order',
+    'Standard Counter QR standee & web upload',
+    'Standard A4 B&W and Color rate card',
+    'Browser print dialog trigger',
+    'Community guides & basic support',
   ];
 
   if (planIdRaw === 'BUSINESS' || rawStatus === 'TRIALING') {
@@ -59,38 +60,43 @@ export function calculateSubscriptionDetails(subscription?: {
     monthlyPrice = 249;
     yearlyPrice = 199;
     features = [
-      'Up to 4 Connected Printers',
-      'Up to 15,000 monthly jobs',
+      'Up to 4 Connected Printers simultaneously',
+      'Up to 10,000 monthly customer orders',
+      '75MB file upload limit per order',
       'Zero-download native silent spooling',
-      'WhatsApp order pickup notifications',
-      'Custom finishing rules (Spiral, Lamination, Hardcover)',
-      'Automated bulk quantity discount tiers',
-      'Daily sales & page count summary'
+      'WhatsApp order ready pickup notifications',
+      'Custom finishing rules (Spiral, Hardcover, Lamination)',
+      'Automated bulk volume discounts',
+      'Up to 2 Staff Operator PIN logins',
+      'Priority WhatsApp & remote setup support',
     ];
   } else if (planIdRaw === 'ENTERPRISE') {
     planName = 'Enterprise Pro (₹499/mo)';
     monthlyPrice = 499;
     yearlyPrice = 399;
     features = [
-      'Unlimited printers & background spoolers',
+      'Unlimited printers & background spooler agents',
       'Unlimited monthly customer orders',
-      'Multi-counter logins & staff operator PINs',
-      'Full Finance & Cashflow Management ledger',
-      'Customer Khata / Credit book with reminders',
-      'Custom shop logo & branding on counter QR & receipts',
-      'Split queue routing (B&W machine vs Color laser)'
+      '250MB high-res file upload limit',
+      'Multi-counter split queue (B&W vs Color auto-routing)',
+      'Unlimited Staff & Operator PIN logins with audit trail',
+      'Custom shop branding & custom logo on receipts',
+      'Custom domain & subdomain mapping',
+      'REST API & Spooler Webhooks',
+      'Dedicated VIP Manager & 1-hour SLA',
     ];
   } else if (planIdRaw === 'FRANCHISE') {
     planName = 'Franchise Hub (₹999/mo)';
     monthlyPrice = 999;
     yearlyPrice = 799;
     features = [
-      'Multi-branch centralized owner dashboard',
+      'Centralized multi-branch owner management',
       'Inter-branch order routing & load balancing',
-      'Centralized rate card & master price sync',
-      'Consolidated multi-counter GST & audit reports',
-      'REST API & Webhook access for ERP/POS sync',
-      'Dedicated 24/7 priority SLA & custom domain'
+      'Central master rate card sync across branches',
+      'Printer fleet toner & drum telemetry alerts',
+      'Consolidated multi-counter audit reports',
+      'Dedicated Android Kiosk mode',
+      '24/7 Phone SLA & on-site installation concierge',
     ];
   }
 

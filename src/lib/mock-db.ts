@@ -505,7 +505,7 @@ class MockDatabase {
           monthlyPrice: sub.planId === 'STARTER' ? 100 : sub.planId === 'ENTERPRISE' ? 499 : sub.planId === 'FRANCHISE' ? 999 : 249,
           yearlyPrice: sub.planId === 'STARTER' ? 80 : sub.planId === 'ENTERPRISE' ? 399 : sub.planId === 'FRANCHISE' ? 799 : 199,
           maxPrinters: sub.planId === 'STARTER' ? 1 : sub.planId === 'ENTERPRISE' ? 999 : sub.planId === 'FRANCHISE' ? 9999 : 4,
-          maxMonthlyOrders: sub.planId === 'STARTER' ? 1500 : sub.planId === 'ENTERPRISE' ? 99999 : sub.planId === 'FRANCHISE' ? 999999 : 15000,
+          maxMonthlyOrders: sub.planId === 'STARTER' ? 1000 : sub.planId === 'ENTERPRISE' ? 99999 : sub.planId === 'FRANCHISE' ? 999999 : 10000,
         },
       };
     }

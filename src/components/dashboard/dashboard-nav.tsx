@@ -15,8 +15,7 @@ import {
   Lock,
   ChevronRight,
   Menu,
-  X,
-  Wallet
+  X
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -36,6 +35,7 @@ interface DashboardNavProps {
 interface SubInfo {
   planId: string;
   planName: string;
+  monthlyPrice?: number;
   status: 'TRIALING' | 'ACTIVE' | 'EXPIRED';
   daysRemaining: number;
   daysElapsed: number;
@@ -80,10 +80,10 @@ export function DashboardNav({ shop, user }: DashboardNavProps) {
       locked: isExpired,
     },
     {
-      title: 'Finance & Accounts',
-      href: '/dashboard/finance',
-      icon: Wallet,
-      active: pathname === '/dashboard/finance',
+      title: 'Shop Settings',
+      href: '/dashboard/settings',
+      icon: Sliders,
+      active: pathname === '/dashboard/settings',
       locked: isExpired,
     },
     {
@@ -101,13 +101,6 @@ export function DashboardNav({ shop, user }: DashboardNavProps) {
       locked: isExpired,
     },
     {
-      title: 'Shop Settings',
-      href: '/dashboard/settings',
-      icon: Sliders,
-      active: pathname === '/dashboard/settings',
-      locked: isExpired,
-    },
-    {
       title: 'Subscription & Rates',
       href: '/dashboard/pricing',
       icon: CreditCard,
@@ -116,7 +109,7 @@ export function DashboardNav({ shop, user }: DashboardNavProps) {
     },
   ];
 
-  const planPrice = sub?.planName?.toLowerCase().includes('pro') ? '₹249' : '₹0';
+  const planPrice = sub?.monthlyPrice ? `₹${sub.monthlyPrice}` : '₹0';
   const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
   const activeTitle = navItems.find((item) => item.active)?.title || 'Dashboard';
 

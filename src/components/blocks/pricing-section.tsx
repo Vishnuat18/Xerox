@@ -12,56 +12,82 @@ export const XEROX_TIERS: PricingTier[] = [
     name: 'Starter',
     price: {
       monthly: 100,
-      yearly: 85,
+      yearly: 80,
     },
-    description: 'Essential toolkit for small Xerox shops & stationery counters',
+    description: 'Essential toolkit for single-counter Xerox shops & stationery desks',
     features: [
       '1 Connected Windows Printer',
-      'Unlimited zero-download customer orders',
-      'Instant shop counter QR & URL',
-      'Standard B&W and Color printing',
-      'Cash & UPI rate collection',
-      'Standard community support',
+      'Up to 1,000 monthly customer orders',
+      '25MB file upload limit per order',
+      'Standard counter QR standee & web upload',
+      'Standard A4 B&W and Color rate card',
+      'Browser print dialog trigger',
+      'Community guides & basic support',
     ],
     cta: 'Select Starter',
   },
   {
     id: 'business',
-    name: 'Business',
+    name: 'Business Pro',
     price: {
       monthly: 249,
       yearly: 199,
     },
-    description: 'High performance for busy Xerox shops & university print hubs',
+    description: 'High performance for busy Xerox shops & campus copy centers',
     features: [
       'Up to 4 Connected Printers simultaneously',
+      'Up to 10,000 monthly customer orders',
+      '75MB file upload limit per order',
       'Zero-download native silent spooling',
-      'WhatsApp order ready notifications',
-      'Custom finishing rules (Spiral, Hardcover)',
+      'WhatsApp order ready pickup notifications',
+      'Custom finishing rules (Spiral, Lamination)',
       'Automated dynamic bulk volume discounts',
-      'Priority remote spooler support',
+      'Up to 2 Staff Operator PIN logins',
+      'Priority WhatsApp & remote setup support',
     ],
     cta: 'Select Business',
     popular: true,
   },
   {
     id: 'enterprise',
-    name: 'Enterprise',
+    name: 'Enterprise Pro',
     price: {
       monthly: 499,
       yearly: 399,
     },
-    description: 'Full featured powerhouse for multi-counter high-volume print centers',
+    description: 'Powerhouse for high-volume 24x7 print hubs & commercial presses',
     features: [
       'Unlimited printers & background spool agents',
-      'Multi-operator counter logins & staff roles',
-      'Custom Xerox shop branding & custom domain',
-      'Live queue split across B&W and color machines',
-      'API & Remote Spooler SDK integration',
-      'Dedicated support & onboarding concierge',
+      'Unlimited monthly customer orders',
+      '250MB high-res file upload limit',
+      'Multi-counter split queue (B&W vs Color router)',
+      'Unlimited Staff & Operator PIN logins with audit',
+      'Custom shop branding & custom logo on receipts',
+      'Custom domain & subdomain mapping',
+      'REST API & Spooler Webhooks',
+      'Dedicated VIP Manager & 1-hour SLA',
     ],
     cta: 'Select Enterprise',
     highlighted: true,
+  },
+  {
+    id: 'franchise',
+    name: 'Franchise Hub',
+    price: {
+      monthly: 999,
+      yearly: 799,
+    },
+    description: 'Centralized multi-branch network for printing franchises & chains',
+    features: [
+      'Centralized multi-branch owner console',
+      'Inter-branch order routing & load balancing',
+      'Master rate card sync across all branches',
+      'Printer fleet toner & drum telemetry alerts',
+      'Consolidated multi-counter audit reports',
+      'Dedicated Android Kiosk mode',
+      '24/7 Phone SLA & on-site setup concierge',
+    ],
+    cta: 'Select Franchise',
   },
 ];
 
@@ -110,7 +136,7 @@ export function PricingSection({
         </div>
       </div>
 
-      <div className="grid w-full max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3 px-4">
+      <div className="grid w-full max-w-7xl gap-4 sm:grid-cols-2 lg:grid-cols-4 px-4">
         {tiers.map((tier) => (
           <PricingCard
             key={tier.name}
